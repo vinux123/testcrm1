@@ -543,7 +543,7 @@ public class VPCRMSDAL
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
-            NewClientCustomerID = Convert.ToDecimal(dt.Rows[0]["maxclientcustomerid"].ToString().Trim()) + 1;
+            NewClientCustomerID = Convert.ToDecimal(dt.Rows[0]["maxclientcustomerid"].ToString().Trim()) + 1 ;
         }
         catch (Exception ex)
         {
@@ -638,7 +638,7 @@ public class VPCRMSDAL
     public static void SaveDCR(String clientdate, String company, String firstname, String occupation, String primarycontact, String website, Decimal erevenue, String followupdate,
         String companyadd1, String companyadd2, String addresscity, String addressdist, String addressstate, String addresscountry, Decimal pincode, String remarks, Decimal assignedto,
         String companytype, String lastname, String email, Decimal alternatecontact, String status, String source, String saddress1, String saddress2, String scity, String sdistrict,
-        String sstate, String scountry, Decimal spincode)
+        String sstate, String scountry, Decimal spincode, String Mode, Decimal clientcustomerid)
     {
         string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
         decimal NewSalesCustID = VPCRMSDAL.AssignClientCustomerID();
@@ -655,7 +655,14 @@ public class VPCRMSDAL
                 // currentl client alias is passed as 1 hardcoded for testng. 
                 cmd.Parameters.AddWithValue("@client_alias", 1);
                 cmd.Parameters.AddWithValue("@client_user", assignedto);
-                cmd.Parameters.AddWithValue("@client_customer_id", NewSalesCustID);
+                if (Mode == "Update")
+                {
+                    cmd.Parameters.AddWithValue("@client_customer_id", clientcustomerid);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@client_customer_id", NewSalesCustID);
+                }
                 cmd.Parameters.AddWithValue("@client_customer_name", company);
                 cmd.Parameters.AddWithValue("@client_customer_pamt", erevenue);
                 // logic not decided yet. 
@@ -711,14 +718,23 @@ public class VPCRMSDAL
             {
                 cmd1.CommandType = CommandType.StoredProcedure;
                 // currentl client alias is passed as 1 hardcoded for testng. 
-                cmd1.Parameters.AddWithValue("@client_customer_id", NewSalesCustID);
+                //cmd1.Parameters.AddWithValue("@client_customer_id", NewSalesCustID);
+                if (Mode == "Update")
+                {
+                    cmd1.Parameters.AddWithValue("@client_customer_id", clientcustomerid);
+                }
+                else
+                {
+                    cmd1.Parameters.AddWithValue("@client_customer_id", NewSalesCustID);
+                }
                 cmd1.Parameters.AddWithValue("@client_customer_status", status);
 
                 cmd1.Parameters.AddWithValue("@client_customer_old_status", String.Empty);
                 cmd1.Parameters.AddWithValue("@client_customer_user", assignedto);
                 cmd1.Parameters.AddWithValue("@client_customer_visit_date", clientdate);
                 cmd1.Parameters.AddWithValue("@client_customer_followup_date", followupdate);
-                cmd1.Parameters.AddWithValue("@client_customer_followup_person", firstname + lastname);
+                cmd1.Parameters.AddWithValue("@client_customer_followup_person_fn", firstname);
+                cmd1.Parameters.AddWithValue("@client_customer_followup_person_ln", lastname);
                 cmd1.Parameters.AddWithValue("@client_customer_followup_person_desgn", String.Empty);
                 cmd1.Parameters.AddWithValue("@client_customer_folloup_email", email);
                 cmd1.Parameters.AddWithValue("@client_customer_followup_done", String.Empty);

@@ -145,12 +145,12 @@ public class VPCRMSBAL
     public static void SaveDCR(String clientdate, String company, String firstname, String occupation, String primarycontact, String website, Decimal erevenue, String followupdate,
         String companyadd1, String companyadd2, String addresscity, String addressdist, String addressstate, String addresscountry, Decimal pincode, String remarks, Decimal assignedto,
         String companytype, String lastname, String email, Decimal alternatecontact, String status, String source, String saddress1, String saddress2, String scity, String sdistrict,
-        String sstate, String scountry, Decimal spincode)
+        String sstate, String scountry, Decimal spincode, String Mode, Decimal clientcustomerid)
     {
         VPCRMSDAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, erevenue, followupdate,
         companyadd1,  companyadd2,  addresscity,  addressdist,  addressstate,  addresscountry, pincode, remarks, assignedto,
         companytype,  lastname, email, alternatecontact, status, source, saddress1,  saddress2,  scity,  sdistrict,
-        sstate,  scountry,  spincode);
+        sstate, scountry, spincode, Mode, clientcustomerid);
     }
 
 

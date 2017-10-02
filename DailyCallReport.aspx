@@ -57,6 +57,7 @@
                         $('#txtsstate').val(val.shippingstate);
                         $('#txtscountry').val(val.shippingcountry);
                         $('#txtspincode').val(val.shippingpincode);
+                        $('#hdnClientCustID').val(val.clientcustomerid);
                         $('#btnSubmit').attr('value', 'Update');
                         $('#modal-dialog').on('show.bs.modal', function (event) {
                             $('#modal-dialog').insertAfter($('body'));
@@ -208,12 +209,22 @@
                 else {
                     var spincode = $('#txtspincode').val();
                 }
-                alert(spincode);
+
+                var Mode = "";
+                var clientcustomerid = "0";
+                if ($('#btnSubmit').val() == "Update") {
+                    Mode = "Update";
+                    clientcustomerid = $('#hdnClientCustID').val();
+                }
+                else {
+                    Mode = "Insert";
+                }
+                
                 $.ajax({
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     url: "DailyCallReport.aspx/SaveDCR",
-                    data: "{'clientdate': '" + clientdate + "', 'company': '" + company + "', 'firstname': '" + firstname + "', 'occupation': '" + occupation + "', 'primarycontact': '" + primarycontact + "', 'website': '" + website + "', 'erevenue': '" + erevenue + "', 'followupdate': '" + followupdate + "', 'companyadd1': '" + companyadd1 + "' , 'companyadd2': '" + companyadd2 + "', 'addresscity': '" + addresscity + "', 'addressdist': '" + addressdist + "', 'addressstate': '" + addressstate + "', 'addresscountry': '" + addresscountry + "', 'pincode': '" + pincode + "', 'remarks': '" + remarks + "', 'assignedto': '" + assignedto + "', 'companytype': '" + companytype + "', 'lastname': '" + lastname + "', 'email': '" + email + "', 'alternatecontact': '" + alternatecontact + "', 'status': '" + status + "', 'source': '" + source + "', 'saddress1': '" + saddress1 + "', 'saddress2': '" + saddress2 + "', 'scity': '" + scity + "', 'sdistrict': '" + sdistrict + "', 'sstate': '" + sstate + "', 'scountry': '" + scountry + "', 'spincode': '" + spincode + "'}",
+                    data: "{'clientdate': '" + clientdate + "', 'company': '" + company + "', 'firstname': '" + firstname + "', 'occupation': '" + occupation + "', 'primarycontact': '" + primarycontact + "', 'website': '" + website + "', 'erevenue': '" + erevenue + "', 'followupdate': '" + followupdate + "', 'companyadd1': '" + companyadd1 + "' , 'companyadd2': '" + companyadd2 + "', 'addresscity': '" + addresscity + "', 'addressdist': '" + addressdist + "', 'addressstate': '" + addressstate + "', 'addresscountry': '" + addresscountry + "', 'pincode': '" + pincode + "', 'remarks': '" + remarks + "', 'assignedto': '" + assignedto + "', 'companytype': '" + companytype + "', 'lastname': '" + lastname + "', 'email': '" + email + "', 'alternatecontact': '" + alternatecontact + "', 'status': '" + status + "', 'source': '" + source + "', 'saddress1': '" + saddress1 + "', 'saddress2': '" + saddress2 + "', 'scity': '" + scity + "', 'sdistrict': '" + sdistrict + "', 'sstate': '" + sstate + "', 'scountry': '" + scountry + "', 'spincode': '" + spincode + "', 'Mode': '" + Mode + "', 'clientcustomerid': '" + clientcustomerid + "'}",
                     dataType: "json",
                     success: function (data) {
                         $('#modal-dialog').modal('hide');
@@ -466,7 +477,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    
+                                    <asp:HiddenField runat="server" ID="hdnClientCustID" ClientIDMode="Static" />
                                 </div>
 
                                 <div class="form-group">
