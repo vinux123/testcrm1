@@ -23,9 +23,7 @@ public partial class Login : System.Web.UI.Page
  
         lblErrorMesage.Text = "";
         string strPassword = string.Empty;
-        //decimal decClientAlias = decimal.Zero;
-        string strClientAlias = string.Empty;
-        
+                
         try
         {
             // Check User Name exists in database. 
@@ -34,14 +32,12 @@ public partial class Login : System.Web.UI.Page
             if (dtLogin.Rows.Count > 0)
             {
                 string enteredpwd = txtpasswd.Text.Trim();              
-
+                // Check Password. 
                 if (BCrypt.CheckPassword(enteredpwd,dtLogin.Rows[0]["clientpassword"].ToString().Trim()).Equals(true))
                 {
                     // Check Client whose user logged in is Active or Not. 
-                    //strClientAlias = dtLogin.Rows[0]["clientuserid"].ToString();
-                    //decClientAlias = Convert.ToDecimal(strClientAlias.Substring(1, 3));
                     //DataTable dtLogin1 = new DataTable();
-                    //dtLogin1 = VPCRMSBAL.CheckClientActiveOrNot(decClientAlias);
+                    //dtLogin1 = VPCRMSBAL.CheckClientActiveOrNot(Convert.ToDecimal(dtLogin.Rows[0]["clientuserid"].ToString().Trim().Substring(0,4)));
                     //DateTime dateTimeToday = DateTime.Today;
                     //DateTime clientDateTime = Convert.ToDateTime(dtLogin1.Rows[0]["enddate"]);
                     //if (clientDateTime <= dateTimeToday)

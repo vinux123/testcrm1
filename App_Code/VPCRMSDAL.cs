@@ -7,7 +7,14 @@ using System.Linq;
 using System.Web;
 
 /// <summary>
-/// Summary description for VPCRMSDAL
+/// =================================================
+/// Data Abstraction Layer(DAL) for CRMS application. 
+/// =================================================
+///     1. All stored procedures call are handled in this module.
+///     2. Two database connection strings are used used in this program 
+///         a. VPCS for user related queries b. CRMS for application specific files. 
+///     3. Business Abstraction Layer(BAL) of CRMS creates instance of each method defined here as per need. 
+///     4. Every page of application calls method from Business Abstraction Layer(BAL) as required. 
 /// </summary>
 public class VPCRMSDAL
 {
@@ -306,6 +313,39 @@ public class VPCRMSDAL
         return dt;
     }
 
+    public DataTable GetMaxAllowedUsers(Decimal ClientAlias)
+    {
+        // Connect to VPCRMS Admin Master Database to check whether client active or not.  
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_getNumberOfAllowedUsers", conn);
+            dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
 
 
     public DataTable GetQuotationDetails(Decimal UserID)
@@ -389,7 +429,7 @@ public class VPCRMSDAL
         conn.Open();
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
-
+        
         try
         {
             dCmd = new MySqlCommand("usp_getDailyCallReport", conn);
@@ -543,7 +583,14 @@ public class VPCRMSDAL
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
-            NewClientCustomerID = Convert.ToDecimal(dt.Rows[0]["maxclientcustomerid"].ToString().Trim()) + 1 ;
+            if (String.IsNullOrEmpty(dt.Rows[0]["maxclientcustomerid"].ToString()))
+            {
+                NewClientCustomerID = 1;
+            }
+            else
+            {
+                NewClientCustomerID = Convert.ToDecimal(dt.Rows[0]["maxclientcustomerid"].ToString().Trim()) + 1;
+            }
         }
         catch (Exception ex)
         {
@@ -561,6 +608,43 @@ public class VPCRMSDAL
         return NewClientCustomerID;
     }
 
+    // Generate New Quote ID for Quotation Generation
+
+    public static Decimal AssignQuoteID()
+    {
+        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+        decimal NewQuoteID = decimal.Zero;
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_GetLatestQuoteID", conn);
+
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+            NewQuoteID = Convert.ToDecimal(dt.Rows[0]["maxquoteid"].ToString().Trim()) + 1;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return NewQuoteID;
+    }
 
     public static void SaveProdData(Decimal alias, String prodname, String proddesc, String prodhsn, String prodprice)
     {
@@ -590,7 +674,50 @@ public class VPCRMSDAL
         }
         finally
         {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+        }
 
+    }
+
+    public static void SaveQuotationData(Decimal clientcustomerid, Decimal clientquoteid, Decimal clientcustomeruser, String clientquotedproduct, Decimal clientquotedprodqty, Decimal clientquotedprice, Decimal clientquotedamt)
+    {
+        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        MySqlConnection conn = new MySqlConnection(connectionstring); ;
+        try
+        {
+
+            conn = new MySqlConnection(connectionstring);
+            conn.Open();
+            using (MySqlCommand cmd = new MySqlCommand("usp_SaveQuotationDetails", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@client_customer_id", clientcustomerid);
+                cmd.Parameters.AddWithValue("@client_quote_id", clientquoteid);
+                cmd.Parameters.AddWithValue("@client_customer_user", clientcustomeruser);
+                cmd.Parameters.AddWithValue("@client_quoted_product", clientquotedproduct);
+                cmd.Parameters.AddWithValue("@client_quoted_product_qty", clientquotedprodqty);
+                cmd.Parameters.AddWithValue("@client_quoted_price", clientquotedprice);
+                cmd.Parameters.AddWithValue("@client_quoted_amount", clientquotedamt);
+
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+        }
+        catch (MySqlException ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
         }
 
     }
@@ -652,8 +779,8 @@ public class VPCRMSDAL
             using (MySqlCommand cmd = new MySqlCommand("save_sales_master", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                // currentl client alias is passed as 1 hardcoded for testng. 
-                cmd.Parameters.AddWithValue("@client_alias", 1);
+                 
+                cmd.Parameters.AddWithValue("@client_alias", Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0,4)));
                 cmd.Parameters.AddWithValue("@client_user", assignedto);
                 if (Mode == "Update")
                 {
@@ -690,6 +817,7 @@ public class VPCRMSDAL
                 cmd.Parameters.AddWithValue("@client_customer_shipcnty", scountry);
                 cmd.Parameters.AddWithValue("@client_customer_shippin", spincode);
                 cmd.Parameters.AddWithValue("@client_customer_shipsame", "Y");
+                cmd.Parameters.AddWithValue("@client_last_modified_date", clientdate);
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
             }
@@ -707,7 +835,7 @@ public class VPCRMSDAL
             }
         }
 
-        // Save Details
+        // Save/Update DCR Details
         MySqlConnection conn1 = new MySqlConnection(connectionstring);
         try
         {
@@ -717,8 +845,6 @@ public class VPCRMSDAL
             using (MySqlCommand cmd1 = new MySqlCommand("save_sales_details", conn1))
             {
                 cmd1.CommandType = CommandType.StoredProcedure;
-                // currentl client alias is passed as 1 hardcoded for testng. 
-                //cmd1.Parameters.AddWithValue("@client_customer_id", NewSalesCustID);
                 if (Mode == "Update")
                 {
                     cmd1.Parameters.AddWithValue("@client_customer_id", clientcustomerid);
@@ -801,6 +927,11 @@ public class VPCRMSDAL
         }
         finally
         {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
 
         }
 
@@ -821,6 +952,72 @@ public class VPCRMSDAL
         {
             dCmd = new MySqlCommand("usp_EditModalUserDetails", conn);
             dCmd.Parameters.AddWithValue("@UserID", userid);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
+
+    public static DataTable GetStatusCount(Decimal userid, String user_role)
+    {
+        DataTable dt = new DataTable();
+        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_StatusCountReport", conn);
+            dCmd.Parameters.AddWithValue("@client_userid", userid);
+            dCmd.Parameters.AddWithValue("@client_role", user_role);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
+
+    public static DataTable GetReportData()
+    {
+        DataTable dt = new DataTable();
+        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_GetReportData", conn);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);

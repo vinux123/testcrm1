@@ -11,17 +11,24 @@ using System.Web.UI.WebControls;
 public partial class ProductSetup : System.Web.UI.Page
 {
     private VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
+    
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["UserID"] == null)
+        {
+            Response.Redirect("Login.aspx");
+        }
+
+        //Get Client alias from UserID
+        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Substring(0, 4));
+
         DataTable dtLogin = new DataTable();
-        // change param of below method pass customer alias
-        dtLogin = VPCRMSBAL.GetProductDetails(1);
+        dtLogin = VPCRMSBAL.GetProductDetails(client_alias);
         grdProduct.DataSource = dtLogin;
         grdProduct.DataBind();
 
         DataTable dtTable = new DataTable();
-        // change alias param of below step .. hardcoded for testing as of now. 
-        dtTable = VPCRMSBAL.GetCompanyName(1);
+        dtTable = VPCRMSBAL.GetCompanyName(client_alias);
         if (dtTable.Rows.Count > 0)
         {
             lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
@@ -35,17 +42,16 @@ public partial class ProductSetup : System.Web.UI.Page
     [WebMethod]
     public static void SaveProdData(String prodname, String proddesc, String prodhsn, String prodprice)
     {
-        decimal alias = 1;
-
-        VPCRMSBAL.SaveProdData(alias, prodname, proddesc, prodhsn, prodprice);
-
+        // HttpContext is used here to access non static variable Session inside static method. 
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0,4));
+        VPCRMSBAL.SaveProdData(client_alias, prodname, proddesc, prodhsn, prodprice);
     }
 
     [WebMethod]
     public static string EditProductData(String productname)
     {
-        string userid = "1";
-        DataTable dt = VPCRMSBAL.GetEditedProductDetails(Convert.ToDecimal(userid), productname);
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        DataTable dt = VPCRMSBAL.GetEditedProductDetails(client_alias, productname);
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
         return json;
     }

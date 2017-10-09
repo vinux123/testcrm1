@@ -3,24 +3,35 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic"/>
-	<link rel="stylesheet" href="assets/css/fonts/linecons/css/linecons.css"/>
-	<link rel="stylesheet" href="assets/css/fonts/fontawesome/css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="assets/css/bootstrap.css"/>
-	<link rel="stylesheet" href="assets/css/xenon-core.css"/>
-	<link rel="stylesheet" href="assets/css/xenon-forms.css"/>
-	<link rel="stylesheet" href="assets/css/xenon-components.css"/>
-	<link rel="stylesheet" href="assets/css/xenon-skins.css"/>
-	<link rel="stylesheet" href="assets/css/custom.css"/>
+
+<html lang="en">
+<head>
+	<title>Login</title>
+
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic">
+	<link rel="stylesheet" href="assets/css/fonts/linecons/css/linecons.css">
+	<link rel="stylesheet" href="assets/css/fonts/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="assets/css/bootstrap.css">
+	<link rel="stylesheet" href="assets/css/xenon-core.css">
+	<link rel="stylesheet" href="assets/css/xenon-forms.css">
+	<link rel="stylesheet" href="assets/css/xenon-components.css">
+	<link rel="stylesheet" href="assets/css/xenon-skins.css">
+	<link rel="stylesheet" href="assets/css/custom.css">
 
 	<script src="assets/js/jquery-1.11.1.min.js"></script>
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	
+	
 </head>
 <body class="page-body login-page login-light">
-    <form id="form1" runat="server">
-    <div class="login-container">
+
+	
+	<div class="login-container">
 	
 		<div class="row">
 		
@@ -54,70 +65,70 @@
 				                }
 				            },
 
-				            // Form Processing via AJAX
-				            submitHandler: function (form) {
-				                show_loading_bar(70); // Fill progress bar to 70% (just a given value)
+				            //// Form Processing via AJAX
+				            //submitHandler: function (form) {
+				            //    show_loading_bar(70); // Fill progress bar to 70% (just a given value)
 
-				                var opts = {
-				                    "closeButton": true,
-				                    "debug": false,
-				                    "positionClass": "toast-top-full-width",
-				                    "onclick": null,
-				                    "showDuration": "300",
-				                    "hideDuration": "1000",
-				                    "timeOut": "5000",
-				                    "extendedTimeOut": "1000",
-				                    "showEasing": "swing",
-				                    "hideEasing": "linear",
-				                    "showMethod": "fadeIn",
-				                    "hideMethod": "fadeOut"
-				                };
+				            //    var opts = {
+				            //        "closeButton": true,
+				            //        "debug": false,
+				            //        "positionClass": "toast-top-full-width",
+				            //        "onclick": null,
+				            //        "showDuration": "300",
+				            //        "hideDuration": "1000",
+				            //        "timeOut": "5000",
+				            //        "extendedTimeOut": "1000",
+				            //        "showEasing": "swing",
+				            //        "hideEasing": "linear",
+				            //        "showMethod": "fadeIn",
+				            //        "hideMethod": "fadeOut"
+				            //    };
 
-				                $.ajax({
-				                    url: "data/login-check.php",
-				                    method: 'POST',
-				                    dataType: 'json',
-				                    data: {
-				                        do_login: true,
-				                        username: $(form).find('#username').val(),
-				                        passwd: $(form).find('#passwd').val(),
-				                    },
-				                    success: function (resp) {
-				                        show_loading_bar({
-				                            delay: .5,
-				                            pct: 100,
-				                            finish: function () {
+				            //    $.ajax({
+				            //        url: "data/login-check.php",
+				            //        method: 'POST',
+				            //        dataType: 'json',
+				            //        data: {
+				            //            do_login: true,
+				            //            username: $(form).find('#username').val(),
+				            //            passwd: $(form).find('#passwd').val(),
+				            //        },
+				            //        success: function (resp) {
+				            //            show_loading_bar({
+				            //                delay: .5,
+				            //                pct: 100,
+				            //                finish: function () {
 
-				                                // Redirect after successful login page (when progress bar reaches 100%)
-				                                if (resp.accessGranted) {
-				                                    window.location.href = 'dashboard-1.html';
-				                                }
-				                            }
-				                        });
-
-
-				                        // Remove any alert
-				                        $(".errors-container .alert").slideUp('fast');
+				            //                    // Redirect after successful login page (when progress bar reaches 100%)
+				            //                    if (resp.accessGranted) {
+				            //                        window.location.href = 'dashboard-1.html';
+				            //                    }
+				            //                }
+				            //            });
 
 
-				                        // Show errors
-				                        if (resp.accessGranted == false) {
-				                            $(".errors-container").html('<div class="alert alert-danger">\
-												<button type="button" class="close" data-dismiss="alert">\
-													<span aria-hidden="true">&times;</span>\
-													<span class="sr-only">Close</span>\
-												</button>\
-												' + resp.errors + '\
-											</div>');
+				            //            // Remove any alert
+				            //            $(".errors-container .alert").slideUp('fast');
 
 
-				                            $(".errors-container .alert").hide().slideDown();
-				                            $(form).find('#passwd').select();
-				                        }
-				                    }
-				                });
+				            //            // Show errors
+				            //            if (resp.accessGranted == false) {
+				            //                $(".errors-container").html('<div class="alert alert-danger">\
+							//					<button type="button" class="close" data-dismiss="alert">\
+							//						<span aria-hidden="true">&times;</span>\
+							//						<span class="sr-only">Close</span>\
+							//					</button>\
+							//					' + resp.errors + '\
+							//				</div>');
 
-				            }
+
+				            //                $(".errors-container .alert").hide().slideDown();
+				            //                $(form).find('#passwd').select();
+				            //            }
+				            //        }
+				            //    });
+
+				            //}
 				        });
 
 				        // Set Form focus
@@ -132,47 +143,39 @@
 				</div>
 				
 				<!-- Add class "fade-in-effect" for login form effect -->
-				<%--<form method="post" role="form" id="login" class="login-form fade-in-effect">--%>
+				<form method="post" role="form" id="login" class="login-form fade-in-effect" runat="server">
 					
 					<div class="login-header">
-						<a href="dashboard-1.html" class="logo">
-							<%--<img src="assets/images/gracenote_black.png" alt=""  /> --%>
-							 
-						</a>
 						
-						<p>Dear user, log in to access</p>
+						
+						<p>Dear user, log in to access the admin area!</p>
 					</div>
 	
 					
 					<div class="form-group">
 						<label class="control-label" for="username">Username</label>
-						<%--<input type="text" class="form-control" name="username" id="username" autocomplete="off" />--%>
-                        <asp:TextBox runat="server" class="form-control" name="username" id="txtusername" autocomplete="off" ></asp:TextBox>
+						<asp:TextBox runat="server" class="form-control" name="username" id="txtusername" autocomplete="off" ClientIDMode="Static"></asp:TextBox>
 					</div>
 					
 					<div class="form-group">
 						<label class="control-label" for="passwd">Password</label>
-						<%--<input type="password" class="form-control" name="passwd" id="passwd" autocomplete="off" />--%>
-                        <asp:TextBox runat="server" class="form-control" name="passwd" id="txtpasswd" autocomplete="off" TextMode="Password"></asp:TextBox>
+						<asp:TextBox runat="server" class="form-control" name="passwd" id="txtpasswd" autocomplete="off" TextMode="Password" ClientIDMode="Static"></asp:TextBox>
 					</div>
 					
 					<div class="form-group">
-						<%--<button type="submit" class="btn btn-primary  btn-block text-left">
-							<i class="fa-lock"></i>
-							Log In
-						</button>--%>
-                        <asp:Button ID="btnLogin" runat="server" Text="Sign in" class="btn btn-primary  btn-block text-left"
+						<asp:Button ID="btnLogin" runat="server" Text="Sign in" class="btn btn-primary  btn-block text-left"
                                     OnClick="btnlogin_Click" />
 					</div>
 					
 					<div class="login-footer">
 						<a href="#">Forgot your password?</a>
 						
-					<asp:Label runat="server" ID="lblErrorMesage"></asp:Label>	
+						
 						
 					</div>
+                    <asp:Label runat="server" ID="lblErrorMesage"></asp:Label>	
 					
-				<%--</form>--%>
+				</form>
 				
 				<!-- External login -->
 				 
@@ -198,6 +201,6 @@
 
 	<!-- JavaScripts initializations and stuff -->
 	<script src="assets/js/xenon-custom.js"></script>
-    </form>
+
 </body>
 </html>

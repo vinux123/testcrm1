@@ -14,24 +14,40 @@ public partial class DailyCallReport : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["UserID"] == null)
+        {
+            Response.Redirect("Login.aspx");
+        }
+
         DataTable dtLogin = new DataTable();
         dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]));
         grdDCR.DataSource = dtLogin;
         grdDCR.DataBind();
 
+        // Get Company Name
         DataTable dtTable = new DataTable();
-        
-        // change alias param of below step .. hardcoded for testing as of now. 
-        dtTable = VPCRMSBAL.GetCompanyName(1);
+        dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0,4)));
         if (dtTable.Rows.Count > 0)
         {
             lblModalCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
+            lblQuotModalCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
             lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
             
         }
         else
         {
             lblCompanyName.Text = "Default Name";
+        }
+
+        // Populate Product Name to dropdown on modal. 
+        DataTable dtProdTable = new DataTable();
+        dtProdTable = VPCRMSBAL.GetProductList(1);
+        if (dtProdTable.Rows.Count > 0)
+        {
+            ddlProductName.DataSource = dtProdTable;
+            ddlProductName.DataValueField = "productname";
+            ddlProductName.DataValueField = "productname";
+            ddlProductName.DataBind();
         }
     }
 
@@ -41,11 +57,17 @@ public partial class DailyCallReport : System.Web.UI.Page
         String companytype, String lastname, String email, String alternatecontact, String status, String source, String saddress1, String saddress2, String scity, String sdistrict,
         String sstate, String scountry, String spincode, String Mode, String clientcustomerid)
     {
-        VPCRMSDAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, Convert.ToDecimal(erevenue), followupdate,
+        VPCRMSBAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, Convert.ToDecimal(erevenue), followupdate,
         companyadd1,  companyadd2,  addresscity,  addressdist,  addressstate,  addresscountry, Convert.ToDecimal(pincode), remarks, Convert.ToDecimal(assignedto),
         companytype,  lastname, email, Convert.ToDecimal(alternatecontact), status, source, saddress1,  saddress2,  scity,  sdistrict,
         sstate,  scountry,  Convert.ToDecimal(spincode), Mode, Convert.ToDecimal(clientcustomerid));
         
+    }
+
+    [WebMethod]
+    public static void SaveQuotationDetails(String clientcustid,String customeruser, String quotedprod, String quoteqty, String quoteprice, String quoteamt)
+    {
+        VPCRMSBAL.SaveQuotationData(Convert.ToDecimal(clientcustid), VPCRMSDAL.AssignQuoteID(), Convert.ToDecimal(customeruser), quotedprod, Convert.ToDecimal(quoteqty), Convert.ToDecimal(quoteprice), Convert.ToDecimal(quoteamt));
     }
 
     [WebMethod]

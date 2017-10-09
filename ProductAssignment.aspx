@@ -30,7 +30,7 @@
                         $('#ddlProductName option:selected').val(val.customerproduct);
                         $('#txtprodamttgt').val(val.useramounttarget);
                         $('#txtprodqtytgt').val(val.userprodtarget);
-                        $('#txtprodtgtmth').val(val.targetmonth);
+                        $('#ddlprodtgtmth option:selected').val(val.targetmonth);
                         $('#txtprodtgtyr').val(val.targetyear);
 
                         $('#btnSubmit').attr('value', 'Update');
@@ -64,6 +64,14 @@
 
             $("#ddlProductName").select2({
                 placeholder: 'Select Product...',
+                allowClear: true
+            }).on('select2-open', function () {
+                // Adding Custom Scrollbar
+                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            });
+
+            $("#ddlprodtgtmth").select2({
+                placeholder: 'Select Month...',
                 allowClear: true
             }).on('select2-open', function () {
                 // Adding Custom Scrollbar
@@ -109,7 +117,8 @@
                 var prodname = $('#ddlProductName option:selected').val();
                 var prodamttgt = $('#txtprodamttgt').val();
                 var prodqtytgt = $('#txtprodqtytgt').val();
-                var prodtgtmth = $('#txtprodtgtmth').val();
+                //var prodtgtmth = $('#txtprodtgtmth').val();
+                var prodtgtmth = $('#ddlprodtgtmth option:selected').val();
                 var prodtgtyr = $('#txtprodtgtyr').val();
                 
                 $.ajax({
@@ -204,8 +213,25 @@
                                 <div class="form-group">
                                     
                                         <label class="control-label" for="prodtgtmth">Product Target Month</label>
-                                    <div class="form-group">
+                                    <%--<div class="form-group">
                                         <asp:TextBox runat="server" class="form-control" name="prodtgtmth" ID="txtprodtgtmth" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                    </div>--%>
+
+                                    <div class="form-group">
+                                        <asp:DropDownList ID="ddlprodtgtmth" runat="server" CssClass="form-control" ClientIDMode="Static">
+                                            <asp:ListItem Value="January" Text="January" Selected="True"></asp:ListItem>
+                                            <asp:ListItem Value="February" Text="February" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="March" Text="March" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="April" Text="April" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="May" Text="May" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="June" Text="June" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="July" Text="July" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="August" Text="August" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="September" Text="September" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="October" Text="October" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="November" Text="November" Enabled="true"></asp:ListItem>
+                                            <asp:ListItem Value="December" Text="December" Enabled="true"></asp:ListItem>
+                                        </asp:DropDownList>
                                     </div>
                                 </div>
 

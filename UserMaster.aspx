@@ -15,6 +15,14 @@
             }
         }
 
+        function ValidateModal() {
+            if ($('#txtusername').val().length <= 0) {
+                $('#errorMessage').text("Please Enter User Name");
+                return false;
+            }
+            else return true;
+        }
+
         function EditUser(UserID) {
             $.ajax({
                 type: "POST",
@@ -90,7 +98,7 @@
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $("#btnAddUser").click(function (e) {
-                //debugger;
+                debugger;
                 $('.modal').on('show.bs.modal', function (event) {
                     $('.modal').insertAfter($('body'));
                 });
@@ -103,30 +111,34 @@
     <script>
         $(document).ready(function () {
             $("#btnSubmit").click(function () {
-
-                var userid = $('#txtuserid').val();
-                var username = $('#txtusername').val();
-                var password = $('#txtpassword').val();
-                var repassword = $('#txtrepassword').val();
-                var firstname = $('#txtfirstname').val();
-                var lastname = $('#txtlastname').val();
-                var doj = $('#txtdoj').val();
-                var contactno = $('#txtcontactno').val();
-                var emailid = $('#txtemailid').val();
-                var role = $('#ddlrole option:selected').val();
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    url: "UserMaster.aspx/SaveUserData",
-                    data: "{'userid': '" + userid + "', 'username': '" + username + "', 'password': '" + password + "', 'repassword': '" + repassword + "', 'firstname': '" + firstname + "', 'lastname': '" + lastname + "', 'doj': '" + doj + "', 'contactno': '" + contactno + "', 'emailid': '" + emailid + "' , 'role': '" + role + "'}",
-                    dataType: "json",
-                    success: function (data) {
-                        $('.modal').modal('hide');
-                    },
-                    error: function (response) {
-                        alert(response);
-                    }
-                });
+                if (ValidateModal()) {
+                    var userid = $('#txtuserid').val();
+                    var username = $('#txtusername').val();
+                    var password = $('#txtpassword').val();
+                    var repassword = $('#txtrepassword').val();
+                    var firstname = $('#txtfirstname').val();
+                    var lastname = $('#txtlastname').val();
+                    var doj = $('#txtdoj').val();
+                    var contactno = $('#txtcontactno').val();
+                    var emailid = $('#txtemailid').val();
+                    var role = $('#ddlrole option:selected').val();
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "UserMaster.aspx/SaveUserData",
+                        data: "{'userid': '" + userid + "', 'username': '" + username + "', 'password': '" + password + "', 'repassword': '" + repassword + "', 'firstname': '" + firstname + "', 'lastname': '" + lastname + "', 'doj': '" + doj + "', 'contactno': '" + contactno + "', 'emailid': '" + emailid + "' , 'role': '" + role + "'}",
+                        dataType: "json",
+                        success: function (data) {
+                            $('.modal').modal('hide');
+                        },
+                        error: function (response) {
+                            alert(response);
+                        }
+                    });
+                }
+                else {
+                    return false;
+                }
             });
         });
     </script>
@@ -164,7 +176,10 @@
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
                     </h4>
                 </div>
+                <label id="errorMessage" ></label>
                 <div class="modal-body">
+                    <%--<asp:Label ID="errorMessage" runat="server" ClientIDMode="Static"></asp:Label>--%>
+                    
                             <div class="col-md-6">
 
                                 <div class="form-group">
@@ -194,7 +209,8 @@
                                     
                                         <label class="control-label" for="doj">Date of Joining</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="doj" ID="txtdoj" ClientIDMode="Static" autocomplete="off" TextMode="Date"></asp:TextBox>
+                                        <%--<asp:TextBox runat="server" class="form-control" name="doj" ID="txtdoj" ClientIDMode="Static" autocomplete="off" TextMode="Date"></asp:TextBox>--%>
+                                        <asp:TextBox runat="server" CssClass="form-control datepicker" ID="txtdoj" ClientIDMode="Static" data-start-date="-2d" data-end-date="+1w"></asp:TextBox>									
                                     </div>
                                 </div>
 
@@ -266,7 +282,9 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-md-2 pull-right">
-        <button type="button" class="btn btn-info pull-right" id="btnAddUser">Add User</button>
+        <%--<button type="button" class="btn btn-info pull-right" id="btnAddUser">Add User</button>--%>
+                        <button type="button" class="btn btn-info pull-right" id="btnAddUser">Add User</button>
+                        <%--<asp:Button ID ="btnAddUser" CssClass="btn btn-info pull-right" ClientIDMode="Static" Text="Add User" runat="server" />--%>
       </div>
                     <div class="row">
                         <div class="col-md-12">

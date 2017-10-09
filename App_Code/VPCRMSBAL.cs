@@ -50,6 +50,12 @@ public class VPCRMSBAL
         return dt;
     }
 
+    public DataTable GetMaxAllowedUsers(Decimal ClientAlias)
+    {
+        DataTable dt = VPCRMSDAL.GetMaxAllowedUsers(ClientAlias);
+        return dt;
+    }
+
     public DataTable CheckClientActiveOrNot(Decimal ClientAlias)
     {
         DataTable dt = VPCRMSDAL.CheckClientActiveOrNot(ClientAlias);
@@ -104,6 +110,12 @@ public class VPCRMSBAL
         VPCRMSDAL.SaveUserDetails(alias, userid, username, password, firstname, lastname, doj, contactno, emailid, role);
     }
 
+    // To save quotation details. 
+    public static void SaveQuotationData(Decimal clientcustomerid, Decimal clientquoteid, Decimal clientcustomeruser, String clientquotedproduct, Decimal clientquotedprodqty, Decimal clientquotedprice, Decimal clientquotedamt)
+    {
+        VPCRMSDAL.SaveQuotationData(clientcustomerid, clientquoteid, clientcustomeruser, clientquotedproduct, clientquotedprodqty, clientquotedprice, clientquotedamt);
+    }
+
     // To get existing user details. 
     public static DataTable GetUserDetails(Decimal userid)
     {
@@ -151,6 +163,18 @@ public class VPCRMSBAL
         companyadd1,  companyadd2,  addresscity,  addressdist,  addressstate,  addresscountry, pincode, remarks, assignedto,
         companytype,  lastname, email, alternatecontact, status, source, saddress1,  saddress2,  scity,  sdistrict,
         sstate, scountry, spincode, Mode, clientcustomerid);
+    }
+
+    public static DataTable GetStatusCount(Decimal userid, String user_role)
+    {
+        DataTable dt = VPCRMSDAL.GetStatusCount(userid, user_role);
+        return dt;
+    }
+
+    public static DataTable GetReportData()
+    {
+        DataTable dt = VPCRMSDAL.GetReportData();
+        return dt;
     }
 
 

@@ -1,13 +1,176 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="Dashboard.aspx.cs" Inherits="Dashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <div class="row error_pagewrap">
-        <div class="col-md-12 text-center error_content" style="margin: 10% auto;">
-            <div class="panel panel-default ">
-                <img src="assets/images/under_construction.png"><h1>Under Construction</h1>
-                <h4>Sorry, but the page you are trying to view dose not exist</h4>
-                <button class="btn btn-info "><i class="fa fa-mail-reply"></i>Return to last page</button>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "Dashboard.aspx/GetMonthlyData",
+            dataType: "json",
+            success: function (data) {
+                var JSONDataR = $.parseJSON(data.d);
+                var dataSource = JSONDataR;
+                $("#bar-1").dxChart({
+                    dataSource: dataSource,
+                    commonSeriesSettings: {
+                        argumentField: "Type"
+                    },
+                    series: [
+                        { valueField: "Count", name: "Status", color: "#40bbea" }
+                    ],
+                    argumentAxis: {
+                        grid: {
+                            visible: true
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    },
+                    title: "",
+                    legend: {
+                        verticalAlignment: "bottom",
+                        horizontalAlignment: "center"
+                    },
+                    commonPaneSettings: {
+                        border: {
+                            visible: true,
+                            right: false
+                        }
+                    }
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error");
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "Dashboard.aspx/GetHalfYearlyData",
+            dataType: "json",
+            success: function (data) {
+                var JSONDataR = $.parseJSON(data.d);
+                var dataSource = JSONDataR;
+                $("#bar-2").dxChart({
+                    dataSource: dataSource,
+                    commonSeriesSettings: {
+                        argumentField: "Type"
+                    },
+                    series: [
+                        { valueField: "Count", name: "Status", color: "#40bbea" }
+                    ],
+                    argumentAxis: {
+                        grid: {
+                            visible: true
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    },
+                    title: "",
+                    legend: {
+                        verticalAlignment: "bottom",
+                        horizontalAlignment: "center"
+                    },
+                    commonPaneSettings: {
+                        border: {
+                            visible: true,
+                            right: false
+                        }
+                    }
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error");
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "Dashboard.aspx/GetYearlyData",
+            dataType: "json",
+            success: function (data) {
+                var JSONDataR = $.parseJSON(data.d);
+                var dataSource = JSONDataR;
+                $("#bar-3").dxChart({
+                    dataSource: dataSource,
+                    commonSeriesSettings: {
+                        argumentField: "Type"
+                    },
+                    series: [
+                        { valueField: "Count", name: "Status", color: "#40bbea" }
+                    ],
+                    argumentAxis: {
+                        grid: {
+                            visible: true
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    },
+                    title: "",
+                    legend: {
+                        verticalAlignment: "bottom",
+                        horizontalAlignment: "center"
+                    },
+                    commonPaneSettings: {
+                        border: {
+                            visible: true,
+                            right: false
+                        }
+                    }
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error");
+            }
+        });
+    });
+</script>
+    <div class="page-title">
+      <div class="title-env col-md-8">
+       <h1 class="title">User DashBoard</h1>
+
+        <h1 class="title">&nbsp;</h1>
+      </div>
+      </div>
+    
+     <div class="col-md-12">
+          <div class="panel  panel-default blue-box">
+           <div class="panel-heading">
+            <h3 class="panel-title">Monthly</h3>
             </div>
-        </div>
-    </div>
+          <div class="panel-body">
+            <div id="bar-1" style="height: 260px; width: 100%;"></div>
+          </div>
+          </div>
+       </div>   
+    <div class="col-md-12">
+          <div class="panel  panel-default blue-box">
+           <div class="panel-heading">
+            <h3 class="panel-title">Half Yearly</h3>
+            </div>
+          <div class="panel-body">
+            <div id="bar-2" style="height: 260px; width: 100%;"></div>
+          </div>
+          </div>
+       </div>   
+    <div class="col-md-12">
+          <div class="panel  panel-default blue-box">
+           <div class="panel-heading">
+            <h3 class="panel-title">Yearly</h3>
+            </div>
+          <div class="panel-body">
+            <div id="bar-3" style="height: 260px; width: 100%;"></div>
+          </div>
+          </div>
+       </div>   
+    
+
+<!-- Imported scripts on this page --> 
+<script src="assets/js/devexpress-web-14.1/js/globalize.min.js"></script> 
+<script src="assets/js/devexpress-web-14.1/js/dx.chartjs.js"></script> 
 </asp:Content>

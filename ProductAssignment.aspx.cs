@@ -14,15 +14,23 @@ public partial class ProductAssignment : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["UserID"] == null)
+        {
+            Response.Redirect("Login.aspx");
+        }
+
+        //Get Client alias from UserID
+        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Substring(0, 4));
+
         DataTable dtLogin = new DataTable();
-        // change param of below method pass customer alias
+        // Since this is admin specific page, not client alias is required to pass to below method. 
         dtLogin = VPCRMSBAL.GetProductAssignment();
         grdProductAssignment.DataSource = dtLogin;
         grdProductAssignment.DataBind();
 
         // Populate Assigned to dropdown on modal. 
         DataTable dtUserTable = new DataTable();
-        dtUserTable = VPCRMSBAL.GetUserList(1);
+        dtUserTable = VPCRMSBAL.GetUserList(client_alias);
         if (dtUserTable.Rows.Count > 0)
         {
             ddlusername.DataSource = dtUserTable;
@@ -33,7 +41,7 @@ public partial class ProductAssignment : System.Web.UI.Page
 
         // Populate Product Name to dropdown on modal. 
         DataTable dtProdTable = new DataTable();
-        dtProdTable = VPCRMSBAL.GetProductList(1);
+        dtProdTable = VPCRMSBAL.GetProductList(client_alias);
         if (dtProdTable.Rows.Count > 0)
         {
             ddlProductName.DataSource = dtProdTable;
@@ -45,7 +53,7 @@ public partial class ProductAssignment : System.Web.UI.Page
 
         DataTable dtTable = new DataTable();
         // change alias param of below step .. hardcoded for testing as of now. 
-        dtTable = VPCRMSBAL.GetCompanyName(1);
+        dtTable = VPCRMSBAL.GetCompanyName(client_alias);
         if (dtTable.Rows.Count > 0)
         {
             lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();

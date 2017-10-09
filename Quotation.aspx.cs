@@ -12,14 +12,18 @@ public partial class Quotation : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["UserID"] == null)
+        {
+            Response.Redirect("Login.aspx");
+        }
+
         DataTable dtLogin = new DataTable();
         dtLogin = VPCRMSBAL.GetQuotationDetails(Convert.ToDecimal(Session["UserID"]));
         grdQuotation.DataSource = dtLogin;
         grdQuotation.DataBind();
 
         DataTable dtTable = new DataTable();
-        // change alias param of below step .. hardcoded for testing as of now. 
-        dtTable = VPCRMSBAL.GetCompanyName(1);
+        dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
         if (dtTable.Rows.Count > 0)
         {
             lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
