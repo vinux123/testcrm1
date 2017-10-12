@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.Services;
-using System.Web.UI.WebControls;
 using System.Web.Script.Serialization;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class DailyCallReport : System.Web.UI.Page
 {
@@ -19,6 +19,8 @@ public partial class DailyCallReport : System.Web.UI.Page
             Response.Redirect("Login.aspx");
         }
 
+        decimal client_alias = Convert.ToDecimal(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
+
         DataTable dtLogin = new DataTable();
         dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]));
         grdDCR.DataSource = dtLogin;
@@ -26,13 +28,13 @@ public partial class DailyCallReport : System.Web.UI.Page
 
         // Get Company Name
         DataTable dtTable = new DataTable();
-        dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0,4)));
+        dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
         if (dtTable.Rows.Count > 0)
         {
             lblModalCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
             lblQuotModalCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
             lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
-            
+
         }
         else
         {
@@ -41,14 +43,38 @@ public partial class DailyCallReport : System.Web.UI.Page
 
         // Populate Product Name to dropdown on modal. 
         DataTable dtProdTable = new DataTable();
-        dtProdTable = VPCRMSBAL.GetProductList(1);
+        dtProdTable = VPCRMSBAL.GetProductList(client_alias);
         if (dtProdTable.Rows.Count > 0)
         {
             ddlProductName.DataSource = dtProdTable;
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataBind();
+
+            // Populate Assigned to dropdown on modal. 
+            DataTable dtUserTable = new DataTable();
+            dtUserTable = VPCRMSBAL.GetUserList(client_alias);
+            if (dtUserTable.Rows.Count > 0)
+            {
+                //ddlassignedto.DataSource = dtUserTable;
+                //ddlassignedto.DataTextField = "clientuserfirstname";
+                //ddlassignedto.DataValueField = "clientuserid";
+                //ddlassignedto.DataBind();
+                //ddlassignedto.DataSource = dtUserTable;
+                //ddlassignedto.DataTextField = "clientuserfirstname";
+                //ddlassignedto.DataValueField = "clientuserid";
+                //ddlassignedto.DataBind();
+            }
         }
+    }
+
+    protected void calculate_gst(object sender, EventArgs e)
+    {
+        //decimal quotedamt = Convert.ToDecimal(Convert.ToString(txtquoteamt.Text));
+        //decimal totalamt = ( quotedamt * 18  / 100 ) + quotedamt;
+        //txttotalamt.Text = Convert.ToString(totalamt);
+        //txttotalamt.Text = "testing";
+        //txttotalamount.Text = "testing";
     }
 
     [WebMethod]

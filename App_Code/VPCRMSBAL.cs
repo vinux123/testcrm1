@@ -38,6 +38,8 @@ public class VPCRMSBAL
         return dt;
     }
 
+    
+
     public DataTable GetUserPassword(String UserName)
     {
         DataTable dt = VPCRMSDAL.GetUserPassword(UserName);

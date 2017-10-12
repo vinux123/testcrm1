@@ -43,7 +43,8 @@
                         $('#txtdoj').val(val.clientuserdoj);
                         $('#txtcontactno').val(val.clientusercontactno);
                         $('#txtemailid').val(val.clientuseremailid);
-                        $('#ddlrole option:selected').val(val.clientuserrole);
+                        //$('#ddlrole option:selected').val(val.clientuserrole);
+                        $("#<%=ddlrole.ClientID %>").val(val.clientuserrole);
                         $('#btnSubmit').attr('value', 'Update');
                         $('.modal').on('show.bs.modal', function (event) {
                             $('.modal').insertAfter($('body'));

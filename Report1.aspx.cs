@@ -7,6 +7,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
@@ -15,6 +16,8 @@ using System.Web.UI.WebControls;
 
 public partial class Report1 : System.Web.UI.Page
 {
+    private VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
+
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -22,79 +25,129 @@ public partial class Report1 : System.Web.UI.Page
 
     protected void btnGenerate_Click(object sender, EventArgs e)
     {
-        string FilePath = Server.MapPath("OfferLetter.pdf");
-        WebClient User = new WebClient();
+        string path = Server.MapPath("PDF-Files");
+        string filename = path + "/Report1.pdf";
 
-        Byte[] FileBuffer = User.DownloadData(FilePath);
-        if (FileBuffer != null)
-        {
-            //Response.ContentType = "application/pdf";
-            //Response.AddHeader("content-length", FileBuffer.Length.ToString());
-            //Response.BinaryWrite(FileBuffer);
-            //Response.TransmitFile(FilePath);
+        DataTable dt = new DataTable();
+        dt = VPCRMSBAL.GetReportData();
+        
+        ExportToPdf(dt);
 
-            //Response.Redirect(FilePath);
-            Response.Write("<script>");
-            Response.Write("window.open('" + FilePath + "','_blank', ' fullscreen=yes')");
-            Response.Write("</script>");
-
-        }
+        displaypdf.Visible = true;
+        displaypdf.FilePath = @"~/PDF-Files/Report1.pdf";
 
     }
 
-    //[WebMethod]
-    //public static string GetReportData()
-    //{
-    //    System.Data.DataTable dt = VPCRMSBAL.GetReportData();
-    //    String json = DataTableToJSONWithJavaScriptSerializer(dt);
-    //    return json;
-    //}
+    protected void btnSend_Click(object sender, EventArgs e)
+    {
+        string path = Server.MapPath("PDF-Files");
+        string filename = path + "/Report1.pdf";
 
-    //public static string DataTableToJSONWithJavaScriptSerializer(System.Data.DataTable table)
-    //{
-    //    JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
-    //    List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
-    //    Dictionary<string, object> childRow;
-    //    foreach (DataRow row in table.Rows)
-    //    {
-    //        childRow = new Dictionary<string, object>();
-    //        foreach (DataColumn col in table.Columns)
-    //        {
-    //            childRow.Add(col.ColumnName, row[col]);
-    //        }
-    //        parentRow.Add(childRow);
-    //    }
-    //    return jsSerializer.Serialize(parentRow);
-    //}
-    ////protected void btnGenerate_Click(object sender, EventArgs e)
-    ////{
+        DataTable dt = new DataTable();
+        dt = VPCRMSBAL.GetReportData();
 
-    ////    String a = CreateCustomReport();
+        ExportToPdf(dt);
 
-    ////}
+        SendMail();
+        
 
-    //public string CreateCustomReport()
-    //{
-    //    var doc = new Document();
-    //    MemoryStream m = new MemoryStream();
-    //    try
-    //    {
-    //        PdfWriter.GetInstance(doc, m).CloseStream = false;
-    //        DataTable dt = VPCRMSBAL.GetReportData();
-    //        doc.Open();
-    //        //PdfPTable table = new PdfPTable(4);
-    //        //PdfPCell cell = new PdfPCell(new Phrase("Title"));
-    //        Phrase P1 = new Phrase("Testing");
-    //        doc.Add(P1);
-    //        doc.Close();
+    }
 
-    //    }
-    //    catch
-    //    {
+    public void ExportToPdf(DataTable dataTable)
+    {
+        string path = Server.MapPath("PDF-Files");
+        string filename = path + "/Report1.pdf";
 
-    //    }
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
+        document.Open();
+        
+        PdfPTable table = new PdfPTable(dataTable.Columns.Count);
+        table.WidthPercentage = 100;
 
-    //    return System.Convert.ToBase64String(m.ToArray());
-    //}
-    
+        //Set columns names in the pdf file
+        for (int k = 0; k < dataTable.Columns.Count; k++)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
+
+            cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+            cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
+
+            table.AddCell(cell);
+        }
+
+        //Add values of DataTable in pdf file
+        for (int i = 0; i < dataTable.Rows.Count; i++)
+        {
+            for (int j = 0; j < dataTable.Columns.Count; j++)
+            {
+                PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+
+                //Align the cell in the center
+                cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+
+                table.AddCell(cell);
+            }
+        }
+
+        document.Add(table);
+        document.Close();
+
+    }
+
+    public void SendMail()
+    {
+        string path = Server.MapPath("PDF-Files");
+        string filename = path + "/Report1.pdf";
+
+        
+        DataTable dtTable = new DataTable();
+        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0,4));
+        
+        dtTable = VPCRMSBAL.GetCompanyName(client_alias);
+        if (dtTable.Rows.Count > 0)
+        {
+            string host = dtTable.Rows[0]["clientsmtphost"].ToString().Trim();
+            string port = dtTable.Rows[0]["clientsmtpport"].ToString().Trim();
+            string sslenabled = dtTable.Rows[0]["clientsmtpenablessl"].ToString().Trim();
+            string smtpuname = dtTable.Rows[0]["clientsmtpusername"].ToString().Trim();
+            string smtppwd = dtTable.Rows[0]["clientsmtppassword"].ToString().Trim();
+
+            System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
+            mm.To.Add(new System.Net.Mail.MailAddress("kulkarnivd1989@gmail.com", "Vinayak Kulkarni"));
+            mm.From = new System.Net.Mail.MailAddress(smtpuname);
+            mm.Sender = new System.Net.Mail.MailAddress(smtpuname, "Vinayak Kulkarni");
+            mm.Subject = "This is Test Email";
+            mm.Body = "<h3>This is Testing SMTP Mail Send By Me</h3>";
+            mm.IsBodyHtml = true;
+            mm.Priority = System.Net.Mail.MailPriority.High; // Set Priority to sending mail
+            mm.Attachments.Add(new Attachment(filename));
+
+            SmtpClient smtCliend = new SmtpClient();
+            smtCliend.Host = host;
+            smtCliend.Port = Convert.ToInt32(port);
+            smtCliend.UseDefaultCredentials = false;
+            smtCliend.EnableSsl = true;
+            smtCliend.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                    
+            smtCliend.Credentials = new NetworkCredential(smtpuname, smtppwd);
+
+            try
+            {
+                smtCliend.Send(mm);
+            }
+            catch (System.Net.Mail.SmtpException ex)
+            {
+                throw ex;
+            }
+            catch (Exception exe)
+            {
+                throw exe;
+            }
+        }
+
+    }
 }
+

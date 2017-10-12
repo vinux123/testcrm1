@@ -26,11 +26,12 @@
                     var JsonData = data.d;
                     var JSONDataR = $.parseJSON(JsonData);
                     $.each(JSONDataR, function (index, val) {
-                        $('#ddlusername option:selected').val(val.customeruser);
-                        $('#ddlProductName option:selected').val(val.customerproduct);
+                        
+                        $("#<%=ddlusername.ClientID %>").val(val.customeruser);
+                        $("#<%=ddlProductName.ClientID %>").val(val.customerproduct);
                         $('#txtprodamttgt').val(val.useramounttarget);
                         $('#txtprodqtytgt').val(val.userprodtarget);
-                        $('#ddlprodtgtmth option:selected').val(val.targetmonth);
+                        $("#<%=ddlprodtgtmth.ClientID %>").val(val.targetmonth);
                         $('#txtprodtgtyr').val(val.targetyear);
 
                         $('#btnSubmit').attr('value', 'Update');

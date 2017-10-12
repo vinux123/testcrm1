@@ -130,13 +130,20 @@
         });
     });
 </script>
-    <div class="page-title">
-      <div class="title-env col-md-8">
-       <h1 class="title">User DashBoard</h1>
-
-        <h1 class="title">&nbsp;</h1>
-      </div>
-      </div>
+   <div class="page-title">
+        <div class=" col-md-10 title-env">
+            <h2 class="title">Dashboard</h2>
+            <ol class="breadcrumb bc-1">
+                <li>
+                    <a href="/Dashboard.aspx">Dashboard</a>
+                </li>
+                
+            </ol>
+            <h2 class="epg-tit">
+                <asp:Label ID="lblCompanyName" runat="server"></asp:Label>
+            </h2>
+        </div>
+    </div>
     
      <div class="col-md-12">
           <div class="panel  panel-default blue-box">
@@ -148,7 +155,7 @@
           </div>
           </div>
        </div>   
-    <div class="col-md-12">
+    <%--<div class="col-md-12">
           <div class="panel  panel-default blue-box">
            <div class="panel-heading">
             <h3 class="panel-title">Half Yearly</h3>
@@ -157,7 +164,7 @@
             <div id="bar-2" style="height: 260px; width: 100%;"></div>
           </div>
           </div>
-       </div>   
+       </div>   --%>
     <div class="col-md-12">
           <div class="panel  panel-default blue-box">
            <div class="panel-heading">

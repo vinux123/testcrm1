@@ -21,6 +21,19 @@ public partial class Dashboard : System.Web.UI.Page
         }
 
         dtCount = VPCRMSBAL.GetStatusCount(Convert.ToDecimal(Session["UserID"].ToString()), Convert.ToString(Session["UserRole"]));
+
+        // Get Company Name
+        DataTable dtTable = new DataTable();
+        dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
+        if (dtTable.Rows.Count > 0)
+        {
+            lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
+
+        }
+        else
+        {
+            lblCompanyName.Text = "Default Name";
+        }
     }
 
     [WebMethod]

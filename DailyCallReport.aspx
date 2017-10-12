@@ -29,7 +29,7 @@
                         alert(new Date(val.clientdate));
                         $('#txtdate').val(val.clientdate);
                         $('#txtcompany').val(val.clientcustomername);
-                        $('#txtfirstname').val(val.custfollowupperson);
+                        $('#txtfirstname').val(val.custfollowuppersonfn);
                         $('#txtoccupation').val(val.followuppersondesgn);
                         $('#txtprimarycontact').val(val.clientcustomerpcontact);
                         $('#txtwebsite').val(val.companywebsite);
@@ -43,13 +43,17 @@
                         $('#txtaddresscountry').val(val.clientcustomercountry);
                         $('#txtpincode').val(val.clientcustomerpincode);
                         $('#txtremarks').val(val.clientremarks);
-                        $('#txtassignedto').val(val.customeruser);
-                        $('#ddlcompanytype option:selected').val(val.clientcompanytype);
-                        $('#txtlastname').val(val.custfollowupperson);
+                        //$('#txtassignedto').val(val.customeruser);
+
+                        $("#<%=ddlassignedto.ClientID %>").val(val.customeruser);
+                        $("#<%=ddlcompanytype.ClientID %>").val(val.clientcompanytype);
+                        $('#txtlastname').val(val.custfollowuppersonln);
                         $('#txtemail').val(val.clientcustomeremailid);
                         $('#txtalternatecontact').val(val.clientcustomeracontact);
-                        $('#ddlstatus option:selected').val(val.clientcustomerstatus);
-                        $('#ddlsource option:selected').val(val.clientsource);
+                        
+                        $("#<%=ddlstatus.ClientID %>").val(val.clientcustomerstatus);
+                        
+                        $("#<%=ddlsource.ClientID %>").val(val.clientsource);
                         $('#txtsaddress1').val(val.shippingadd1);
                         $('#txtsaddress2').val(val.shippingadd2);
                         $('#txtscity').val(val.shippingcity);
@@ -116,6 +120,14 @@
 
             $("#ddlProductName").select2({
                 placeholder: 'Select Product...',
+                allowClear: true
+            }).on('select2-open', function () {
+                // Adding Custom Scrollbar
+                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            });
+
+            $("#ddlassignedto").select2({
+                placeholder: 'Select Assignedto...',
                 allowClear: true
             }).on('select2-open', function () {
                 // Adding Custom Scrollbar
@@ -197,13 +209,9 @@
                 }
                 //var pincode = $('#txtpincode').val();
                 var remarks = $('#txtremarks').val();
-                if ($('#txtassignedto').val() == ' ') {
-                    var assignedto = '0';
-                }
-                else {
-                    var assignedto = $('#txtassignedto').val();
-                }
-                //var assignedto = $('#txtassignedto').val();
+                
+                var assignedto = $('#ddlassignedto option:selected').val();
+                
                 var companytype = $('#ddlcompanytype option:selected').val();
                 var lastname = $('#txtlastname').val();
                 var email = $('#txtemail').val();
@@ -322,8 +330,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <%--<asp:FormView ID="frmModalPopup" runat="server" DefaultMode="Insert">
-                        <InsertItemTemplate>--%>
+                    
                             <div class="col-md-6">
 
                                 <div class="form-group">
@@ -375,7 +382,7 @@
                                 <div class="form-group">
                                     <label class=" control-label" for="erevenue">Expected Revenue</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="erevenue" ID="txterevenue" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                        <asp:TextBox runat="server" class="form-control" name="erevenue" ID="txterevenue" ClientIDMode="Static" autocomplete="off" Text="0"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -432,7 +439,7 @@
                                 <div class="form-group">
                                     <label class=" control-label" for="pincode">Pincode</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="pincode" ID="txtpincode" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                        <asp:TextBox runat="server" class="form-control" name="pincode" ID="txtpincode" ClientIDMode="Static" autocomplete="off" MaxLength="6" Text="0"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -441,9 +448,12 @@
                             <div class="col-md-6">
 
                                 <div class="form-group">
-                                    <label class=" control-label" for="assignedto">Assigned To</label>
+                                    <label class=" control-label" for="field-1">Assigned To</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="assignedto" ID="txtassignedto" ClientIDMode="Static"></asp:TextBox>
+                                        <%--<asp:TextBox runat="server" class="form-control" name="assignedto" ID="txtassignedto" ClientIDMode="Static"></asp:TextBox>--%>
+                                        <%--<asp:DropDownList ID="ddlassignedto" runat="server" CssClass="form-control" ClientIDMode="Static">
+                                    </asp:DropDownList>--%>
+                                        <asp:DropDownList ID="ddlassignedto" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
                                     </div>
                                     
                                 </div>
@@ -479,7 +489,7 @@
                                     
                                         <label class="control-label" for="alternatecontact">Alternate Contact No</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="alternatecontact" ID="txtalternatecontact" ClientIDMode="Static" autocomplete="off" TextMode="Phone" MaxLength="10"></asp:TextBox>
+                                        <asp:TextBox runat="server" class="form-control" name="alternatecontact" ID="txtalternatecontact" ClientIDMode="Static" autocomplete="off" TextMode="Phone" MaxLength="10" Text="0"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -566,29 +576,14 @@
                                 <div class="form-group">
                                     <label class=" control-label" for="spincode">Pincode</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="spincode" ID="txtspincode" ClientIDMode="Static" autocomplete="on" MaxLength="6"></asp:TextBox>
+                                        <asp:TextBox runat="server" class="form-control" name="spincode" ID="txtspincode" ClientIDMode="Static" autocomplete="on" MaxLength="6" Text="0"></asp:TextBox>
                                     </div>
                                 </div>
-                                <%--<div class="form-group">
-                                    
-                                        <%--<label class="control-label" for="role">Role</label>
-                                    <div class="form-group">
-                                        <asp:DropDownList ID="ddlrole" runat="server" CssClass="form-control" ClientIDMode="Static">
-                                            <asp:ListItem Value="Associate" Text="Associate" Selected="True"></asp:ListItem>
-                                            <asp:ListItem Value="Manager" Text="Manager" Enabled="false"></asp:ListItem>
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>--%>
-
                                 
                                 </div>
                                 
                                 
-                                
-                                <%--</div>--%>
-                        <%--</InsertItemTemplate>
-                    </asp:FormView>--%>
-                </div>
+                          </div>
                                 <div class="form-group">
                                     <label class=" control-label" for="remarks">Remarks</label>
                                     <div class="form-group">
@@ -622,9 +617,9 @@
                           <div class="col-md-6">
 
                                 <div class="form-group">
-                                    <label class=" control-label" for="customeruser">Assigned To</label>
+                                    <label class=" control-label" for="customeruser1">Assigned To</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="customeruser" ID="txtcustomeruser" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
+                                        <asp:TextBox runat="server" class="form-control" name="customeruser1" ID="txtcustomeruser" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -659,8 +654,18 @@
                                     
                                         <label class="control-label" for="quoteamt">Quoted Amount</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="quoteamt" ID="txtquoteamt" autocomplete="off" ClientIDMode="Static"></asp:TextBox>
+                                        <%--<asp:TextBox runat="server" class="form-control" name="quoteamt" ID="txtquoteamt" autocomplete="off" ClientIDMode="Static"></asp:TextBox>--%>
+                                        <asp:TextBox runat="server" class="form-control" name="quoteamt" ID="txtquoteamt" autocomplete="off" ClientIDMode="Static" OnTextChanged="calculate_gst"></asp:TextBox>
                                     </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    
+                                        <label class="control-label" for="totalamt">Total Amount (Inclusive of GST)</label>
+                                    
+                                        <%--<asp:TextBox runat="server" class="form-control" name="totalamt" ID="txttotalamt" autocomplete="off" ClientIDMode="Static"></asp:TextBox>--%>
+                                        <asp:TextBox runat="server" class="form-control" name="totalamount" ID="txttotalamount" autocomplete="off" ClientIDMode="Static"></asp:TextBox>
+                                    
                                 </div>
 
                 </div>

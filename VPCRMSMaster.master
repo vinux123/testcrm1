@@ -40,7 +40,7 @@
                 <header class="logo-env"> 
         
         <!-- logo -->
-        <div class="logo"> <a href="#" class="logo-expanded"> <img src="assets/images/crmlogo.jpeg" alt="" /> </a> <a href="#" class="logo-collapsed"> <img src="assets/images/logo-collapsed@2x.png" width="40" alt="" /> </a> </div>
+        <div class="logo"> <a href="#" class="logo-expanded"> <img src="assets/images/CRMlogo.jpeg" alt="" /> </a> <a href="#" class="logo-collapsed"> <img src="assets/images/CRMLogosmall.jpeg" width="40" alt="" /> </a> </div>
         <div class="logo">  </div>
         
         <!-- This will toggle the mobile menu and will be visible only on mobile devices -->

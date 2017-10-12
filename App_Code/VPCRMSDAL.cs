@@ -104,6 +104,8 @@ public class VPCRMSDAL
         return dt;
     }
 
+    
+
     // Fetch user password for Login. 
     public DataTable GetUserPassword(String UserName)
     {

@@ -1,37 +1,9 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="Report1.aspx.cs" Inherits="Report1" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <%--<script type="text/javascript">
-    jQuery(document).ready(function ($) {
-        $("#btnGenerate").click(function (e) {
-            //debugger;
-            $.ajax({
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                url: "Report1.aspx/GetReportData",
-                dataType: "json",
-                success: function (data) {
-                    data = "Testing";
-                    var openpdf = $('<a id="openpdf" download="Report.pdf" href="data:apploication/pdf;base64,' + data + '" target="_blank">');
-                    $('body').append(openpdf);
-                    document.getElementById("openpdf").click();
-                    $("#openpdf").remove();
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
-                }
-            });
-        });
+<%@ Register Assembly="OnlinePdfViewer" Namespace="OnlinePdfViewer" TagPrefix="PdfViewer" %>
 
-        $('#openpdf').click(function () {
-            var Nwin = window.open($(this).prop('href'), '', 'height=800,width=800');
-            if (window.focus) {
-                Nwin.focus();
-            }
-            return false;
-        });
-    });
-</script>--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+   
     <div class="page-title">
         <div class=" col-md-10 title-env">
             <h1 class="title">Report</h1>
@@ -58,9 +30,13 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-md-2 pull-right">
-                        <%--<button type="button" class="btn btn-info pull-right" id="btnGenerate" runat="server">Generate</button>--%>
                         <asp:Button ID="btnGenerate" class="btn btn-info pull-right" Text="Generate" runat="server" OnClick="btnGenerate_Click" />
+                        <asp:Button ID="btnSend" class="btn btn-info pull-right" Text="Send" runat="server" OnClick="btnSend_Click" />
                     </div>
+                </div>
+
+                <div class="panel-body">
+                    <PdfViewer:DisplayPdf ID="displaypdf" runat="server" BorderStyle="Inset" BorderWidth="2px" Style="height: 500px;" Width="800px" Visible="false" ></PdfViewer:DisplayPdf>
                 </div>
             </div>
         </div>

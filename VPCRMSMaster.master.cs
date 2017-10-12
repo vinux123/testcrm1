@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class VPCRMSMaster : System.Web.UI.MasterPage
 {
+    private VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["UserID"] == null)

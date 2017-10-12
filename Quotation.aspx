@@ -23,14 +23,12 @@
                 ]
             });
         });
-					</script>
+	</script>
     <div class="page-title">
         <div class=" col-md-10 title-env">
             <h1 class="title">Quotation</h1>
             <ol class="breadcrumb bc-1">
                 <li>
-
-                    <%--<a href="ui-panels.html">Admin </a>--%>
                     <a href="/Dashboard.aspx">Dashboard</a>
                 </li>
                 <li class="active">
