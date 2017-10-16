@@ -8,7 +8,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class DailyCallReport : System.Web.UI.Page
+public partial class testdcr : System.Web.UI.Page
 {
     private VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
 
@@ -22,7 +22,7 @@ public partial class DailyCallReport : System.Web.UI.Page
         decimal client_alias = Convert.ToDecimal(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
 
         DataTable dtLogin = new DataTable();
-        dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]));
+        dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]), Convert.ToString(Session["UserRole"].ToString().Trim()));
         grdDCR.DataSource = dtLogin;
         grdDCR.DataBind();
 
@@ -51,27 +51,34 @@ public partial class DailyCallReport : System.Web.UI.Page
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataBind();
 
-            // Populate Assigned to dropdown on modal. 
-            DataTable dtUserTable = new DataTable();
-            dtUserTable = VPCRMSBAL.GetUserList(client_alias);
-            if (dtUserTable.Rows.Count > 0)
-            {
-                //ddlassignedto.DataSource = dtUserTable;
-                //ddlassignedto.DataTextField = "clientuserfirstname";
-                //ddlassignedto.DataValueField = "clientuserid";
-                //ddlassignedto.DataBind();
-                //ddlassignedto.DataSource = dtUserTable;
-                //ddlassignedto.DataTextField = "clientuserfirstname";
-                //ddlassignedto.DataValueField = "clientuserid";
-                //ddlassignedto.DataBind();
-            }
+            
         }
+
+        // Populate Assigned to dropdown on modal. 
+        DataTable dtUserTable = new DataTable();
+        dtUserTable = VPCRMSBAL.GetUserList(client_alias);
+        if (dtUserTable.Rows.Count > 0)
+        {
+            ddlassignedto.DataSource = dtUserTable;
+            ddlassignedto.DataTextField = "clientuserfirstname";
+            ddlassignedto.DataValueField = "clientuserid";
+            ddlassignedto.DataBind();
+
+            ddlcustomeruser.DataSource = dtUserTable;
+            ddlcustomeruser.DataTextField = "clientuserfirstname";
+            ddlcustomeruser.DataValueField = "clientuserid";
+            ddlcustomeruser.DataBind();
+        }
+
+        
     }
 
     protected void calculate_gst(object sender, EventArgs e)
     {
-        //decimal quotedamt = Convert.ToDecimal(Convert.ToString(txtquoteamt.Text));
-        //decimal totalamt = ( quotedamt * 18  / 100 ) + quotedamt;
+
+        decimal quotedamt = Convert.ToDecimal(Convert.ToString(txtquoteamt.Text));
+        decimal totalamt = (quotedamt * 18 / 100) + quotedamt;
+        txttotalamount.Text = Convert.ToString(totalamt);
         //txttotalamt.Text = Convert.ToString(totalamt);
         //txttotalamt.Text = "testing";
         //txttotalamount.Text = "testing";
@@ -84,14 +91,14 @@ public partial class DailyCallReport : System.Web.UI.Page
         String sstate, String scountry, String spincode, String Mode, String clientcustomerid)
     {
         VPCRMSBAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, Convert.ToDecimal(erevenue), followupdate,
-        companyadd1,  companyadd2,  addresscity,  addressdist,  addressstate,  addresscountry, Convert.ToDecimal(pincode), remarks, Convert.ToDecimal(assignedto),
-        companytype,  lastname, email, Convert.ToDecimal(alternatecontact), status, source, saddress1,  saddress2,  scity,  sdistrict,
-        sstate,  scountry,  Convert.ToDecimal(spincode), Mode, Convert.ToDecimal(clientcustomerid));
-        
+        companyadd1, companyadd2, addresscity, addressdist, addressstate, addresscountry, Convert.ToDecimal(pincode), remarks, Convert.ToDecimal(assignedto),
+        companytype, lastname, email, Convert.ToDecimal(alternatecontact), status, source, saddress1, saddress2, scity, sdistrict,
+        sstate, scountry, Convert.ToDecimal(spincode), Mode, Convert.ToDecimal(clientcustomerid));
+
     }
 
     [WebMethod]
-    public static void SaveQuotationDetails(String clientcustid,String customeruser, String quotedprod, String quoteqty, String quoteprice, String quoteamt)
+    public static void SaveQuotationDetails(String clientcustid, String customeruser, String quotedprod, String quoteqty, String quoteprice, String quoteamt)
     {
         VPCRMSBAL.SaveQuotationData(Convert.ToDecimal(clientcustid), VPCRMSDAL.AssignQuoteID(), Convert.ToDecimal(customeruser), quotedprod, Convert.ToDecimal(quoteqty), Convert.ToDecimal(quoteprice), Convert.ToDecimal(quoteamt));
     }

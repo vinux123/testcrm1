@@ -79,9 +79,9 @@ public class VPCRMSBAL
     }
 
     // To fetch daily call report details per user for DCR form. 
-    public DataTable GetDailyCallReportDetails(Decimal UserID)
+    public DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
     {
-        DataTable dt = VPCRMSDAL.GetDailyCallReportDetails(UserID);
+        DataTable dt = VPCRMSDAL.GetDailyCallReportDetails(UserID, UserRole);
         return dt;
     }
 
@@ -173,9 +173,15 @@ public class VPCRMSBAL
         return dt;
     }
 
-    public static DataTable GetReportData()
+    public static DataTable GetReportData(String fromdate, String todate, Decimal userid, String role)
     {
-        DataTable dt = VPCRMSDAL.GetReportData();
+        DataTable dt = VPCRMSDAL.GetReportData(fromdate, todate, userid, role);
+        return dt;
+    }
+
+    public static DataTable GetReportDataSalesDetails(String fromdate, String todate, Decimal userid, String role, String status)
+    {
+        DataTable dt = VPCRMSDAL.GetReportDataSalesDetails(fromdate, todate, userid, role, status);
         return dt;
     }
 

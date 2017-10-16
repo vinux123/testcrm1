@@ -20,7 +20,7 @@ public partial class ProductSetup : System.Web.UI.Page
         }
 
         //Get Client alias from UserID
-        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Substring(0, 4));
+        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
 
         DataTable dtLogin = new DataTable();
         dtLogin = VPCRMSBAL.GetProductDetails(client_alias);
@@ -32,10 +32,12 @@ public partial class ProductSetup : System.Web.UI.Page
         if (dtTable.Rows.Count > 0)
         {
             lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
+            lblModalCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
         }
         else
         {
             lblCompanyName.Text = "Default Name";
+            lblModalCompanyName.Text = "Default Name";
         }
     }
 

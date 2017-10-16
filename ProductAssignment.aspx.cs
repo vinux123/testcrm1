@@ -37,6 +37,8 @@ public partial class ProductAssignment : System.Web.UI.Page
             ddlusername.DataTextField = "clientuserfirstname";
             ddlusername.DataValueField = "clientuserid";
             ddlusername.DataBind();
+            ddlusername.Items.Insert(0, new ListItem("Select Assign Person", "0"));
+            ddlusername.SelectedIndex = 0;
         }
 
         // Populate Product Name to dropdown on modal. 
@@ -48,6 +50,8 @@ public partial class ProductAssignment : System.Web.UI.Page
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataBind();
+            ddlProductName.Items.Insert(0, new ListItem("Select Product", "0"));
+            ddlProductName.SelectedIndex = 0;
         }
 
 

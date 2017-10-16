@@ -15,6 +15,40 @@
             }
         }
 
+        function ValidateModal() {
+            var prodname = $('#txtprodname').val();
+            var prodprice = $('#txtprodprice').val();
+            var rege = /^[1-9]\d*$/;
+
+            if (prodname.length <= 0) {
+                $('#txtprodname').parent().addClass('validate-has-error');
+                productnameHelper.innerHTML = "Please enter product name";
+            }
+            else {
+                $('#txtprodname').parent().removeClass('validate-has-error');
+                productnameHelper.innerHTML = "";
+            }
+
+            if (prodprice.length <= 0) {
+                $('#txtprodprice').parent().addClass('validate-has-error');
+                prodpriceHelper.innerHTML = "Please enter product price";
+            }
+            else if (!rege.test(prodprice)) {
+                $('#txtprodprice').parent().addClass('validate-has-error');
+                prodpriceHelper.innerHTML = "Please enter numeric fields only";
+            }
+            else {
+                $('#txtprodprice').parent().removeClass('validate-has-error');
+                prodpriceHelper.innerHTML = "";
+            }
+            
+            if (($('.validate-has-error').length) > 0) {
+                val = false;
+            }
+            else { val = true; }
+            return val;
+        }
+
         function EditProduct(ProductName) {
             $.ajax({
                 type: "POST",
@@ -66,12 +100,16 @@
         $(function () {
             //attach listner to .modal-close-btn so that when button is pressed the modal dialogue disappears
             $('body').on('click', '.modal-close-btn', function () {
-                $('#modal-container').modal('hide');
+                $('.modal').modal('hide');
             });
 
             //clear modal cache so that new contenet can be loaded
-            $('#modal-container').on('hidden.bs.modal', function () {
-                $(this).removeData('bs.modal');
+            $('.modal').on('hidden.bs.modal', function () {
+                $(this).find("input,textarea,select").val('').end();
+                $('div').removeClass('validate-has-error');
+                $('span').val('');
+                
+
             });
 
             $('#CancelModal').on('click', function () {
@@ -93,25 +131,29 @@
     <script>
         $(document).ready(function () {
             $("#btnSubmit").click(function () {
+                if (ValidateModal()) {
+                    var prodname = $('#txtprodname').val();
+                    var proddesc = $('#txtproddesc').val();
+                    var prodhsn = $('#txtprodhsn').val();
+                    var prodprice = $('#txtprodprice').val();
 
-                var prodname = $('#txtprodname').val();
-                var proddesc = $('#txtproddesc').val();
-                var prodhsn = $('#txtprodhsn').val();
-                var prodprice = $('#txtprodprice').val();
-                
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    url: "ProductSetup.aspx/SaveProdData",
-                    data: "{'prodname': '" + prodname + "', 'proddesc': '" + proddesc + "', 'prodhsn': '" + prodhsn + "', 'prodprice': '" + prodprice + "'}",
-                    dataType: "json",
-                    success: function (data) {
-                        $('.modal').modal('hide');
-                    },
-                    error: function (response) {
-                        alert(response);
-                    }
-                });
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "ProductSetup.aspx/SaveProdData",
+                        data: "{'prodname': '" + prodname + "', 'proddesc': '" + proddesc + "', 'prodhsn': '" + prodhsn + "', 'prodprice': '" + prodprice + "'}",
+                        dataType: "json",
+                        success: function (data) {
+                            $('.modal').modal('hide');
+                        },
+                        error: function (response) {
+                            alert(response);
+                        }
+                    });
+                }
+                else {
+                    return false;
+                }
             });
         });
     </script>
@@ -143,6 +185,7 @@
         
         <%--<div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog">--%>
         <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
@@ -151,56 +194,35 @@
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
                     </h4>
                 </div>
-                <div class="modal-body">
-                    <%--<asp:FormView ID="frmModalPopup" runat="server" DefaultMode="Insert">--%>
-                        <%--<InsertItemTemplate>--%>
+                <div class="modal-body" id="modalbody">
                             <div class="col-md-6">
-
                                 <div class="form-group">
                                     <label class=" control-label" for="field-1">Product Name</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
-                                    </div>
+                                    <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
+                                    <span id="productnameHelper"></span>
                                 </div>
                                 <div class="form-group">
-                                    
                                         <label class="control-label" for="proddesc">Product Description</label>
-                                    <div class="form-group">
                                         <asp:TextBox runat="server" class="form-control" name="proddesc" ID="txtproddesc" autocomplete="off" ClientIDMode="Static" MaxLength="50"></asp:TextBox>
-                                    </div>
-                                    
                                 </div>
                                 <div class="form-group">
-                                    
                                         <label class="control-label" for="prodhsn">Product HSN</label>
-                                    <div class="form-group">
                                         <asp:TextBox runat="server" class="form-control" name="prodhsn" ID="txtprodhsn" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
-                                        </div>
-                                    
                                 </div>
-
                                 <div class="form-group">
-                                    
                                         <label class="control-label" for="prodprice">Product Price</label>
-                                    <div class="form-group">
                                         <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                                    </div>
+                                    <span id="prodpriceHelper"></span>
                                 </div>
-
-                            
                             </div>
-                            
-                        <%--</InsertItemTemplate>
-                    </asp:FormView>--%>
                 </div>
                 <div class="modal-footer">
-                    
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-primary"/>
-                  
                 </div>
             </div>
         </div>
+            </div>
     </div>
     <div class="row">
         <div class="col-md-12">

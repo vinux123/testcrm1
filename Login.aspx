@@ -167,12 +167,13 @@
                                     OnClick="btnlogin_Click" />
 					</div>
 					
-					<div class="login-footer">
+                    <%-- commenting below code for now untill logic is build - vinayak %>
+					<%--<div class="login-footer">
 						<a href="#">Forgot your password?</a>
 						
 						
 						
-					</div>
+					</div>--%>
                     <asp:Label runat="server" ID="lblErrorMesage"></asp:Label>	
 					
 				</form>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="DailyCallReport.aspx.cs" Inherits="DailyCallReport" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="DailyCallReport.aspx.cs" Inherits="testdcr" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
@@ -44,15 +44,15 @@
                         $('#txtpincode').val(val.clientcustomerpincode);
                         $('#txtremarks').val(val.clientremarks);
                         //$('#txtassignedto').val(val.customeruser);
-
                         $("#<%=ddlassignedto.ClientID %>").val(val.customeruser);
+
                         $("#<%=ddlcompanytype.ClientID %>").val(val.clientcompanytype);
                         $('#txtlastname').val(val.custfollowuppersonln);
                         $('#txtemail').val(val.clientcustomeremailid);
                         $('#txtalternatecontact').val(val.clientcustomeracontact);
-                        
+
                         $("#<%=ddlstatus.ClientID %>").val(val.clientcustomerstatus);
-                        
+
                         $("#<%=ddlsource.ClientID %>").val(val.clientsource);
                         $('#txtsaddress1').val(val.shippingadd1);
                         $('#txtsaddress2').val(val.shippingadd2);
@@ -88,10 +88,10 @@
                 aLengthMenu: [
                     [25, 50, 100, -1], [25, 50, 100, "All"]
                 ]
-          //      ,
-          //      "aoColumnDefs": [
-          //{ 'bSortable': false, 'aTargets': [6] }
-          //      ]
+                //      ,
+                //      "aoColumnDefs": [
+                //{ 'bSortable': false, 'aTargets': [6] }
+                //      ]
             });
 
             $("#ddlstatus").select2({
@@ -134,7 +134,15 @@
                 $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
             });
 
-         });
+            $("#ddlcustomeruser").select2({
+                placeholder: 'Select Assignedto...',
+                allowClear: true
+            }).on('select2-open', function () {
+                // Adding Custom Scrollbar
+                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            });
+
+        });
 	</script>
     <script type="text/javascript">
         $(function () {
@@ -209,9 +217,10 @@
                 }
                 //var pincode = $('#txtpincode').val();
                 var remarks = $('#txtremarks').val();
-                
+
                 var assignedto = $('#ddlassignedto option:selected').val();
-                
+                //var assignedto = $('#txtassignedto').val();
+
                 var companytype = $('#ddlcompanytype option:selected').val();
                 var lastname = $('#txtlastname').val();
                 var email = $('#txtemail').val();
@@ -246,7 +255,7 @@
                 else {
                     Mode = "Insert";
                 }
-                
+
                 $.ajax({
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
@@ -268,13 +277,14 @@
         $(document).ready(function () {
             $("#btnQuoteSubmit").click(function () {
                 debugger;
-                var customeruser = $('#txtcustomeruser').val();
+                //var customeruser = $('#txtcustomeruser').val();
+                var customeruser = $('#ddlcustomeruser option:selected').val();
                 var clientcustid = $('#hdnClientCustID').val();
                 var quotedprod = $('#ddlProductName option:selected').val();
                 var quoteqty = $('#txtquoteqty').val();
                 var quoteprice = $('#txtquoteprice').val();
                 var quoteamt = $('#txtquoteamt').val();
-                
+
                 $.ajax({
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
@@ -320,7 +330,8 @@
     </div>
     <asp:HiddenField runat="server" ID="hdnClientCustID" ClientIDMode="Static" />
     <div class="row">
-        <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div id="modal-dialog" class="modal fade custom-width" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="width: 100%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
@@ -450,7 +461,7 @@
                                 <div class="form-group">
                                     <label class=" control-label" for="field-1">Assigned To</label>
                                     <div class="form-group">
-                                        <%--<asp:TextBox runat="server" class="form-control" name="assignedto" ID="txtassignedto" ClientIDMode="Static"></asp:TextBox>--%>
+                                        <%--<asp:TextBox runat="server" class="form-control" name="assignedto" ID="txtassignedto" ClientIDMode="Static" Text="0"></asp:TextBox>--%>
                                         <%--<asp:DropDownList ID="ddlassignedto" runat="server" CssClass="form-control" ClientIDMode="Static">
                                     </asp:DropDownList>--%>
                                         <asp:DropDownList ID="ddlassignedto" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
@@ -601,6 +612,7 @@
                 </div>
             </div>
         </div>
+            </div>
     </div> 
         <%--Vinayak--%>
     <div class="row">
@@ -619,7 +631,8 @@
                                 <div class="form-group">
                                     <label class=" control-label" for="customeruser1">Assigned To</label>
                                     <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="customeruser1" ID="txtcustomeruser" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
+                                        <%--<asp:TextBox runat="server" class="form-control" name="customeruser1" ID="txtcustomeruser" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>--%>
+                                        <asp:DropDownList ID="ddlcustomeruser" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
                                     </div>
                                 </div>
 

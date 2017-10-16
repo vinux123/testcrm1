@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -25,6 +26,8 @@ public class VPCRMSDAL
 
     #endregion
 
+    
+
     string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
     string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
 
@@ -46,6 +49,8 @@ public class VPCRMSDAL
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
+        
+
         try
         {
             dCmd = new MySqlCommand("usp_getUserList", conn);
@@ -53,10 +58,13 @@ public class VPCRMSDAL
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
+
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -90,7 +98,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -127,7 +137,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -160,7 +172,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -196,7 +210,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -233,7 +249,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -267,7 +285,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -301,7 +321,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -335,7 +357,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -370,7 +394,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -406,7 +432,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -422,7 +450,7 @@ public class VPCRMSDAL
 
 
 
-    public DataTable GetDailyCallReportDetails(Decimal UserID)
+    public DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
     {
         // Get daily call report details of perticular user by passing UserID parameter. 
         DataTable dt = new DataTable();
@@ -436,13 +464,16 @@ public class VPCRMSDAL
         {
             dCmd = new MySqlCommand("usp_getDailyCallReport", conn);
             dCmd.Parameters.AddWithValue("@client_customer_user", UserID);
+            dCmd.Parameters.AddWithValue("@client_customer_role", UserRole);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -479,7 +510,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -515,7 +548,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -551,7 +586,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -596,7 +633,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -634,7 +673,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -672,7 +713,9 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -711,7 +754,9 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -749,7 +794,9 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            throw ex;
+           // throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -826,7 +873,9 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -881,7 +930,9 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -925,7 +976,9 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -960,7 +1013,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -994,7 +1049,9 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {
@@ -1008,7 +1065,7 @@ public class VPCRMSDAL
         return dt;
     }
 
-    public static DataTable GetReportData()
+    public static DataTable GetReportData(String fromdate, String todate, Decimal userid, String role)
     {
         DataTable dt = new DataTable();
         string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
@@ -1020,13 +1077,60 @@ public class VPCRMSDAL
         try
         {
             dCmd = new MySqlCommand("usp_GetReportData", conn);
+            
+            dCmd.Parameters.AddWithValue("@client_report_fromdate", fromdate);
+            dCmd.Parameters.AddWithValue("@client_report_todate", todate);
+            dCmd.Parameters.AddWithValue("@client_report_userid", userid);
+            dCmd.Parameters.AddWithValue("@client_report_role", role);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
         }
         catch (Exception ex)
         {
-            throw ex;
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
+
+    public static DataTable GetReportDataSalesDetails(String fromdate, String todate, Decimal userid, String role, String status)
+    {
+        DataTable dt = new DataTable();
+        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_GetReportDataSalesDetails", conn);
+
+            dCmd.Parameters.AddWithValue("@client_report_fromdate", fromdate);
+            dCmd.Parameters.AddWithValue("@client_report_todate", todate);
+            dCmd.Parameters.AddWithValue("@client_report_userid", userid);
+            dCmd.Parameters.AddWithValue("@client_report_role", role);
+            dCmd.Parameters.AddWithValue("@client_report_status", status);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
         }
         finally
         {

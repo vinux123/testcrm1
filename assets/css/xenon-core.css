@@ -6824,6 +6824,40 @@ pre {
   margin-top: 0;
   margin-bottom: 20px;
 }
+
+.form-group.validate-has-error .form-control {
+  border-color: #cc3f44;
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control::-moz-placeholder {
+  color: #cc3f44;
+  opacity: 1;
+}
+.form-group.validate-has-error .form-control:-ms-input-placeholder {
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control::-webkit-input-placeholder {
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control::-webkit-input-placeholder {
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control:-moz-placeholder {
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control::-moz-placeholder {
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control:-ms-input-placeholder {
+  color: #cc3f44;
+}
+.form-group.validate-has-error .form-control + span {
+  display: block;
+  padding-top: 5px;
+  font-size: 12px;
+  color: #cc3f44;
+}
+
 @media screen and (max-width: 768px) {
   .page-body .jumbotron {
     padding-left: 0;
