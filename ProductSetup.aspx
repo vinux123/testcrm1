@@ -41,7 +41,7 @@
                 $('#txtprodprice').parent().removeClass('validate-has-error');
                 prodpriceHelper.innerHTML = "";
             }
-            
+
             if (($('.validate-has-error').length) > 0) {
                 val = false;
             }
@@ -64,7 +64,6 @@
                         $('#txtproddesc').val(val.productdesc);
                         $('#txtprodhsn').val(val.producthsn);
                         $('#txtprodprice').val(val.prodprice);
-
                         $('#btnSubmit').attr('value', 'Update');
                         $('.modal').on('show.bs.modal', function (event) {
                             $('.modal').insertAfter($('body'));
@@ -85,15 +84,6 @@
                     [25, 50, 100, -1], [25, 50, 100, "All"]
                 ]
             });
-
-            //$("#ddlrole").select2({
-            //    placeholder: 'Select Role...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
-
         });
     </script>
     <script type="text/javascript">
@@ -106,10 +96,9 @@
             //clear modal cache so that new contenet can be loaded
             $('.modal').on('hidden.bs.modal', function () {
                 $(this).find("input,textarea,select").val('').end();
-                $('div').removeClass('validate-has-error');
-                $('span').val('');
-                
-
+                $('.form-group').removeClass('validate-has-error');
+                //$('span').html("");
+                $('.modal').find('span').html("");
             });
 
             $('#CancelModal').on('click', function () {
@@ -165,7 +154,6 @@
     </style>
     <div class="page-title">
         <div class=" col-md-10 title-env">
-            <%--<h1 class="title">User Master</h1>--%>
             <ol class="breadcrumb bc-1">
                 <li>
                     <a href="/Dashboard.aspx">Dashboard</a>
@@ -179,50 +167,47 @@
             </h2>
         </div>
     </div>
-
-    <%--Vinayak--%>
     <div class="row">
-        
-        <%--<div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog">--%>
-        <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        &times;</button>
-                    <h4 class="modal-title">Add Product - 
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;</button>
+                        <h4 class="modal-title">Add Product - 
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
-                    </h4>
-                </div>
-                <div class="modal-body" id="modalbody">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class=" control-label" for="field-1">Product Name</label>
-                                    <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
-                                    <span id="productnameHelper"></span>
-                                </div>
-                                <div class="form-group">
-                                        <label class="control-label" for="proddesc">Product Description</label>
-                                        <asp:TextBox runat="server" class="form-control" name="proddesc" ID="txtproddesc" autocomplete="off" ClientIDMode="Static" MaxLength="50"></asp:TextBox>
-                                </div>
-                                <div class="form-group">
-                                        <label class="control-label" for="prodhsn">Product HSN</label>
-                                        <asp:TextBox runat="server" class="form-control" name="prodhsn" ID="txtprodhsn" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
-                                </div>
-                                <div class="form-group">
-                                        <label class="control-label" for="prodprice">Product Price</label>
-                                        <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                                    <span id="prodpriceHelper"></span>
-                                </div>
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="modalbody">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class=" control-label" for="field-1">Product Name</label>
+                                <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
+                                <span id="productnameHelper"></span>
                             </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-primary"/>
+                            <div class="form-group">
+                                <label class="control-label" for="proddesc">Product Description</label>
+                                <asp:TextBox runat="server" class="form-control" name="proddesc" ID="txtproddesc" autocomplete="off" ClientIDMode="Static" MaxLength="50"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="prodhsn">Product HSN</label>
+                                <asp:TextBox runat="server" class="form-control" name="prodhsn" ID="txtprodhsn" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="prodprice">Product Price</label>
+                                <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                <span id="prodpriceHelper"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <%--<asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-primary"/>--%>
+                        <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
-            </div>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -234,8 +219,8 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-md-2 pull-right">
-        <button type="button" class="btn btn-info pull-right" id="btnAddProduct">Add Product</button>
-      </div>
+                        <button type="button" class="btn btn-info pull-right" id="btnAddProduct">Add Product</button>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <asp:GridView ID="grdProduct" ClientIDMode="Static" class="table table-striped table-bordered" runat="server" EmptyDataText="No Records Found" ShowHeaderWhenEmpty="true" AllowPaging="true" AutoGenerateColumns="False">
@@ -256,19 +241,13 @@
                                         <HeaderStyle HorizontalAlign="Center" Wrap="True" />
                                         <ItemStyle VerticalAlign="Top" />
                                     </asp:BoundField>
-                                    
                                     <asp:TemplateField HeaderStyle-Width="10%">
-                                        <%--<ItemTemplate>
-                                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" CommandArgument='<%# Eval("productname") %>'
-                                                Text="Edit" class="btn btn-info" />
-                                        </ItemTemplate>--%>
                                         <ItemTemplate>
-                                            <a href="#"><i class="fa fa-pencil"  id="EditButton" onclick="EditProduct('<%# Eval("productname") %>');"></i></a>
+                                            <a href="#"><i class="fa fa-pencil" id="EditButton" onclick="EditProduct('<%# Eval("productname") %>');"></i></a>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
-
                         </div>
                     </div>
                 </div>

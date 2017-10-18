@@ -107,10 +107,16 @@ public class VPCRMSBAL
     }
 
     // To Save/Update user details. 
-    public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role)
+    public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd)
     {
-        VPCRMSDAL.SaveUserDetails(alias, userid, username, password, firstname, lastname, doj, contactno, emailid, role);
+        VPCRMSDAL.SaveUserDetails(alias, userid, username, password, firstname, lastname, doj, contactno, emailid, role, defaultpwd);
     }
+
+    //public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role)
+    //{
+    //    VPCRMSDAL.SaveUserDetails(alias, userid, username, password, firstname, lastname, doj, contactno, emailid, role);
+    //}
+
 
     // To save quotation details. 
     public static void SaveQuotationData(Decimal clientcustomerid, Decimal clientquoteid, Decimal clientcustomeruser, String clientquotedproduct, Decimal clientquotedprodqty, Decimal clientquotedprice, Decimal clientquotedamt)
@@ -161,10 +167,17 @@ public class VPCRMSBAL
         String companytype, String lastname, String email, Decimal alternatecontact, String status, String source, String saddress1, String saddress2, String scity, String sdistrict,
         String sstate, String scountry, Decimal spincode, String Mode, Decimal clientcustomerid)
     {
-        VPCRMSDAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, erevenue, followupdate,
-        companyadd1,  companyadd2,  addresscity,  addressdist,  addressstate,  addresscountry, pincode, remarks, assignedto,
-        companytype,  lastname, email, alternatecontact, status, source, saddress1,  saddress2,  scity,  sdistrict,
-        sstate, scountry, spincode, Mode, clientcustomerid);
+        try
+        {
+            VPCRMSDAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, erevenue, followupdate,
+            companyadd1, companyadd2, addresscity, addressdist, addressstate, addresscountry, pincode, remarks, assignedto,
+            companytype, lastname, email, alternatecontact, status, source, saddress1, saddress2, scity, sdistrict,
+            sstate, scountry, spincode, Mode, clientcustomerid);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public static DataTable GetStatusCount(Decimal userid, String user_role)
@@ -182,6 +195,25 @@ public class VPCRMSBAL
     public static DataTable GetReportDataSalesDetails(String fromdate, String todate, Decimal userid, String role, String status)
     {
         DataTable dt = VPCRMSDAL.GetReportDataSalesDetails(fromdate, todate, userid, role, status);
+        return dt;
+    }
+
+    public static void UdpateUserPassword(Decimal alias, Decimal userid, String password)
+    {
+        try
+        {
+            VPCRMSDAL.UdpateUserPassword(alias, userid, password);
+        }
+        catch (Exception ex)
+        {
+            
+        }
+
+    }
+
+    public static DataTable CheckUserName(string username)
+    {
+        DataTable dt = VPCRMSDAL.CheckUserName(username);
         return dt;
     }
 

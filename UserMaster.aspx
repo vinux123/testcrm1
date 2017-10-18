@@ -2,8 +2,60 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
+        $(function () {
+            var mdTemp1 = new Date(),
+           minDate = getFormatDate(new Date(mdTemp1.setDate(mdTemp1.getDate() - 15))),
+           mdTemp = new Date(),
+           maxDate = getFormatDate(new Date(mdTemp.setDate(mdTemp.getDate() + 0)));
+            $('#txtdoj').datepicker({
+                autoclose: true,
+                dateFormat:'yy-mm-dd'
+            });
+        });
+        function getFormatDate(d) {
+            return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear()
+        }
+        </script>
+    <script type="text/javascript">
         $(document).ready(function () {
             fixGridView($("#grdUserMaster"));
+
+            $('#txtusername').change(function () {
+                var username = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "UserMaster.aspx/CheckUserName",
+                    data: "{'username': '" + username + "'}",
+                    dataType: "json",
+                    success: function (data) {
+                        var JsonData = data.d;
+                        var JSONDataR = $.parseJSON(JsonData);
+                        
+                        if (JSONDataR.length > 0) {
+                                //$.alert({
+                                //    title: 'Alert!',
+                                //    content: 'Login Name exists. Please specify another Login Name.',
+                                //    confirm: function () {
+                                //        $('#txtusername').attr("value", "");
+                                //        $('#txtusername').focus();
+                                //    }
+                            //});
+                            $('#txtusername').attr("value", "");
+                            $('#txtusername').focus();
+                            alert('Login Name exists. Please specify another Login Name.');
+                            
+                            }
+                            else {
+
+                            }
+                        
+                },
+                     error: function (XMLHttpRequest, textStatus, errorThrown) {
+                         alert("some error");
+                     }
+                 });
+            });
         });
 
         function fixGridView(tableEl) {
@@ -40,7 +92,8 @@
                         $('#txtrepassword').prop("disabled", true);
                         $('#txtfirstname').val(val.clientuserfirstname);
                         $('#txtlastname').val(val.clientuserlastname);
-                        $('#txtdoj').val(val.clientuserdoj);
+                        var date1 = new Date(parseInt(val.doj.replace('/Date(', ''))).toISOString();
+                        $('#txtdoj').val(date1.substring(0, 10));
                         $('#txtcontactno').val(val.clientusercontactno);
                         $('#txtemailid').val(val.clientuseremailid);
                         //$('#ddlrole option:selected').val(val.clientuserrole);

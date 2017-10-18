@@ -48,21 +48,29 @@ public partial class UserMaster : System.Web.UI.Page
         //{
         //    btnAddUser.Visible = false;
         //}
+        
     }
 
     [WebMethod]
     public static void SaveUserData(String userid, String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role)
     {
-        // change this alias logic, fetch it from userid 
-        decimal alias = 1;
-
-        //string sltforpwd = username.Substring(0, 2) + doj.Substring(8,2);
+        
+        decimal alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)); 
+        
+        
         string sltforpwd = BCrypt.GenerateSalt(10);
         string hashedpassword = BCrypt.HashPassword(password, sltforpwd);
         
-        //VPCRMSBAL.SaveUserDetails(alias, Convert.ToDecimal(userid), username, password, firstname, lastname, doj, Convert.ToDecimal(contactno), emailid, role);
-        VPCRMSBAL.SaveUserDetails(alias, Convert.ToDecimal(userid), username, hashedpassword, firstname, lastname, doj, Convert.ToDecimal(contactno), emailid, role);
+        VPCRMSBAL.SaveUserDetails(alias, Convert.ToDecimal(userid), username, hashedpassword, firstname, lastname, doj, Convert.ToDecimal(contactno), emailid, role, "N");
 
+    }
+
+    [WebMethod]
+    public static string CheckUserName(String username)
+    {
+        DataTable dt = VPCRMSBAL.CheckUserName(username);
+        String json = DataTableToJSONWithJavaScriptSerializer(dt);
+        return json;
     }
 
     [WebMethod]
@@ -70,7 +78,7 @@ public partial class UserMaster : System.Web.UI.Page
     {
         DataTable dt = VPCRMSBAL.GetUserDetails(Convert.ToDecimal(userid));
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
-        return json;   
+        return json;
     }
 
     public static string DataTableToJSONWithJavaScriptSerializer(DataTable table)

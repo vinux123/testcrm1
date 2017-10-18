@@ -63,11 +63,15 @@ public partial class testdcr : System.Web.UI.Page
             ddlassignedto.DataTextField = "clientuserfirstname";
             ddlassignedto.DataValueField = "clientuserid";
             ddlassignedto.DataBind();
+            ddlassignedto.Items.Insert(0, new ListItem("Select Assign Person", "0"));
+            ddlassignedto.SelectedIndex = 0;
 
             ddlcustomeruser.DataSource = dtUserTable;
             ddlcustomeruser.DataTextField = "clientuserfirstname";
             ddlcustomeruser.DataValueField = "clientuserid";
             ddlcustomeruser.DataBind();
+            ddlcustomeruser.Items.Insert(0, new ListItem("Select Customer", "0"));
+            ddlcustomeruser.SelectedIndex = 0;
         }
 
         
@@ -94,7 +98,7 @@ public partial class testdcr : System.Web.UI.Page
         companyadd1, companyadd2, addresscity, addressdist, addressstate, addresscountry, Convert.ToDecimal(pincode), remarks, Convert.ToDecimal(assignedto),
         companytype, lastname, email, Convert.ToDecimal(alternatecontact), status, source, saddress1, saddress2, scity, sdistrict,
         sstate, scountry, Convert.ToDecimal(spincode), Mode, Convert.ToDecimal(clientcustomerid));
-
+        
     }
 
     [WebMethod]

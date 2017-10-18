@@ -42,12 +42,20 @@ public partial class Login : System.Web.UI.Page
                     //DateTime clientDateTime = Convert.ToDateTime(dtLogin1.Rows[0]["enddate"]);
                     //if (clientDateTime <= dateTimeToday)
                     //{
-                        Session["UserID"] = dtLogin.Rows[0]["clientuserid"].ToString();
-                        Session["UserName"] = dtLogin.Rows[0]["clientusername"].ToString();
-                        Session["UserFirstName"] = dtLogin.Rows[0]["clientuserfirstname"].ToString();
-                        Session["UserLastName"] = dtLogin.Rows[0]["clientuserlastname"].ToString();
-                        Session["UserRole"] = dtLogin.Rows[0]["clientuserrole"].ToString();
-                        Response.Redirect("/Dashboard.aspx");
+                        if (dtLogin.Rows[0]["clientpwddefault"].ToString().Trim() == "Y")
+                        {
+                            Session["UserID"] = dtLogin.Rows[0]["clientuserid"].ToString();
+                            Response.Redirect("ChangePassword.aspx");
+                        }
+                        else
+                        {
+                            Session["UserID"] = dtLogin.Rows[0]["clientuserid"].ToString();
+                            Session["UserName"] = dtLogin.Rows[0]["clientusername"].ToString();
+                            Session["UserFirstName"] = dtLogin.Rows[0]["clientuserfirstname"].ToString();
+                            Session["UserLastName"] = dtLogin.Rows[0]["clientuserlastname"].ToString();
+                            Session["UserRole"] = dtLogin.Rows[0]["clientuserrole"].ToString();
+                            Response.Redirect("/Dashboard.aspx");
+                        }
                     //}
                     //else
                     //{

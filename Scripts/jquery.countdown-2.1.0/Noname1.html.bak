@@ -1,0 +1,13 @@
+<script src="./jquery-1.7.1.js"></script>
+<script src="./jquery.countdown.js"></script>
+<div style="display:inline;padding:0px"><img src="waittimer.jpg" style="float:left"></div><div style="display:inline;padding:5px;" id="getting-started">ddd</div>
+<script type="text/javascript">
+	var d1 = new Date (),
+	d2 = new Date( d1 );
+	d2.setMinutes( d1.getMinutes() + 15 );
+	$("#getting-started").countdown(d2, function(event) {
+		$(this).text(
+			event.strftime('%M minutes %S seconds remaining')
+		);
+	});
+</script>

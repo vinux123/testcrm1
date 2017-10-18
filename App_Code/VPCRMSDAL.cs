@@ -49,8 +49,6 @@ public class VPCRMSDAL
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
-        
-
         try
         {
             dCmd = new MySqlCommand("usp_getUserList", conn);
@@ -65,6 +63,8 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            
+            
         }
         finally
         {
@@ -876,6 +876,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            throw; // vinayak
         }
         finally
         {
@@ -946,7 +947,8 @@ public class VPCRMSDAL
     }
 
     // Save/Update User details. 
-    public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role)
+    public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, 
+        String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd)
     {
         string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
         MySqlConnection conn = new MySqlConnection(connectionstring); ;
@@ -968,6 +970,7 @@ public class VPCRMSDAL
                 cmd.Parameters.AddWithValue("@client_user_contact_no", contactno);
                 cmd.Parameters.AddWithValue("@client_user_emailid", emailid);
                 cmd.Parameters.AddWithValue("@client_user_role", role);
+                cmd.Parameters.AddWithValue("@client_user_default_password", defaultpwd);
 
 
                 cmd.ExecuteNonQuery();
@@ -991,6 +994,92 @@ public class VPCRMSDAL
         }
 
     }
+
+    // Update default password for user & default password flag. 
+    public static void UdpateUserPassword(Decimal alias, Decimal userid, String password)
+    {
+        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
+        MySqlConnection conn = new MySqlConnection(connectionstring); ;
+        try
+        {
+
+            conn = new MySqlConnection(connectionstring);
+            conn.Open();
+            using (MySqlCommand cmd = new MySqlCommand("usp_UpdateDefaultPassword", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@client_user_alias", alias);
+                cmd.Parameters.AddWithValue("@client_user_id", userid);
+                cmd.Parameters.AddWithValue("@client_user_password", password);
+                
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+        }
+        catch (MySqlException ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+
+        }
+
+    }
+
+    //public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role)
+    //{
+    //    string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
+    //    MySqlConnection conn = new MySqlConnection(connectionstring); ;
+    //    try
+    //    {
+
+    //        conn = new MySqlConnection(connectionstring);
+    //        conn.Open();
+    //        using (MySqlCommand cmd = new MySqlCommand("usp_SaveClientUserDetails", conn))
+    //        {
+    //            cmd.CommandType = CommandType.StoredProcedure;
+    //            cmd.Parameters.AddWithValue("@client_alias", alias);
+    //            cmd.Parameters.AddWithValue("@client_user_id", userid);
+    //            cmd.Parameters.AddWithValue("@client_user_name", username);
+    //            cmd.Parameters.AddWithValue("@client_password", password);
+    //            cmd.Parameters.AddWithValue("@client_user_firstname", firstname);
+    //            cmd.Parameters.AddWithValue("@client_user_lastname", lastname);
+    //            cmd.Parameters.AddWithValue("@client_user_doj", doj);
+    //            cmd.Parameters.AddWithValue("@client_user_contact_no", contactno);
+    //            cmd.Parameters.AddWithValue("@client_user_emailid", emailid);
+    //            cmd.Parameters.AddWithValue("@client_user_role", role);
+    ////            cmd.Parameters.AddWithValue("@client_user_default_password", defaultpwd);
+
+
+    //            cmd.ExecuteNonQuery();
+    //            cmd.Dispose();
+    //        }
+    //    }
+    //    catch (MySqlException ex)
+    //    {
+    //        //throw ex;
+    //        ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+    //        logger.Error(ex.ToString());
+    //    }
+    //    finally
+    //    {
+    //        if (conn.State == ConnectionState.Open)
+    //        {
+    //            conn.Close();
+    //            conn.Dispose();
+    //        }
+
+    //    }
+
+    //}
 
     // Get existing user details
     public static DataTable GetUserDetails(Decimal userid)
@@ -1122,6 +1211,41 @@ public class VPCRMSDAL
             dCmd.Parameters.AddWithValue("@client_report_userid", userid);
             dCmd.Parameters.AddWithValue("@client_report_role", role);
             dCmd.Parameters.AddWithValue("@client_report_status", status);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
+    public static DataTable CheckUserName(string UserName)
+    {
+        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_CheckUserName", conn);
+            dCmd.Parameters.AddWithValue("@UserName", UserName);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
