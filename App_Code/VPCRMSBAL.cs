@@ -24,6 +24,14 @@ public class VPCRMSBAL
 		//
     }
 
+    // Get quotation details by ID
+    public DataTable GetQuotationDetailsbyID(Decimal clientquoteid)
+    {
+        DataTable dt = VPCRMSDAL.GetQuotationDetailsbyID(clientquoteid);
+        return dt;
+    }
+
+
     // Get User List
     public DataTable GetUserList(Decimal ClientAlias)
     {

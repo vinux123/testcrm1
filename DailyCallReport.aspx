@@ -2,6 +2,20 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
+        $(function () {
+            $('#txtdate').datepicker({
+                autoclose: true,
+                format: 'yyyy-mm-dd'
+            });
+
+            $('#txtfollowupdate').datepicker({
+                autoclose: true,
+                format: 'yyyy-mm-dd'
+            });
+            
+        });
+    </script>
+    <script type="text/javascript">
         $(document).ready(function () {
             fixGridView($("#grdDCR"));
         });
@@ -504,7 +518,11 @@
 
                             <div class="form-group">
                                 <label class=" control-label" for="date">Date</label>
-                                    <asp:TextBox runat="server" class="form-control" name="userid" ID="txtdate" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
+                                    <%--<asp:TextBox runat="server" class="form-control" name="userid" ID="txtdate" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>--%>
+                                <asp:TextBox runat="server" CssClass="form-control" ID="txtdate" ClientIDMode="Static"></asp:TextBox>
+                                <%--<div class="input-group-addon">
+                                                            <a href="#"><i class="linecons-calendar"></i></a>
+                                                        </div>--%>
                                 <span id="txtdateHelper"></span>
                             </div>
                             <div class="form-group">
@@ -542,7 +560,11 @@
 
                             <div class="form-group">
                                 <label class=" control-label" for="followupdate">Follow Up Date</label>
-                                    <asp:TextBox runat="server" class="form-control" name="followupdate" ID="txtfollowupdate" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                    <%--<asp:TextBox runat="server" class="form-control" name="followupdate" ID="txtfollowupdate" ClientIDMode="Static" autocomplete="off"></asp:TextBox>--%>
+                                <asp:TextBox runat="server" CssClass="form-control" ID="txtfollowupdate" ClientIDMode="Static"></asp:TextBox>
+                                <%--<div class="input-group-addon">
+                                                            <a href="#"><i class="linecons-calendar"></i></a>
+                                                        </div>--%>
                                 <span id="txtfollowupdateHelper"></span>
                             </div>
 

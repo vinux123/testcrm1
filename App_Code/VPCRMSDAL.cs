@@ -78,6 +78,44 @@ public class VPCRMSDAL
         return dt;
     }
 
+    // Get quotation details by ID
+    public DataTable GetQuotationDetailsbyID(Decimal clientquoteid)
+    {
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_GetQuotationDetailsbyID", conn);
+            dCmd.Parameters.AddWithValue("@client_quotation_id", clientquoteid);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
+
     // Get Product List for Product List Drop Down. 
     public DataTable GetProductList(Decimal ClientAlias)
     {

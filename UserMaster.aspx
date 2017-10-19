@@ -3,19 +3,27 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
         $(function () {
-            var mdTemp1 = new Date(),
-           minDate = getFormatDate(new Date(mdTemp1.setDate(mdTemp1.getDate() - 15))),
-           mdTemp = new Date(),
-           maxDate = getFormatDate(new Date(mdTemp.setDate(mdTemp.getDate() + 0)));
+            $('#chkReset').prop("checked", false);
+            $('#chkdisplay').hide();
+            
+
+            $('#chkReset').click(function () {
+                if ($('#chkReset').prop("checked")) {
+                    $('#txtpassword').prop("disabled", false);
+                    $('#txtrepassword').prop("disabled", false);
+                }
+                else {
+                    $('#txtpassword').prop("disabled", true);
+                    $('#txtrepassword').prop("disabled", true);
+                }
+            });
+
             $('#txtdoj').datepicker({
                 autoclose: true,
-                dateFormat:'yy-mm-dd'
+                format: 'yyyy-mm-dd'
             });
         });
-        function getFormatDate(d) {
-            return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear()
-        }
-        </script>
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             fixGridView($("#grdUserMaster"));
@@ -31,30 +39,30 @@
                     success: function (data) {
                         var JsonData = data.d;
                         var JSONDataR = $.parseJSON(JsonData);
-                        
+
                         if (JSONDataR.length > 0) {
-                                //$.alert({
-                                //    title: 'Alert!',
-                                //    content: 'Login Name exists. Please specify another Login Name.',
-                                //    confirm: function () {
-                                //        $('#txtusername').attr("value", "");
-                                //        $('#txtusername').focus();
-                                //    }
+                            //$.alert({
+                            //    title: 'Alert!',
+                            //    content: 'Login Name exists. Please specify another Login Name.',
+                            //    confirm: function () {
+                            //        $('#txtusername').attr("value", "");
+                            //        $('#txtusername').focus();
+                            //    }
                             //});
                             $('#txtusername').attr("value", "");
                             $('#txtusername').focus();
                             alert('Login Name exists. Please specify another Login Name.');
-                            
-                            }
-                            else {
 
-                            }
-                        
-                },
-                     error: function (XMLHttpRequest, textStatus, errorThrown) {
-                         alert("some error");
-                     }
-                 });
+                        }
+                        else {
+
+                        }
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("some error");
+                    }
+                });
             });
         });
 
@@ -84,6 +92,7 @@
                 dataType: "json",
                 success: function (data) {
                     var JsonData = data.d;
+                    $('#chkdisplay').show();
                     var JSONDataR = $.parseJSON(JsonData);
                     $.each(JSONDataR, function (index, val) {
                         $('#txtuserid').val(val.clientuserid);
@@ -92,7 +101,7 @@
                         $('#txtrepassword').prop("disabled", true);
                         $('#txtfirstname').val(val.clientuserfirstname);
                         $('#txtlastname').val(val.clientuserlastname);
-                        var date1 = new Date(parseInt(val.doj.replace('/Date(', ''))).toISOString();
+                        var date1 = new Date(parseInt(val.clientuserdoj.replace('/Date(', ''))).toISOString();
                         $('#txtdoj').val(date1.substring(0, 10));
                         $('#txtcontactno').val(val.clientusercontactno);
                         $('#txtemailid').val(val.clientuseremailid);
@@ -136,12 +145,15 @@
         $(function () {
             //attach listner to .modal-close-btn so that when button is pressed the modal dialogue disappears
             $('body').on('click', '.modal-close-btn', function () {
-                $('#modal-container').modal('hide');
+                $('.modal').modal('hide');
             });
 
             //clear modal cache so that new contenet can be loaded
-            $('#modal-container').on('hidden.bs.modal', function () {
-                $(this).removeData('bs.modal');
+            $('.modal').on('hidden.bs.modal', function () {
+                $(this).find("input,textarea,select").val('').end();
+                $('.form-group').removeClass('validate-has-error');
+                //$('span').html("");
+                $('.modal').find('span').html("");
             });
 
             $('#CancelModal').on('click', function () {
@@ -153,13 +165,18 @@
         jQuery(document).ready(function ($) {
             $("#btnAddUser").click(function (e) {
                 debugger;
+
                 $('.modal').on('show.bs.modal', function (event) {
                     $('.modal').insertAfter($('body'));
                 });
                 $('.modal').modal('show');
+                $('#chkdisplay').hide();
+                $('#txtpassword').prop("disabled", true);
+                $('#txtrepassword').prop("disabled", true);
             });
 
-            
+
+
         });
     </script>
     <script>
@@ -222,106 +239,85 @@
     <%--Vinayak--%>
     <div class="row">
         <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        &times;</button>
-                    <h4 class="modal-title">Add User - 
+            <<div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;</button>
+                        <h4 class="modal-title">Add User - 
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
-                    </h4>
-                </div>
-                <label id="errorMessage" ></label>
-                <div class="modal-body">
-                    <%--<asp:Label ID="errorMessage" runat="server" ClientIDMode="Static"></asp:Label>--%>
-                    
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label class=" control-label" for="field-1">User ID</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="userid" ID="txtuserid" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="password">Password</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="password" ID="txtpassword" autocomplete="off" ClientIDMode="Static" TextMode="Password" MaxLength="20"></asp:TextBox>
-                                        </div>
-                                    
-                                </div>
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="firstname">First Name</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="firstname" ID="txtfirstname" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
-                                        </div>
-                                    
-                                </div>
-
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="doj">Date of Joining</label>
-                                    <div class="form-group">
-                                        <%--<asp:TextBox runat="server" class="form-control" name="doj" ID="txtdoj" ClientIDMode="Static" autocomplete="off" TextMode="Date"></asp:TextBox>--%>
-                                        <asp:TextBox runat="server" CssClass="form-control datepicker" ID="txtdoj" ClientIDMode="Static" data-start-date="-2d" data-end-date="+1w"></asp:TextBox>									
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="contactno">Email ID</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="emailid" ID="txtemailid" autocomplete="off" ClientIDMode="Static" TextMode="Email" MaxLength="100"></asp:TextBox>
-                                    </div>
-                                </div>
-                                
-
+                        </h4>
+                    </div>
+                    <label id="errorMessage"></label>
+                    <div class="modal-body">
+                        <%--<asp:Label ID="errorMessage" runat="server" ClientIDMode="Static"></asp:Label>--%>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class=" control-label" for="field-1">User ID</label>
+                                <asp:TextBox runat="server" class="form-control" name="userid" ID="txtuserid" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
                             </div>
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label class=" control-label" for="field-1">Username</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="username" ID="txtusername" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                        <label class="control-label" for="repassword">Reenter Password</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="repassword" ID="txtrepassword" autocomplete="off" TextMode="Password" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="lastname">Last Name</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="lastname" ClientIDMode="Static" ID="txtlastname" autocomplete="off" MaxLength="20"></asp:TextBox>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="contactno">Contact No</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="contactno" ID="txtcontactno" ClientIDMode="Static" autocomplete="off" TextMode="Phone" MaxLength="10"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="role">Role</label>
-                                    <div class="form-group">
-                                        <asp:DropDownList ID="ddlrole" runat="server" CssClass="form-control" ClientIDMode="Static">
-                                            <asp:ListItem Value="Associate" Text="Associate" Selected="True"></asp:ListItem>
-                                            <asp:ListItem Value="Manager" Text="Manager" Enabled="false"></asp:ListItem>
-                                        </asp:DropDownList>
-                                    </div>
+                            
+               <div class="form-group  pull-Left" id="chkdisplay">
+                    <div class="form-block change_Para">
+                      <input checked="" class="iswitch iswitch-info" id="chkReset" type="checkbox" >
+                      <label> Enable reset password </label>
+                  </div>
+                   </div>
+              
+                            <div class="form-group">
+                                <label class="control-label" for="password">Password</label>
+                                <asp:TextBox runat="server" class="form-control" name="password" ID="txtpassword" autocomplete="off" ClientIDMode="Static" TextMode="Password" MaxLength="20"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="firstname">First Name</label>
+                                <asp:TextBox runat="server" class="form-control" name="firstname" ID="txtfirstname" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="doj">Date of Joining</label>
+                                <asp:TextBox runat="server" CssClass="form-control" ID="txtdoj" ClientIDMode="Static"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="contactno">Email ID</label>
+                                <asp:TextBox runat="server" class="form-control" name="emailid" ID="txtemailid" autocomplete="off" ClientIDMode="Static" TextMode="Email" MaxLength="100"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class=" control-label" for="field-1">Username</label>
+                                <asp:TextBox runat="server" class="form-control" name="username" ID="txtusername" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
+                            </div>
+                            <div class="row">
+                            <div class="form-group">
                                 </div>
                                 </div>
-                </div>
-                <div class="modal-footer">
-                   <asp:Button ID="btnSubmit" runat="server" ClientIDMode="Static" Text="Save" CssClass="btn btn-info" />
-                            <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>
+                            <div class="form-group">
+                                <label class="control-label" for="repassword">Reenter Password</label>
+                                <asp:TextBox runat="server" class="form-control" name="repassword" ID="txtrepassword" autocomplete="off" TextMode="Password" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="lastname">Last Name</label>
+                                <asp:TextBox runat="server" class="form-control" name="lastname" ClientIDMode="Static" ID="txtlastname" autocomplete="off" MaxLength="20"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="contactno">Contact No</label>
+                                <asp:TextBox runat="server" class="form-control" name="contactno" ID="txtcontactno" ClientIDMode="Static" autocomplete="off" TextMode="Phone" MaxLength="10"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="role">Role</label>
+                                <asp:DropDownList ID="ddlrole" runat="server" CssClass="form-control" ClientIDMode="Static">
+                                    <asp:ListItem Value="Associate" Text="Associate" Selected="True"></asp:ListItem>
+                                    <asp:ListItem Value="Manager" Text="Manager" Enabled="false"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <%-- <asp:Button ID="btnSubmit" runat="server" ClientIDMode="Static" Text="Save" CssClass="btn btn-info" />
+                            <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>--%>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <%--<asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-primary"/>--%>
+                        <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -336,10 +332,10 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-md-2 pull-right">
-        <%--<button type="button" class="btn btn-info pull-right" id="btnAddUser">Add User</button>--%>
+                        <%--<button type="button" class="btn btn-info pull-right" id="btnAddUser">Add User</button>--%>
                         <button type="button" class="btn btn-info pull-right" id="btnAddUser">Add User</button>
                         <%--<asp:Button ID ="btnAddUser" CssClass="btn btn-info pull-right" ClientIDMode="Static" Text="Add User" runat="server" />--%>
-      </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <asp:GridView ID="grdUserMaster" ClientIDMode="Static" class="table table-striped table-bordered" runat="server" EmptyDataText="No Records Found" ShowHeaderWhenEmpty="true" AllowPaging="true" AutoGenerateColumns="False">
@@ -374,7 +370,7 @@
                                     </asp:BoundField>
                                     <asp:TemplateField HeaderStyle-Width="10%" HeaderText="Action">
                                         <ItemTemplate>
-                                            <a href="#"><i class="fa fa-pencil"  id="EditButton" onclick="EditUser('<%# Eval("clientuserid") %>');"></i></a>
+                                            <a href="#"><i class="fa fa-pencil" id="EditButton" onclick="EditUser('<%# Eval("clientuserid") %>');"></i></a>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
@@ -387,4 +383,6 @@
         </div>
     </div>
     <!--main-content-ends-->
+    <!-- Imported scripts on this page -->
+    <%--<script src="assets/js/datepicker/bootstrap-datepicker.js"></script>--%>
 </asp:Content>
