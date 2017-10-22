@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -73,7 +74,16 @@ public partial class ProductAssignment : System.Web.UI.Page
     [WebMethod]
     public static void SaveProdAssignment(String username, String prodname, String prodamttgt, String prodqtytgt, String prodtgtmth, String prodtgtyr)
     {
-        VPCRMSBAL.SaveProdAssignment(Convert.ToDecimal(username), prodname, Convert.ToDecimal(prodamttgt), Convert.ToDecimal(prodqtytgt), prodtgtmth, prodtgtyr);
+        try
+        {
+            VPCRMSBAL.SaveProdAssignment(Convert.ToDecimal(username), prodname, Convert.ToDecimal(prodamttgt), Convert.ToDecimal(prodqtytgt), prodtgtmth, prodtgtyr);
+        }
+        catch (Exception ex)
+        {
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
 
     }
 

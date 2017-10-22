@@ -82,9 +82,12 @@
 
                     <li><a href="#" id="A1" runat="server"><i class="linecons-user"></i><span class="title">Reports</span> </a>
                         <ul>
-                            <li><a href="Report1.aspx"><span class="title">Report1</span> </a></li>
+                            <li><a href="Report1.aspx"><span class="title">Reports</span> </a></li>
                         </ul>
 
+                        <ul>
+                            <li><a href="Forecasting.aspx"><span class="title">Forecasting</span> </a></li>
+                        </ul>
                         
                     </li>
                 </ul>

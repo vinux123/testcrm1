@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 
+
 /// <summary>
 /// =================================================
 /// Data Abstraction Layer(DAL) for CRMS application. 
@@ -26,11 +27,14 @@ public class VPCRMSDAL
 
     #endregion
 
-    
+   
+   
 
     string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
     string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
-
+    
+    
+    
     public VPCRMSDAL()
     {
         //
@@ -38,7 +42,7 @@ public class VPCRMSDAL
         //
     }
 
-
+    
     // Get User List for User List Drop Down. 
     public DataTable GetUserList(Decimal ClientAlias)
     {
@@ -63,7 +67,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
-            
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
             
         }
         finally
@@ -92,6 +96,7 @@ public class VPCRMSDAL
         {
             dCmd = new MySqlCommand("usp_GetQuotationDetailsbyID", conn);
             dCmd.Parameters.AddWithValue("@client_quotation_id", clientquoteid);
+
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
@@ -102,7 +107,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
-
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -139,6 +144,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -178,6 +184,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -213,6 +220,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -251,6 +259,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -290,6 +299,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -326,6 +336,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -362,6 +373,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -398,6 +410,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -412,7 +425,7 @@ public class VPCRMSDAL
     }
 
 
-    public DataTable GetQuotationDetails(Decimal UserID)
+    public DataTable GetQuotationDetails(Decimal UserID, String role)
     {
         // Get Quotation details of perticular user by passing UserID parameter. 
         DataTable dt = new DataTable();
@@ -426,6 +439,7 @@ public class VPCRMSDAL
         {
             dCmd = new MySqlCommand("usp_GetQuotationDetails", conn);
             dCmd.Parameters.AddWithValue("@client_customer_user", UserID);
+            dCmd.Parameters.AddWithValue("@client_customer_role", role);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
@@ -435,6 +449,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -473,6 +488,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -512,6 +528,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -551,6 +568,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -589,6 +607,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -674,6 +693,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -714,6 +734,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -754,6 +775,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -795,6 +817,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -835,6 +858,7 @@ public class VPCRMSDAL
            // throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -911,10 +935,12 @@ public class VPCRMSDAL
         }
         catch (MySqlException ex)
         {
-            //throw ex;
+            
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
-            throw; // vinayak
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+            
+            
         }
         finally
         {
@@ -972,6 +998,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1020,6 +1047,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1059,6 +1087,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1143,6 +1172,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1179,6 +1209,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1218,6 +1249,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1258,6 +1290,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -1293,6 +1326,7 @@ public class VPCRMSDAL
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 
+
 /// <summary>
 /// Summary description for VRCRMSBAL
 /// </summary>
@@ -73,9 +74,9 @@ public class VPCRMSBAL
     }
 
     // To fetch quotation details per user for Quatation form. 
-    public DataTable GetQuotationDetails(Decimal UserID)
+    public DataTable GetQuotationDetails(Decimal UserID, String role)
     {
-        DataTable dt = VPCRMSDAL.GetQuotationDetails(UserID);
+        DataTable dt = VPCRMSDAL.GetQuotationDetails(UserID, role);
         return dt;
     }
 

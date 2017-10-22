@@ -1,6 +1,7 @@
 ﻿
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -83,83 +84,90 @@ public partial class Report1 : System.Web.UI.Page
 
         Document document = new Document(new Rectangle(288f, 144f), 30, 20, 20, 20);
         document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
-
-        PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
-        document.Open();
-
-        BaseFont header = iTextSharp.text.pdf.BaseFont.CreateFont("C:\\windows\\fonts\\timesbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-
-        FontSelector selector = new FontSelector();
-        Font f1 = FontFactory.GetFont(FontFactory.TIMES_BOLD, 12);
-        f1.Color = BaseColor.MAGENTA;
-
-        Font f2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-        f1.Color = BaseColor.RED;
-
-        iTextSharp.text.Font fontHeader = new iTextSharp.text.Font(header, 18, iTextSharp.text.Font.BOLD);
-
-
-        DataTable dt = new DataTable();
-        dt = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
-        if (dt.Rows.Count > 0)
+        try
         {
-            Paragraph para1 = new Paragraph(dt.Rows[0]["clientname"].ToString().Trim(), f2);
-            para1.Alignment = Element.ALIGN_CENTER;
-            document.Add(para1);
-            para1.SpacingAfter = 50f;
-        }
-        //Paragraph para1 = new Paragraph("Company Name", f2);
+            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
+            document.Open();
+
+            BaseFont header = iTextSharp.text.pdf.BaseFont.CreateFont("C:\\windows\\fonts\\timesbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+            FontSelector selector = new FontSelector();
+            Font f1 = FontFactory.GetFont(FontFactory.TIMES_BOLD, 12);
+            f1.Color = BaseColor.MAGENTA;
+
+            Font f2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+            f1.Color = BaseColor.RED;
+
+            iTextSharp.text.Font fontHeader = new iTextSharp.text.Font(header, 18, iTextSharp.text.Font.BOLD);
 
 
-        Paragraph para2 = new Paragraph();
-        Phrase phrase1 = new Phrase("SALES DETAILS", f1);
-
-        para2.Alignment = Element.ALIGN_LEFT;
-        para2.Add(phrase1);
-        document.Add(para2);
-
-        Paragraph para3 = new Paragraph();
-        Phrase phrase2 = new Phrase("Sales Person: ");
-        Phrase phrase3 = new Phrase(Session["UserFirstName"].ToString().Trim() + ' ' + Session["UserLastName"].ToString().Trim());
-        para3.Add(phrase2);
-        para3.Add(phrase3);
-        para3.Alignment = Element.ALIGN_RIGHT;
-        para3.SpacingAfter = 50f;
-        document.Add(para3);
-
-
-        PdfPTable table = new PdfPTable(dataTable.Columns.Count);
-        table.WidthPercentage = 100;
-
-        //Set columns names in the pdf file
-        for (int k = 0; k < dataTable.Columns.Count; k++)
-        {
-            PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
-
-            cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
-            cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
-
-            table.AddCell(cell);
-        }
-
-        //Add values of DataTable in pdf file
-        for (int i = 0; i < dataTable.Rows.Count; i++)
-        {
-            for (int j = 0; j < dataTable.Columns.Count; j++)
+            DataTable dt = new DataTable();
+            dt = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
+            if (dt.Rows.Count > 0)
             {
-                PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+                Paragraph para1 = new Paragraph(dt.Rows[0]["clientname"].ToString().Trim(), f2);
+                para1.Alignment = Element.ALIGN_CENTER;
+                document.Add(para1);
+                para1.SpacingAfter = 50f;
+            }
+            //Paragraph para1 = new Paragraph("Company Name", f2);
 
-                //Align the cell in the center
+
+            Paragraph para2 = new Paragraph();
+            Phrase phrase1 = new Phrase("SALES DETAILS", f1);
+
+            para2.Alignment = Element.ALIGN_LEFT;
+            para2.Add(phrase1);
+            document.Add(para2);
+
+            Paragraph para3 = new Paragraph();
+            Phrase phrase2 = new Phrase("Sales Person: ");
+            Phrase phrase3 = new Phrase(Session["UserFirstName"].ToString().Trim() + ' ' + Session["UserLastName"].ToString().Trim());
+            para3.Add(phrase2);
+            para3.Add(phrase3);
+            para3.Alignment = Element.ALIGN_RIGHT;
+            para3.SpacingAfter = 50f;
+            document.Add(para3);
+
+
+            PdfPTable table = new PdfPTable(dataTable.Columns.Count);
+            table.WidthPercentage = 100;
+
+            //Set columns names in the pdf file
+            for (int k = 0; k < dataTable.Columns.Count; k++)
+            {
+                PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
+
                 cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                 cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
 
                 table.AddCell(cell);
             }
-        }
 
-        document.Add(table);
-        document.Close();
+            //Add values of DataTable in pdf file
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                for (int j = 0; j < dataTable.Columns.Count; j++)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+
+                    //Align the cell in the center
+                    cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+
+                    table.AddCell(cell);
+                }
+            }
+
+            document.Add(table);
+            document.Close();
+        }
+        catch (Exception ex)
+        {
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+        }
     }
 
     public void ExportToPdf(DataTable dataTable)
@@ -170,83 +178,90 @@ public partial class Report1 : System.Web.UI.Page
         Document document = new Document(new Rectangle(288f,144f), 30, 20, 20, 20);
         document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
 
-        PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
-        document.Open();
-
-        BaseFont header = iTextSharp.text.pdf.BaseFont.CreateFont("C:\\windows\\fonts\\timesbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        
-        FontSelector selector = new FontSelector();
-        Font f1 = FontFactory.GetFont(FontFactory.TIMES_BOLD, 12);
-        f1.Color = BaseColor.MAGENTA;
-
-        Font f2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-        f1.Color = BaseColor.RED;
-
-        iTextSharp.text.Font fontHeader = new iTextSharp.text.Font(header, 18, iTextSharp.text.Font.BOLD);
-
-
-        DataTable dt = new DataTable();
-        dt = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
-        if (dt.Rows.Count > 0)
+        try
         {
-            Paragraph para1 = new Paragraph(dt.Rows[0]["clientname"].ToString().Trim(), f2);
-            para1.Alignment = Element.ALIGN_CENTER;
-            document.Add(para1);
-            para1.SpacingAfter = 50f;
-        }
-        //Paragraph para1 = new Paragraph("Company Name", f2);
-        
-        
-        Paragraph para2 = new Paragraph();
-        Phrase phrase1 = new Phrase("DAILY SALES STATISTICS",f1);
-        
-        para2.Alignment = Element.ALIGN_LEFT;
-        para2.Add(phrase1);
-        document.Add(para2);
+            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
+            document.Open();
 
-        Paragraph para3 = new Paragraph();
-        Phrase phrase2 = new Phrase("Sales Person: ");
-        Phrase phrase3 = new Phrase(Session["UserFirstName"].ToString().Trim() + Session["UserLastName"].ToString().Trim());
-        para3.Add(phrase2);
-        para3.Add(phrase3);
-        para3.Alignment = Element.ALIGN_RIGHT;
-        para3.SpacingAfter = 50f;
-        document.Add(para3);
+            BaseFont header = iTextSharp.text.pdf.BaseFont.CreateFont("C:\\windows\\fonts\\timesbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
-        
-        PdfPTable table = new PdfPTable(dataTable.Columns.Count);
-        table.WidthPercentage = 100;
+            FontSelector selector = new FontSelector();
+            Font f1 = FontFactory.GetFont(FontFactory.TIMES_BOLD, 12);
+            f1.Color = BaseColor.MAGENTA;
 
-        //Set columns names in the pdf file
-        for (int k = 0; k < dataTable.Columns.Count; k++)
-        {
-            PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
+            Font f2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+            f1.Color = BaseColor.RED;
 
-            cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
-            cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
+            iTextSharp.text.Font fontHeader = new iTextSharp.text.Font(header, 18, iTextSharp.text.Font.BOLD);
 
-            table.AddCell(cell);
-        }
 
-        //Add values of DataTable in pdf file
-        for (int i = 0; i < dataTable.Rows.Count; i++)
-        {
-            for (int j = 0; j < dataTable.Columns.Count; j++)
+            DataTable dt = new DataTable();
+            dt = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
+            if (dt.Rows.Count > 0)
             {
-                PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+                Paragraph para1 = new Paragraph(dt.Rows[0]["clientname"].ToString().Trim(), f2);
+                para1.Alignment = Element.ALIGN_CENTER;
+                document.Add(para1);
+                para1.SpacingAfter = 50f;
+            }
+            //Paragraph para1 = new Paragraph("Company Name", f2);
 
-                //Align the cell in the center
+
+            Paragraph para2 = new Paragraph();
+            Phrase phrase1 = new Phrase("DAILY SALES STATISTICS", f1);
+
+            para2.Alignment = Element.ALIGN_LEFT;
+            para2.Add(phrase1);
+            document.Add(para2);
+
+            Paragraph para3 = new Paragraph();
+            Phrase phrase2 = new Phrase("Sales Person: ");
+            Phrase phrase3 = new Phrase(Session["UserFirstName"].ToString().Trim() + Session["UserLastName"].ToString().Trim());
+            para3.Add(phrase2);
+            para3.Add(phrase3);
+            para3.Alignment = Element.ALIGN_RIGHT;
+            para3.SpacingAfter = 50f;
+            document.Add(para3);
+
+
+            PdfPTable table = new PdfPTable(dataTable.Columns.Count);
+            table.WidthPercentage = 100;
+
+            //Set columns names in the pdf file
+            for (int k = 0; k < dataTable.Columns.Count; k++)
+            {
+                PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
+
                 cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                 cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
 
                 table.AddCell(cell);
             }
+
+            //Add values of DataTable in pdf file
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                for (int j = 0; j < dataTable.Columns.Count; j++)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+
+                    //Align the cell in the center
+                    cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+
+                    table.AddCell(cell);
+                }
+            }
+
+            document.Add(table);
+            document.Close();
         }
-
-        document.Add(table);
-        document.Close();
-
+        catch (Exception ex)
+        {
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+        }
     }
 
     public void SendMail()
@@ -292,11 +307,15 @@ public partial class Report1 : System.Web.UI.Page
             }
             catch (System.Net.Mail.SmtpException ex)
             {
-                throw ex;
+                ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+                logger.Error(ex.ToString());
+                Response.Redirect("ErrorPage.aspx");
             }
             catch (Exception exe)
             {
-                throw exe;
+                ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+                logger.Error(exe.ToString());
+                Response.Redirect("ErrorPage.aspx");
             }
         }
 

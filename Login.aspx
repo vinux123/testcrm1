@@ -28,7 +28,7 @@
 	
 	
 </head>
-<body class="page-body login-page login-light">
+<body class="page-body login-page login-light" style="background-image: url('assets/images/login_background.jpg');">
 
 	
 	<div class="login-container">
@@ -148,7 +148,7 @@
 					<div class="login-header">
 						
 						
-						<p>Dear user, log in to access the admin area!</p>
+						<p>Dear user, log in to access dashboard!</p>
 					</div>
 	
 					

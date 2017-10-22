@@ -26,7 +26,7 @@
 	
 	
 </head>
-<body class="page-body login-page login-light">
+<body class="page-body login-page login-light" style="background-image: url('assets/images/login_background.jpg');">
 
 	
 	<div class="login-container">
