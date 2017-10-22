@@ -16,6 +16,7 @@ public partial class Login : System.Web.UI.Page
     private VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
     protected void Page_Load(object sender, EventArgs e)
     {
+        //
         
     }
 
@@ -57,7 +58,7 @@ public partial class Login : System.Web.UI.Page
                             Session["UserFirstName"] = dtLogin.Rows[0]["clientuserfirstname"].ToString();
                             Session["UserLastName"] = dtLogin.Rows[0]["clientuserlastname"].ToString();
                             Session["UserRole"] = dtLogin.Rows[0]["clientuserrole"].ToString();
-                            
+                            Session["ConnectionStringCRMS"] = dtLogin1.Rows[0]["connectionstring"].ToString().Trim();
                             Response.Redirect("/Dashboard.aspx");
                         }
                     }

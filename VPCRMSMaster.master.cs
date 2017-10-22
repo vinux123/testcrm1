@@ -40,6 +40,7 @@ public partial class VPCRMSMaster : System.Web.UI.MasterPage
         Session["UserFirstName"] = null;
         Session["UserLastName"] = null;
         Session["UserRole"] = null;
+        Session["ConnectionStringCRMS"] = null;
         Session.Abandon();
     }
 }

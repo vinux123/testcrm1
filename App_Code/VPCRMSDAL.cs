@@ -14,7 +14,7 @@ using System.Web;
 /// =================================================
 ///     1. All stored procedures call are handled in this module.
 ///     2. Two database connection strings are used used in this program 
-///         a. VPCS for user related queries b. CRMS for application specific files. 
+///         a. VPCS for user related queries b. CRMS for application specific files ( fetched from Session Parameter set on Login.aspx form. 
 ///     3. Business Abstraction Layer(BAL) of CRMS creates instance of each method defined here as per need. 
 ///     4. Every page of application calls method from Business Abstraction Layer(BAL) as required. 
 /// </summary>
@@ -31,8 +31,8 @@ public class VPCRMSDAL
    
 
     string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
-    string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
-    
+    // string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+    //string connectionstring_crms = HttpContext.Current.Session["connectionstring_crms"].ToString().Trim();
     
     
     public VPCRMSDAL()
@@ -46,6 +46,7 @@ public class VPCRMSDAL
     // Get User List for User List Drop Down. 
     public DataTable GetUserList(Decimal ClientAlias)
     {
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
@@ -85,6 +86,7 @@ public class VPCRMSDAL
     // Get quotation details by ID
     public DataTable GetQuotationDetailsbyID(Decimal clientquoteid)
     {
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -124,6 +126,7 @@ public class VPCRMSDAL
     // Get Product List for Product List Drop Down. 
     public DataTable GetProductList(Decimal ClientAlias)
     {
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -164,6 +167,7 @@ public class VPCRMSDAL
     public DataTable GetUserPassword(String UserName)
     {
         // Connect to VPCRMS Admin Master Database to fetch user login details. 
+        
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
@@ -237,7 +241,8 @@ public class VPCRMSDAL
     // get product details which are to be edited
     public static DataTable GetEditedProdDetails(Decimal client_alias, String product_name)
     {
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        // string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim(); 
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -275,7 +280,8 @@ public class VPCRMSDAL
 
     public static DataTable GetEditedProdAssignments(Decimal client_user, String customer_product, String target_month, String target_year)
     {
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -315,7 +321,8 @@ public class VPCRMSDAL
 
     public static DataTable GetEditDCRDetails(Decimal ClientUserID)
     {
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -428,6 +435,7 @@ public class VPCRMSDAL
     public DataTable GetQuotationDetails(Decimal UserID, String role)
     {
         // Get Quotation details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -468,6 +476,7 @@ public class VPCRMSDAL
     public DataTable GetFollowupDetails(Decimal UserID)
     {
         // Get Quotation details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -507,6 +516,7 @@ public class VPCRMSDAL
     public DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
     {
         // Get daily call report details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -587,6 +597,7 @@ public class VPCRMSDAL
     public DataTable GetProductDetails(Decimal client_alias)
     {
         // Get Product details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -626,6 +637,7 @@ public class VPCRMSDAL
     public DataTable GetProductAssignDetails()
     {
         // Get Product Assignment details
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -663,7 +675,8 @@ public class VPCRMSDAL
 
     public static Decimal AssignClientCustomerID()
     {
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -711,7 +724,8 @@ public class VPCRMSDAL
 
     public static Decimal AssignQuoteID()
     {
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
@@ -750,7 +764,8 @@ public class VPCRMSDAL
 
     public static void SaveProdData(Decimal alias, String prodname, String proddesc, String prodhsn, String prodprice)
     {
-        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring); ;
         try
         {
@@ -790,7 +805,8 @@ public class VPCRMSDAL
 
     public static void SaveQuotationData(Decimal clientcustomerid, Decimal clientquoteid, Decimal clientcustomeruser, String clientquotedproduct, Decimal clientquotedprodqty, Decimal clientquotedprice, Decimal clientquotedamt)
     {
-        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring); ;
         try
         {
@@ -832,7 +848,9 @@ public class VPCRMSDAL
 
     public static void SaveProdAssignment(Decimal userid, String prodname, Decimal prodamttgt, Decimal prodqtytgt, String prodtgtmth, String prodtgtyr)
     {
-        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        
         MySqlConnection conn = new MySqlConnection(connectionstring); ;
         try
         {
@@ -878,7 +896,8 @@ public class VPCRMSDAL
         String companytype, String lastname, String email, Decimal alternatecontact, String status, String source, String saddress1, String saddress2, String scity, String sdistrict,
         String sstate, String scountry, Decimal spincode, String Mode, Decimal clientcustomerid)
     {
-        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         decimal NewSalesCustID = VPCRMSDAL.AssignClientCustomerID();
         MySqlConnection conn = new MySqlConnection(connectionstring);
         try
@@ -1101,52 +1120,7 @@ public class VPCRMSDAL
 
     }
 
-    //public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role)
-    //{
-    //    string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
-    //    MySqlConnection conn = new MySqlConnection(connectionstring); ;
-    //    try
-    //    {
-
-    //        conn = new MySqlConnection(connectionstring);
-    //        conn.Open();
-    //        using (MySqlCommand cmd = new MySqlCommand("usp_SaveClientUserDetails", conn))
-    //        {
-    //            cmd.CommandType = CommandType.StoredProcedure;
-    //            cmd.Parameters.AddWithValue("@client_alias", alias);
-    //            cmd.Parameters.AddWithValue("@client_user_id", userid);
-    //            cmd.Parameters.AddWithValue("@client_user_name", username);
-    //            cmd.Parameters.AddWithValue("@client_password", password);
-    //            cmd.Parameters.AddWithValue("@client_user_firstname", firstname);
-    //            cmd.Parameters.AddWithValue("@client_user_lastname", lastname);
-    //            cmd.Parameters.AddWithValue("@client_user_doj", doj);
-    //            cmd.Parameters.AddWithValue("@client_user_contact_no", contactno);
-    //            cmd.Parameters.AddWithValue("@client_user_emailid", emailid);
-    //            cmd.Parameters.AddWithValue("@client_user_role", role);
-    ////            cmd.Parameters.AddWithValue("@client_user_default_password", defaultpwd);
-
-
-    //            cmd.ExecuteNonQuery();
-    //            cmd.Dispose();
-    //        }
-    //    }
-    //    catch (MySqlException ex)
-    //    {
-    //        //throw ex;
-    //        ILog logger = log4net.LogManager.GetLogger("ErrorLog");
-    //        logger.Error(ex.ToString());
-    //    }
-    //    finally
-    //    {
-    //        if (conn.State == ConnectionState.Open)
-    //        {
-    //            conn.Close();
-    //            conn.Dispose();
-    //        }
-
-    //    }
-
-    //}
+    
 
     // Get existing user details
     public static DataTable GetUserDetails(Decimal userid)
@@ -1189,7 +1163,8 @@ public class VPCRMSDAL
     public static DataTable GetStatusCount(Decimal userid, String user_role)
     {
         DataTable dt = new DataTable();
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
         conn.Open();
         MySqlCommand dCmd;
@@ -1226,7 +1201,8 @@ public class VPCRMSDAL
     public static DataTable GetReportData(String fromdate, String todate, Decimal userid, String role)
     {
         DataTable dt = new DataTable();
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
         conn.Open();
         MySqlCommand dCmd;
@@ -1266,7 +1242,8 @@ public class VPCRMSDAL
     public static DataTable GetReportDataSalesDetails(String fromdate, String todate, Decimal userid, String role, String status)
     {
         DataTable dt = new DataTable();
-        string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
         conn.Open();
         MySqlCommand dCmd;
