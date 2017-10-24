@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="Report1.aspx.cs" Inherits="Report1" %>
+﻿
+
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="Report1.aspx.cs" Inherits="Report1" %>
 
 <%@ Register Assembly="OnlinePdfViewer" Namespace="OnlinePdfViewer" TagPrefix="PdfViewer" %>
 
@@ -6,13 +8,13 @@
    
     <div class="page-title">
         <div class=" col-md-10 title-env">
-            <h1 class="title">Report</h1>
+            <h1 class="title">Reports</h1>
             <ol class="breadcrumb bc-1">
                 <li>
                     <a href="/Dashboard.aspx">Dashboard</a>
                 </li>
                 <li class="active">
-                    <strong>Report1</strong>
+                    <strong>Reports</strong>
                 </li>
             </ol>
             <h2 class="epg-tit">

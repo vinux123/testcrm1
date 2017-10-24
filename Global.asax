@@ -1,4 +1,6 @@
-﻿<%@ Application Language="C#" %>
+﻿
+
+<%@ Application Language="C#" %>
 <%@ Import Namespace="VPCRMS" %>
 <%@ Import Namespace="System.Web.Optimization" %>
 
@@ -10,6 +12,7 @@
         BundleConfig.RegisterBundles(BundleTable.Bundles);
         AuthConfig.RegisterOpenAuth();
 
+        // Log4Net initialization & configuration. 
         log4net.Config.XmlConfigurator.Configure();
     }
     

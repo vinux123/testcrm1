@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="ProductAssignment.aspx.cs" Inherits="ProductAssignment" %>
+﻿
+
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="ProductAssignment.aspx.cs" Inherits="ProductAssignment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>

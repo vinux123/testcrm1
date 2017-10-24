@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="UserMaster.aspx.cs" Inherits="UserMaster" %>
+﻿
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="UserMaster.aspx.cs" Inherits="UserMaster" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
@@ -244,7 +245,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             &times;</button>
-                        <h4 class="modal-title">Add User - 
+                        <h4 class="modal-title">User Maintenance - 
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
                         </h4>
                     </div>
@@ -306,7 +307,7 @@
                                 <label class="control-label" for="role">Role</label>
                                 <asp:DropDownList ID="ddlrole" runat="server" CssClass="form-control" ClientIDMode="Static">
                                     <asp:ListItem Value="Associate" Text="Associate" Selected="True"></asp:ListItem>
-                                    <asp:ListItem Value="Manager" Text="Manager" Enabled="false"></asp:ListItem>
+                                    <asp:ListItem Value="Manager" Text="Manager" Enabled="true"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>

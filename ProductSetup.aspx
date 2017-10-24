@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="ProductSetup.aspx.cs" Inherits="ProductSetup" %>
+﻿
+
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="ProductSetup.aspx.cs" Inherits="ProductSetup" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
@@ -93,7 +95,7 @@
                 $('.modal').modal('hide');
             });
 
-            //clear modal cache so that new contenet can be loaded
+            //clear modal cache so that new content can be loaded
             $('.modal').on('hidden.bs.modal', function () {
                 $(this).find("input,textarea,select").val('').end();
                 $('.form-group').removeClass('validate-has-error');
@@ -154,6 +156,7 @@
     </style>
     <div class="page-title">
         <div class=" col-md-10 title-env">
+            <h1 class="title">Product Setup</h1>
             <ol class="breadcrumb bc-1">
                 <li>
                     <a href="/Dashboard.aspx">Dashboard</a>
@@ -174,7 +177,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             &times;</button>
-                        <h4 class="modal-title">Add Product - 
+                        <h4 class="modal-title">Product - 
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
                         </h4>
                     </div>

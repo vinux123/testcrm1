@@ -1,4 +1,6 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="VPCRMSMaster.master.cs"
+﻿
+
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="VPCRMSMaster.master.cs"
     EnableViewState="true" Inherits="VPCRMSMaster" %>
 <!DOCTYPE html>
 
@@ -80,7 +82,7 @@
                         </ul>
                     </li>
 
-                    <li><a href="#" id="A1" runat="server"><i class="linecons-user"></i><span class="title">Reports</span> </a>
+                    <li><a href="#" id="A1" runat="server"><i class="linecons-doc"></i><span class="title">Reports</span> </a>
                         <ul>
                             <li><a href="Report1.aspx"><span class="title">Reports</span> </a></li>
                         </ul>

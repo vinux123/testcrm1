@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="Forecasting.aspx.cs" Inherits="_Default" %>
+﻿
+
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="Forecasting.aspx.cs" Inherits="_Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     
@@ -187,7 +189,7 @@
                                         });
                                     });
                                 </script>
-                                <label class="control-label" for="status">Status</label>
+                                <label class="control-label" for="status"></label>
                                 <asp:DropDownList ID="ddlstatus" runat="server" CssClass="form-control" ClientIDMode="Static">
                                     <asp:ListItem Value="DCR" Text="DCR" Selected="True"></asp:ListItem>
                                     <asp:ListItem Value="Prospect" Text="Prospect"></asp:ListItem>

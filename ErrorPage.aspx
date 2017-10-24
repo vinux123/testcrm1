@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿<!-- 
+    
+    Copyright (c) 2017 VP Consultancy Services.
+    
+    Permission to use, copy, modify, and distribute this software for given
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies & with 
+    written approval of original VP Consultancy Services. 
+    
+-->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -6,7 +17,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Xenon Boostrap Admin Panel" />
 <meta name="author" content="" />
-<title>Exporter-create-schedule</title>
+<title>VPCRMS - Error Page</title>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic">
 <link rel="stylesheet" href="assets/css/fonts/linecons/css/linecons.css">
 <link rel="stylesheet" href="assets/css/fonts/fontawesome/css/font-awesome.min.css">

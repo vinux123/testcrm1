@@ -1,4 +1,15 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ChangePassword.aspx.cs" Inherits="_Default" %>
+﻿<!-- 
+    
+    Copyright (c) 2017 VP Consultancy Services.
+    
+    Permission to use, copy, modify, and distribute this software for given
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies & with 
+    written approval of original VP Consultancy Services. 
+    
+-->
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ChangePassword.aspx.cs" Inherits="_Default" %>
 
 <!DOCTYPE html>
 

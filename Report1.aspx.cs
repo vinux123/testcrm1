@@ -1,4 +1,12 @@
-﻿
+﻿// Copyright (c) 2017 VP Consultancy Services. 
+// 
+// Permission to use, copy, modify, and distribute this software for given
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies & with 
+// written consent of original VP Consultancy Services. 
+//
+
+
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using log4net;
@@ -21,7 +29,24 @@ public partial class Report1 : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        if (Session["UserID"] == null)
+        {
+            Response.Redirect("Login.aspx");
+        }
+
+        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
+
+        DataTable dtTable = new DataTable();
+
+        dtTable = VPCRMSBAL.GetCompanyName(client_alias);
+        if (dtTable.Rows.Count > 0)
+        {
+            lblCompanyName.Text = dtTable.Rows[0]["clientname"].ToString();
+        }
+        else
+        {
+            lblCompanyName.Text = "Default Name";
+        }
 
     }
 
@@ -29,6 +54,7 @@ public partial class Report1 : System.Web.UI.Page
     {
         string path = Server.MapPath("PDF-Files");
         string filename = path + "/Report1.pdf";
+        
 
         DataTable dt = new DataTable();
         dt = VPCRMSBAL.GetReportData("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim());
@@ -167,6 +193,7 @@ public partial class Report1 : System.Web.UI.Page
         {
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            Response.Redirect("ErrorPage.aspx");
         }
     }
 
@@ -261,6 +288,7 @@ public partial class Report1 : System.Web.UI.Page
         {
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            Response.Redirect("ErrorPage.aspx");
         }
     }
 

@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="DailyCallReport.aspx.cs" Inherits="testdcr" %>
+﻿
+
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="DailyCallReport.aspx.cs" Inherits="testdcr" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
@@ -193,7 +195,7 @@
                         $('#txterevenue').val(val.clientcustomerpamt)
                         var date1 = new Date(parseInt(val.custfollowupdate.replace('/Date(', ''))).toISOString();
                         $('#txtfollowupdate').val(date1.substring(0,10));
-                        //$('#txtfollowupdate').val(val.custfollowupdate);
+                        
                         $('#txtcompanyadd1').val(val.clientcustomeradd1);
                         $('#txtcompanyadd2').val(val.clientcustomeradd2);
                         $('#txtaddresscity').val(val.clientcustomercity);
@@ -202,7 +204,7 @@
                         $('#txtaddresscountry').val(val.clientcustomercountry);
                         $('#txtpincode').val(val.clientcustomerpincode);
                         $('#txtremarks').val(val.clientremarks);
-                        //$('#txtassignedto').val(val.customeruser);
+                        
                         $("#<%=ddlassignedto.ClientID %>").val(val.customeruser);
 
                         $("#<%=ddlcompanytype.ClientID %>").val(val.clientcompanytype);
@@ -247,10 +249,7 @@
                 aLengthMenu: [
                     [25, 50, 100, -1], [25, 50, 100, "All"]
                 ]
-                //      ,
-                //      "aoColumnDefs": [
-                //{ 'bSortable': false, 'aTargets': [6] }
-                //      ]
+                
             });
 
             $("#ddlstatus").select2({
@@ -337,17 +336,7 @@
         });
     </script>
 
-    <%--<script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $("#btnGenQuot").click(function (e) {
-                //debugger;
-                $('.modal').on('show.bs.modal', function (event) {
-                    $('.modal').insertAfter($('body'));
-                });
-                $('.modal').modal('show');
-           });
-        });
-    </script>--%>
+   
 
     <script>
         $(document).ready(function () {
@@ -379,11 +368,11 @@
                     else {
                         var pincode = $('#txtpincode').val();
                     }
-                    //var pincode = $('#txtpincode').val();
+                    
                     var remarks = $('#txtremarks').val();
 
                     var assignedto = $('#ddlassignedto option:selected').val();
-                    //var assignedto = $('#txtassignedto').val();
+                    
 
                     var companytype = $('#ddlcompanytype option:selected').val();
                     var lastname = $('#txtlastname').val();
@@ -394,7 +383,7 @@
                     else {
                         var alternatecontact = $('#txtalternatecontact').val();
                     }
-                    //var alternatecontact = $('#txtalternatecontact').val();
+                    
                     var status = $('#ddlstatus option:selected').val();
                     var source = $('#ddlsource option:selected').val();
                     var saddress1 = $('#txtsaddress1').val();
@@ -447,7 +436,7 @@
             $("#btnQuoteSubmit").click(function () {
                 debugger;
                 if (ValidateModal()) {
-                    //var customeruser = $('#txtcustomeruser').val();
+                    
                     var customeruser = $('#ddlcustomeruser option:selected').val();
                     var clientcustid = $('#hdnClientCustID').val();
                     var quotedprod = $('#ddlProductName option:selected').val();
@@ -487,7 +476,6 @@
             <ol class="breadcrumb bc-1">
                 <li>
 
-                    <%--<a href="ui-panels.html">Admin </a>--%>
                     <a href="/Dashboard.aspx">Dashboard</a>
                 </li>
                 <li class="active">
@@ -508,7 +496,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             &times;</button>
-                        <h4 class="modal-title">Add Daily Call Report - 
+                        <h4 class="modal-title">Daily Call Report - 
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
                         </h4>
                     </div>

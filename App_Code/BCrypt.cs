@@ -13,6 +13,16 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+// Copyright (c) 2017 VP Consultancy Services. 
+// 
+// Permission to use, copy, modify, and distribute this software for given
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies & with 
+// written approval of original VP Consultancy Services. 
+//
+
+
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
