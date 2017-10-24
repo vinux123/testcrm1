@@ -28,6 +28,7 @@ public partial class ProductSetup : System.Web.UI.Page
             Response.Redirect("Login.aspx");
         }
 
+        
         //Get Client alias from UserID
         decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
 
@@ -65,6 +66,7 @@ public partial class ProductSetup : System.Web.UI.Page
         decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
         DataTable dt = VPCRMSBAL.GetEditedProductDetails(client_alias, productname);
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
+        
         return json;
     }
 

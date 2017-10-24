@@ -120,7 +120,7 @@ public class VPCRMSBAL
         DataTable dt = VPCRMSDAL.GetCompanyName(ClientAlias);
         return dt;
     }
-
+    
     // To Fetch Product Details of client. 
     public DataTable GetProductDetails(Decimal ClientAlias)
     {

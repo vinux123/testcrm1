@@ -23,6 +23,11 @@
                 aLengthMenu: [
                     [25, 50, 100, -1], [25, 50, 100, "All"]
                 ]
+                ,
+                "columnDefs": [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                }]
             });
         });
 	</script>

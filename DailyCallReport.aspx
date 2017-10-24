@@ -249,6 +249,11 @@
                 aLengthMenu: [
                     [25, 50, 100, -1], [25, 50, 100, "All"]
                 ]
+                ,
+                "columnDefs": [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                }]
                 
             });
 
@@ -417,6 +422,9 @@
                         dataType: "json",
                         success: function (data) {
                             $('#modal-dialog').modal('hide');
+                            // For Parent Window's GridView refresh for changes made in modal popup. 
+                            window.top.location = "DailyCallReport.aspx";
+                            // changes end for refresh.
                         },
                         error: function (response) {
                             alert(response);

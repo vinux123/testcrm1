@@ -729,6 +729,54 @@ public class VPCRMSDAL
         return NewClientCustomerID;
     }
 
+    // Get New User ID
+    public static Decimal AssignNewUserID(Decimal client_alias)
+    {
+        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
+
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring);
+        conn.Open();
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+        decimal NewUserID = decimal.Zero;
+
+        try
+        {
+            dCmd = new MySqlCommand("usp_GetLatestUserID", conn);
+            dCmd.Parameters.AddWithValue("@client_alias", client_alias);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+            if (String.IsNullOrEmpty(dt.Rows[0]["maxclientuserid"].ToString()))
+            {
+                NewUserID = 1;
+            }
+            else
+            {
+                NewUserID = Convert.ToDecimal(dt.Rows[0]["maxclientuserid"].ToString().Trim()) + 1;
+            }
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return NewUserID;
+    }
+
     // Generate New Quote ID for Quotation Generation
 
     public static Decimal AssignQuoteID()
@@ -1044,6 +1092,8 @@ public class VPCRMSDAL
         String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd)
     {
         string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
+        decimal NewUserID = VPCRMSDAL.AssignNewUserID(alias);
+
         MySqlConnection conn = new MySqlConnection(connectionstring); ;
         try
         {
@@ -1054,7 +1104,8 @@ public class VPCRMSDAL
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@client_alias", alias);
-                cmd.Parameters.AddWithValue("@client_user_id", userid);
+                //cmd.Parameters.AddWithValue("@client_user_id", userid);
+                cmd.Parameters.AddWithValue("@client_user_id", NewUserID);
                 cmd.Parameters.AddWithValue("@client_user_name", username);
                 cmd.Parameters.AddWithValue("@client_password", password);
                 cmd.Parameters.AddWithValue("@client_user_firstname", firstname);

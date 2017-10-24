@@ -108,6 +108,7 @@
                         $('#txtemailid').val(val.clientuseremailid);
                         //$('#ddlrole option:selected').val(val.clientuserrole);
                         $("#<%=ddlrole.ClientID %>").val(val.clientuserrole);
+                        
                         $('#btnSubmit').attr('value', 'Update');
                         $('.modal').on('show.bs.modal', function (event) {
                             $('.modal').insertAfter($('body'));
@@ -176,8 +177,6 @@
                 $('#txtrepassword').prop("disabled", true);
             });
 
-
-
         });
     </script>
     <script>
@@ -202,6 +201,9 @@
                         dataType: "json",
                         success: function (data) {
                             $('.modal').modal('hide');
+                            // For Parent Window's GridView refresh for changes made in modal popup. 
+                            window.top.location = "UserMaster.aspx";
+                            // changes end for refresh.
                         },
                         error: function (response) {
                             alert(response);
@@ -247,6 +249,7 @@
                             &times;</button>
                         <h4 class="modal-title">User Maintenance - 
                             <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
+                            
                         </h4>
                     </div>
                     <label id="errorMessage"></label>
@@ -306,8 +309,8 @@
                             <div class="form-group">
                                 <label class="control-label" for="role">Role</label>
                                 <asp:DropDownList ID="ddlrole" runat="server" CssClass="form-control" ClientIDMode="Static">
-                                    <asp:ListItem Value="Associate" Text="Associate" Selected="True"></asp:ListItem>
-                                    <asp:ListItem Value="Manager" Text="Manager" Enabled="true"></asp:ListItem>
+                                    <asp:ListItem Value="Associate" Text="Associate"></asp:ListItem>
+                                    <asp:ListItem Value="Manager" Text="Manager"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>

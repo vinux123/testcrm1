@@ -103,17 +103,10 @@ public partial class testdcr : System.Web.UI.Page
         String companytype, String lastname, String email, String alternatecontact, String status, String source, String saddress1, String saddress2, String scity, String sdistrict,
         String sstate, String scountry, String spincode, String Mode, String clientcustomerid)
     {
-        try
-        {
-            VPCRMSBAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, Convert.ToDecimal(erevenue), followupdate,
+        VPCRMSBAL.SaveDCR(clientdate, company, firstname, occupation, primarycontact, website, Convert.ToDecimal(erevenue), followupdate,
             companyadd1, companyadd2, addresscity, addressdist, addressstate, addresscountry, Convert.ToDecimal(pincode), remarks, Convert.ToDecimal(assignedto),
             companytype, lastname, email, Convert.ToDecimal(alternatecontact), status, source, saddress1, saddress2, scity, sdistrict,
             sstate, scountry, Convert.ToDecimal(spincode), Mode, Convert.ToDecimal(clientcustomerid));
-        }
-        catch (Exception ex)
-        {
-            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
-        }
         
     }
 

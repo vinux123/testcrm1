@@ -4,6 +4,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script type="text/javascript">
+        
         $(document).ready(function () {
             fixGridView($("#grdProduct"));
         });
@@ -81,11 +82,19 @@
     </script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
+            
             $("#grdProduct").dataTable({
                 aLengthMenu: [
                     [25, 50, 100, -1], [25, 50, 100, "All"]
                 ]
+                ,
+                "columnDefs": [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                }]
             });
+
+            
         });
     </script>
     <script type="text/javascript">
@@ -95,9 +104,14 @@
                 $('.modal').modal('hide');
             });
 
-            //clear modal cache so that new content can be loaded
+            // clear modal cache so that new content can be loaded
             $('.modal').on('hidden.bs.modal', function () {
                 $(this).find("input,textarea,select").val('').end();
+                // testing vinayak
+                debugger;
+                var companyname = $('#lblCompanyName').text();
+                $('#lblModalCompanyName').text(companyname);
+                //vinayak testing end. 
                 $('.form-group').removeClass('validate-has-error');
                 //$('span').html("");
                 $('.modal').find('span').html("");
@@ -136,6 +150,12 @@
                         dataType: "json",
                         success: function (data) {
                             $('.modal').modal('hide');
+                            debugger;
+                            $('#myalert').append('<div id="myalert" class="alert alert-info" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999; display: normal;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Record Updated Successful!</strong></div>');
+
+                            // For Parent Window's GridView refresh for changes made in modal popup. 
+                            window.top.location = "ProductSetup.aspx";
+                            // changes end for refresh. 
                         },
                         error: function (response) {
                             alert(response);
@@ -166,7 +186,7 @@
                 </li>
             </ol>
             <h2 class="epg-tit">
-                <asp:Label ID="lblCompanyName" runat="server"></asp:Label>
+                <asp:Label ID="lblCompanyName" runat="server" ClientIDMode="Static"></asp:Label>
             </h2>
         </div>
     </div>
@@ -178,7 +198,7 @@
                         <button type="button" class="close" data-dismiss="modal">
                             &times;</button>
                         <h4 class="modal-title">Product - 
-                            <asp:Label ID="lblModalCompanyName" runat="server"></asp:Label>
+                            <asp:Label ID="lblModalCompanyName" runat="server" ClientIDMode="Static"></asp:Label>
                         </h4>
                     </div>
                     <div class="modal-body" id="modalbody">
@@ -201,6 +221,7 @@
                                 <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
                                 <span id="prodpriceHelper"></span>
                             </div>
+                           
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -212,6 +233,13 @@
             </div>
         </div>
     </div>
+    <div id="myalert" class="alert alert-info" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Record Updated Successfully.</strong>
+    </div>
+
+    
+    
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default blue-box">
