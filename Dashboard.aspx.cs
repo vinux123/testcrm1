@@ -62,11 +62,12 @@ public partial class Dashboard : System.Web.UI.Page
         drNew1[1] = dtCount.Rows[0]["QualifiedCountMonthly"];
         dt.Rows.Add(drNew1);
 
+
         DataRow drNew2 = dt.NewRow();
-        drNew2[0] = "Junk";
-        drNew2[1] = dtCount.Rows[0]["JunkCountMonthly"];
+        drNew2[0] = "Closed";
+        drNew2[1] = dtCount.Rows[0]["ClosedCountMonthly"];
         dt.Rows.Add(drNew2);
-        
+
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
         return json;
     }
@@ -87,10 +88,10 @@ public partial class Dashboard : System.Web.UI.Page
         drNew1[0] = "Qualified";
         drNew1[1] = dtCount.Rows[0]["QualifiedCountHly"];
         dt.Rows.Add(drNew1);
-
+        
         DataRow drNew2 = dt.NewRow();
-        drNew2[0] = "Junk";
-        drNew2[1] = dtCount.Rows[0]["JunkCountHly"];
+        drNew2[0] = "Closed";
+        drNew2[1] = dtCount.Rows[0]["ClosedCountHly"];
         dt.Rows.Add(drNew2);
 
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
@@ -115,8 +116,8 @@ public partial class Dashboard : System.Web.UI.Page
         dt.Rows.Add(drNew1);
 
         DataRow drNew2 = dt.NewRow();
-        drNew2[0] = "Junk";
-        drNew2[1] = dtCount.Rows[0]["JunkCountYearly"];
+        drNew2[0] = "Closed";
+        drNew2[1] = dtCount.Rows[0]["ClosedCountYearly"];
         dt.Rows.Add(drNew2);
 
         String json = DataTableToJSONWithJavaScriptSerializer(dt);

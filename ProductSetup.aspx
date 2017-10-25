@@ -107,14 +107,9 @@
             // clear modal cache so that new content can be loaded
             $('.modal').on('hidden.bs.modal', function () {
                 $(this).find("input,textarea,select").val('').end();
-                // testing vinayak
-                debugger;
-                var companyname = $('#lblCompanyName').text();
-                $('#lblModalCompanyName').text(companyname);
-                //vinayak testing end. 
                 $('.form-group').removeClass('validate-has-error');
-                //$('span').html("");
-                $('.modal').find('span').html("");
+                                
+                $('.modal-body').find('span').html("");
             });
 
             $('#CancelModal').on('click', function () {
@@ -125,7 +120,6 @@
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $("#btnAddProduct").click(function (e) {
-                //debugger;
                 $('.modal').on('show.bs.modal', function (event) {
                     $('.modal').insertAfter($('body'));
                 });
@@ -150,12 +144,17 @@
                         dataType: "json",
                         success: function (data) {
                             $('.modal').modal('hide');
-                            debugger;
-                            $('#myalert').append('<div id="myalert" class="alert alert-info" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999; display: normal;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Record Updated Successful!</strong></div>');
+                            $.alert({
+                                title: 'Confirm!',
+                                content: 'Records Updated Successfully',
+                                confirmButtonClass: 'btn-primary',
+                                animation: 'zoom',
+                                backgroundDismiss: false,
+                                confirm: function () {
+                                    window.top.location = "ProductSetup.aspx";
+                                }
+                            });
 
-                            // For Parent Window's GridView refresh for changes made in modal popup. 
-                            window.top.location = "ProductSetup.aspx";
-                            // changes end for refresh. 
                         },
                         error: function (response) {
                             alert(response);
@@ -233,12 +232,6 @@
             </div>
         </div>
     </div>
-    <div id="myalert" class="alert alert-info" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Record Updated Successfully.</strong>
-    </div>
-
-    
     
     <div class="row">
         <div class="col-md-12">

@@ -40,9 +40,7 @@ public class VPCRMSDAL
    
 
     string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
-    // string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
-    //string connectionstring_crms = HttpContext.Current.Session["connectionstring_crms"].ToString().Trim();
-    
+        
     
     public VPCRMSDAL()
     {
@@ -56,15 +54,14 @@ public class VPCRMSDAL
     public DataTable GetUserList(Decimal ClientAlias)
     {
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
-        DataTable dt = new DataTable();
-
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
         MySqlCommand dCmd;
-        DataTable dtUsers = new DataTable();
-
+        DataTable dt = new DataTable();
+        
         try
         {
+            conn.Open();
+            DataTable dtUsers = new DataTable();
             dCmd = new MySqlCommand("usp_getUserList", conn);
             dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -97,14 +94,13 @@ public class VPCRMSDAL
     {
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         DataTable dt = new DataTable();
-
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetQuotationDetailsbyID", conn);
             dCmd.Parameters.AddWithValue("@client_quotation_id", clientquoteid);
 
@@ -139,12 +135,12 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_getProductList", conn);
             dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -180,12 +176,12 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("fetch_user_pswd", conn);
             dCmd.Parameters.AddWithValue("@client_user_name", UserName);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -217,12 +213,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetUserDetails", conn);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
@@ -255,12 +252,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_EditModalProdDetails", conn);
             dCmd.Parameters.AddWithValue("@client_alias", client_alias);
             dCmd.Parameters.AddWithValue("@product_name", product_name);
@@ -294,12 +292,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_EditModalProdAssignment", conn);
             dCmd.Parameters.AddWithValue("@customer_user", client_user);
             dCmd.Parameters.AddWithValue("@customer_product", customer_product);
@@ -335,12 +334,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_EditModalDCR", conn);
             dCmd.Parameters.AddWithValue("@client_customer_id", ClientUserID);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -372,12 +372,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetActiveClientDetails", conn);
             dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -409,12 +410,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_getNumberOfAllowedUsers", conn);
             dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -448,12 +450,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetQuotationDetails", conn);
             dCmd.Parameters.AddWithValue("@client_customer_user", UserID);
             dCmd.Parameters.AddWithValue("@client_customer_role", role);
@@ -489,12 +492,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_getFollowupDetails", conn);
             dCmd.Parameters.AddWithValue("@client_customer_user", UserID);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -529,12 +533,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
         
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_getDailyCallReport", conn);
             dCmd.Parameters.AddWithValue("@client_customer_user", UserID);
             dCmd.Parameters.AddWithValue("@client_customer_role", UserRole);
@@ -570,12 +575,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetCompanyName", conn);
             dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -610,12 +616,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetProductList", conn);
             dCmd.Parameters.AddWithValue("@client_alias", client_alias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -650,23 +657,23 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetProductAssignment", conn);
-            //dCmd.Parameters.AddWithValue("@client_customer_alias", client_alias);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
         }
         catch (Exception ex)
         {
-            //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
         finally
         {
@@ -689,15 +696,15 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
         decimal NewClientCustomerID = decimal.Zero;
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_getLatestClientCustomerID", conn);
-            
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
@@ -737,13 +744,14 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
         decimal NewUserID = decimal.Zero;
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetLatestUserID", conn);
             dCmd.Parameters.AddWithValue("@client_alias", client_alias);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -786,13 +794,14 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
         decimal NewQuoteID = decimal.Zero;
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetLatestQuoteID", conn);
 
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -1088,8 +1097,9 @@ public class VPCRMSDAL
     }
 
     // Save/Update User details. 
-    public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, 
-        String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd)
+    //public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, 
+    public static void SaveUserDetails(Decimal alias, String username, String password, String firstname, 
+        String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd, String mode, String userid)
     {
         string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
         decimal NewUserID = VPCRMSDAL.AssignNewUserID(alias);
@@ -1104,8 +1114,14 @@ public class VPCRMSDAL
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@client_alias", alias);
-                //cmd.Parameters.AddWithValue("@client_user_id", userid);
-                cmd.Parameters.AddWithValue("@client_user_id", NewUserID);
+                if (mode == "Insert")
+                {
+                    cmd.Parameters.AddWithValue("@client_user_id", NewUserID);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@client_user_id", userid);
+                }
                 cmd.Parameters.AddWithValue("@client_user_name", username);
                 cmd.Parameters.AddWithValue("@client_password", password);
                 cmd.Parameters.AddWithValue("@client_user_firstname", firstname);
@@ -1115,7 +1131,6 @@ public class VPCRMSDAL
                 cmd.Parameters.AddWithValue("@client_user_emailid", emailid);
                 cmd.Parameters.AddWithValue("@client_user_role", role);
                 cmd.Parameters.AddWithValue("@client_user_default_password", defaultpwd);
-
 
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
@@ -1189,12 +1204,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_EditModalUserDetails", conn);
             dCmd.Parameters.AddWithValue("@UserID", userid);
             dCmd.CommandType = CommandType.StoredProcedure;
@@ -1226,12 +1242,13 @@ public class VPCRMSDAL
         //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_StatusCountReport", conn);
             dCmd.Parameters.AddWithValue("@client_userid", userid);
             dCmd.Parameters.AddWithValue("@client_role", user_role);
@@ -1241,7 +1258,6 @@ public class VPCRMSDAL
         }
         catch (Exception ex)
         {
-            //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
@@ -1264,12 +1280,13 @@ public class VPCRMSDAL
         //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetReportData", conn);
             
             dCmd.Parameters.AddWithValue("@client_report_fromdate", fromdate);
@@ -1305,12 +1322,13 @@ public class VPCRMSDAL
         //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
         MySqlConnection conn = new MySqlConnection(connectionstring_crms);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_GetReportDataSalesDetails", conn);
 
             dCmd.Parameters.AddWithValue("@client_report_fromdate", fromdate);
@@ -1346,12 +1364,13 @@ public class VPCRMSDAL
         DataTable dt = new DataTable();
 
         MySqlConnection conn = new MySqlConnection(connectionstring);
-        conn.Open();
+        
         MySqlCommand dCmd;
         DataTable dtUsers = new DataTable();
 
         try
         {
+            conn.Open();
             dCmd = new MySqlCommand("usp_CheckUserName", conn);
             dCmd.Parameters.AddWithValue("@UserName", UserName);
             dCmd.CommandType = CommandType.StoredProcedure;

@@ -139,10 +139,11 @@ public class VPCRMSBAL
     }
 
     // To Save/Update user details. 
-    public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd)
+    //public static void SaveUserDetails(Decimal alias, Decimal userid, String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd)
+    public static void SaveUserDetails(Decimal alias,String username, String password, String firstname, String lastname, String doj, Decimal contactno, String emailid, String role, String defaultpwd, String mode, String userid)
     {
-        
-        VPCRMSDAL.SaveUserDetails(alias, userid, username, password, firstname, lastname, doj, contactno, emailid, role, defaultpwd);
+        //VPCRMSDAL.SaveUserDetails(alias, userid, username, password, firstname, lastname, doj, contactno, emailid, role, defaultpwd);
+        VPCRMSDAL.SaveUserDetails(alias, username, password, firstname, lastname, doj, contactno, emailid, role, defaultpwd, mode, userid);
     }
 
     

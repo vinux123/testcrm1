@@ -15,7 +15,7 @@
 
 <html lang="en">
 <head>
-	<title>Login</title>
+	<title>VPCRMS | Change Password!</title>
 
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic">
 	<link rel="stylesheet" href="assets/css/fonts/linecons/css/linecons.css">

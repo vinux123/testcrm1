@@ -205,7 +205,6 @@
                     var prodname = $('#ddlProductName option:selected').val();
                     var prodamttgt = $('#txtprodamttgt').val();
                     var prodqtytgt = $('#txtprodqtytgt').val();
-                    //var prodtgtmth = $('#txtprodtgtmth').val();
                     var prodtgtmth = $('#ddlprodtgtmth option:selected').val();
                     var prodtgtyr = $('#txtprodtgtyr').val();
 
@@ -217,9 +216,17 @@
                         dataType: "json",
                         success: function (data) {
                             $('.modal').modal('hide');
-                            // For Parent Window's GridView refresh for changes made in modal popup. 
-                            window.top.location = "ProductAssignment.aspx";
-                            // changes end for refresh.
+                            $.alert({
+                                title: 'Confirm!',
+                                content: 'Records Updated Successfully',
+                                confirmButtonClass: 'btn-primary',
+                                animation: 'zoom',
+                                backgroundDismiss: false,
+                                confirm: function () {
+                                    window.top.location = "ProductAssignment.aspx";
+                                }
+                            });
+                            
                         },
                         error: function (response) {
                             alert(response);
@@ -240,8 +247,9 @@
     </style>
     <div class="page-title">
         <div class=" col-md-10 title-env">
-            <%--<h1 class="title">User Master</h1>--%>
+            <h1 class="title">Product Assignment</h1>
             <ol class="breadcrumb bc-1">
+                
                 <li>
                     <a href="/Dashboard.aspx">Dashboard</a>
                 </li>
@@ -257,23 +265,6 @@
 
     <%--Vinayak--%>
     <div class="row">
-        <div class="modal fade custom-width" id="modal-2">
-            <div class="modal-dialog" style="width: 60%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Custom Width Modal</h4>
-                    </div>
-                    <div class="modal-body">
-                        Any type of width can be applied.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-info">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -285,8 +276,7 @@
                         </h4>
                     </div>
                     <div class="modal-body">
-                        <%--<asp:FormView ID="frmModalPopup" runat="server" DefaultMode="Insert">
-                        <InsertItemTemplate>--%>
+                        
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class=" control-label" for="field-1">Assigned To</label>
@@ -335,54 +325,7 @@
                                 <span id="prodtgtyrHelper"></span>
                             </div>
                         </div>
-                        <%--<div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label class=" control-label" for="field-1">Username</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="username" ID="txtusername" ClientIDMode="Static" autocomplete="off" MaxLength="10"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                        <label class="control-label" for="repassword">Reenter Password</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="repassword" ID="txtrepassword" autocomplete="off" TextMode="Password" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="lastname">Last Name</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="lastname" ClientIDMode="Static" ID="txtlastname" autocomplete="off" MaxLength="20"></asp:TextBox>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="contactno">Contact No</label>
-                                    <div class="form-group">
-                                        <asp:TextBox runat="server" class="form-control" name="contactno" ID="txtcontactno" ClientIDMode="Static" autocomplete="off" TextMode="Phone" MaxLength="10"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    
-                                        <label class="control-label" for="role">Role</label>
-                                    <div class="form-group">
-                                        <asp:DropDownList ID="ddlrole" runat="server" CssClass="form-control" ClientIDMode="Static">
-                                            <asp:ListItem Value="Associate" Text="Associate" Selected="True"></asp:ListItem>
-                                            <asp:ListItem Value="Manager" Text="Manager" Enabled="false"></asp:ListItem>
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>
-
-                                
-                                </div>
-                        --%>
-
-
-                        <%--</div>--%>
-                        <%--</InsertItemTemplate>
-                    </asp:FormView>--%>
+                  
                     </div>
                     <div class="modal-footer">
 

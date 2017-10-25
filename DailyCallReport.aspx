@@ -316,11 +316,9 @@
 
             //clear modal cache so that new contenet can be loaded
             $('.modal').on('hidden.bs.modal', function () {
-                //                $(this).removeData('bs.modal');
                 $(this).find("input,textarea,select").val('').end();
                 $('.form-group').removeClass('validate-has-error');
-                //$('span').html("");
-                $('.modal').find('span').html("");
+                $('.modal-body').find('span').html("");
             });
 
             $('#CancelModal').on('click', function () {
@@ -422,9 +420,17 @@
                         dataType: "json",
                         success: function (data) {
                             $('#modal-dialog').modal('hide');
-                            // For Parent Window's GridView refresh for changes made in modal popup. 
-                            window.top.location = "DailyCallReport.aspx";
-                            // changes end for refresh.
+                            $.alert({
+                                title: 'Confirm!',
+                                content: 'Records Updated Successfully',
+                                confirmButtonClass: 'btn-primary',
+                                animation: 'zoom',
+                                backgroundDismiss: false,
+                                confirm: function () {
+                                    window.top.location = "DailyCallReport.aspx";
+                                }
+                            });
+                            
                         },
                         error: function (response) {
                             alert(response);
@@ -460,6 +466,16 @@
                         dataType: "json",
                         success: function (data) {
                             $('#modal_dialog1').modal('hide');
+                            $.alert({
+                                title: 'Confirm!',
+                                content: 'Quotation Generated Successfully',
+                                confirmButtonClass: 'btn-primary',
+                                animation: 'zoom',
+                                backgroundDismiss: false,
+                                confirm: function () {
+                                    window.top.location = "DailyCallReport.aspx";
+                                }
+                            });
                         },
                         error: function (response) {
                             alert(response);
@@ -636,10 +652,11 @@
                                 <div class="form-group">
                                     <label class="control-label" for="status">Status</label>
                                         <asp:DropDownList ID="ddlstatus" runat="server" CssClass="form-control" ClientIDMode="Static">
-                                            <asp:ListItem Value="DCR" Text="DCR" Selected="True"></asp:ListItem>
+                                            <asp:ListItem Value="DCR" Text="DCR"></asp:ListItem>
                                             <asp:ListItem Value="Prospect" Text="Prospect"></asp:ListItem>
                                             <asp:ListItem Value="Qualified" Text="Qualified"></asp:ListItem>
                                             <asp:ListItem Value="JunkLost" Text="Junk/Lost"></asp:ListItem>
+                                            <asp:ListItem Value="Closed" Text="Closed"></asp:ListItem>
                                         </asp:DropDownList>
                                     <span id="ddlstatusHelper"></span>
                                 </div>

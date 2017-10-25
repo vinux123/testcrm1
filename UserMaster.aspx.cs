@@ -61,16 +61,23 @@ public partial class UserMaster : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static void SaveUserData(String userid, String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role)
+    //public static void SaveUserData(String userid, String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role)
+    public static void SaveUserData(String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role, String mode, String userid)
     {
         
-        decimal alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)); 
-        
-        
-        string sltforpwd = BCrypt.GenerateSalt(10);
-        string hashedpassword = BCrypt.HashPassword(password, sltforpwd);
-        
-        VPCRMSBAL.SaveUserDetails(alias, Convert.ToDecimal(userid), username, hashedpassword, firstname, lastname, doj, Convert.ToDecimal(contactno), emailid, role, "N");
+        decimal alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+
+        string hashedpassword = String.Empty;
+
+        // IN Edit mode, if password is not passed in modal update, do not compute hash and pass password field as blank. 
+        // Stored procedure handled blank password condition. 
+        if (!String.IsNullOrEmpty(password))
+        {
+            string sltforpwd = BCrypt.GenerateSalt(10);
+            hashedpassword = BCrypt.HashPassword(password, sltforpwd);
+        }
+                        
+        VPCRMSBAL.SaveUserDetails(alias, username, hashedpassword, firstname, lastname, doj, Convert.ToDecimal(contactno), emailid, role, "N", mode, userid);
 
     }
 
