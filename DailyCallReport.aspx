@@ -652,7 +652,6 @@
                                 <div class="form-group">
                                     <label class="control-label" for="status">Status</label>
                                         <asp:DropDownList ID="ddlstatus" runat="server" CssClass="form-control" ClientIDMode="Static">
-                                            <asp:ListItem Value="DCR" Text="DCR"></asp:ListItem>
                                             <asp:ListItem Value="Prospect" Text="Prospect"></asp:ListItem>
                                             <asp:ListItem Value="Qualified" Text="Qualified"></asp:ListItem>
                                             <asp:ListItem Value="JunkLost" Text="Junk/Lost"></asp:ListItem>

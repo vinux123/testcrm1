@@ -26,7 +26,17 @@
                 data: "{'customerquoteid': '" + customerquoteid + "'}",
                 dataType: "json",
                 success: function (data) {
-                    alert("quotation generated");
+                    //alert("quotation generated");
+                    $.alert({
+                        title: 'PDF',
+                        content: 'Quotation Generated',
+                        confirmButtonClass: 'btn-primary',
+                        animation: 'zoom',
+                        backgroundDismiss: false,
+                        confirm: function () {
+                            window.top.location = "ProductSetup.aspx";
+                        }
+                    });
                 },
 
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
