@@ -23,6 +23,11 @@ public partial class ProductSetup : System.Web.UI.Page
     
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Set page cache to NO
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");
@@ -32,10 +37,10 @@ public partial class ProductSetup : System.Web.UI.Page
         //Get Client alias from UserID
         decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
 
-        DataTable dtLogin = new DataTable();
-        dtLogin = VPCRMSBAL.GetProductDetails(client_alias);
-        grdProduct.DataSource = dtLogin;
-        grdProduct.DataBind();
+        //DataTable dtLogin = new DataTable();
+        //dtLogin = VPCRMSBAL.GetProductDetails(client_alias);
+        //grdProduct.DataSource = dtLogin;
+        //grdProduct.DataBind();
 
         DataTable dtTable = new DataTable();
         dtTable = VPCRMSBAL.GetCompanyName(client_alias);
@@ -50,6 +55,18 @@ public partial class ProductSetup : System.Web.UI.Page
             lblCompanyName.Text = "Default Name";
             lblModalCompanyName.Text = "Default Name";
         }
+    }
+
+    [WebMethod]
+    public static string GetProductDetails()
+    {
+        // HttpContext is used here to access non static variable Session inside static method. 
+        DataTable dtProductDetails = new DataTable();
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        dtProductDetails = VPCRMSBAL.GetProductDetails(client_alias);
+        String json = DataTableToJSONWithJavaScriptSerializer(dtProductDetails);
+
+        return json;
     }
 
     [WebMethod]

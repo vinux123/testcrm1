@@ -24,6 +24,11 @@ public partial class UserMaster : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Set page cache to NO
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");
@@ -31,12 +36,7 @@ public partial class UserMaster : System.Web.UI.Page
 
         decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
 
-        DataTable dtLogin = new DataTable();
-        dtLogin = VPCRMSBAL.GetUsersDetails();
         
-        grdUserMaster.DataSource = dtLogin;
-        grdUserMaster.DataBind();
-
         DataTable dtTable = new DataTable();
         dtTable = VPCRMSBAL.GetCompanyName(client_alias);
         if (dtTable.Rows.Count > 0)
@@ -59,6 +59,14 @@ public partial class UserMaster : System.Web.UI.Page
         //}
         
     }
+    [WebMethod]
+    public static string GetUserDetails()
+    {
+        DataTable dtUserDetails = VPCRMSBAL.GetUsersDetails();
+        String json = DataTableToJSONWithJavaScriptSerializer(dtUserDetails);
+        return json;
+    }
+
 
     [WebMethod]
     //public static void SaveUserData(String userid, String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role)

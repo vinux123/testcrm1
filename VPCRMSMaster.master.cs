@@ -20,6 +20,11 @@ public partial class VPCRMSMaster : System.Web.UI.MasterPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Set page cache to NO
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");
@@ -49,6 +54,7 @@ public partial class VPCRMSMaster : System.Web.UI.MasterPage
         Session["UserLastName"] = null;
         Session["UserRole"] = null;
         Session["ConnectionStringCRMS"] = null;
+        Session.RemoveAll();
         Session.Abandon();
     }
 }

@@ -24,6 +24,11 @@ public partial class Dashboard : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Set page cache to NO
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");

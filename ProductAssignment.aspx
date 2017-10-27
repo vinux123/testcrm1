@@ -8,9 +8,64 @@
   <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"/>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"> </script>--%>
-
+    <style>
+        #fullpageloading
+        {
+            background-color: Gray;
+            opacity: 0.5;
+            cursor: auto;
+            width: 100%;
+            height: 100%;
+            z-index: 15; /* Positioning */
+            position: absolute;
+            left: 0;
+            top: 0;
+            vertical-align: middle;
+            text-align: center;
+            display: none;
+        }
+    </style>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "ProductAssignment.aspx/GetProductDetails",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function () {
+                    $('#fullpageloading').show()
+                },
+                complete: function () {
+                    $('#fullpageloading').hide();
+                },
+                success: function (data) {
+                    var finaldata = "<tr><th>Assigned To</th><th>Product Name</th><th>Amount Target</th><th>Product Qty Target</th><th>Product Target Month</th><th>Product Target Year</th><th>Action</th></tr>";
+                    var JSONDataR = $.parseJSON(data.d);
+                    for (var i = 0; i < JSONDataR.length; i++) {
+                        finaldata = finaldata + '<tr><td>' + JSONDataR[i].prodassignedto + '</td><td>' + JSONDataR[i].productname + '</td><td>' + JSONDataR[i].prodamttgt + '</td><td>' + JSONDataR[i].prodqtytgt + '</td><td>' + JSONDataR[i].prodtgtmth + '</td><td>' + JSONDataR[i].prodtgtyr + '</td><td><a href=#><i class="fa fa-pencil" id="I9" onclick="EditProductAssignment(\'' + JSONDataR[i].prodassignedto + '\');"></i></a></td></tr>';
+                    }
+                    $("#grdProductAssignment").append(finaldata);
+                    fixGridView($("#grdProductAssignment"));
+                    $("#grdProductAssignment").dataTable({
+                        aLengthMenu: [
+                            [5, 10, 15, 20, 25, 50, 100, -1], [5, 10, 15, 20, 25, 50, 100, "All"]
+                        ],
+                        "aoColumnDefs": [
+                  { 'bSortable': false, 'aTargets': [6] }
+                        ]
+                        ,
+                        "columnDefs": [{
+                            "defaultContent": "-",
+                            "targets": "_all"
+                        }]
+                    });
+                },
+                error: function (data) {
+                    console.log('ajax call error');
+                }
+            });
+
             fixGridView($("#grdProductAssignment"));
         });
 
@@ -102,6 +157,12 @@
                 url: "ProductAssignment.aspx/EditProductAssignment",
                 data: "{'ProdAssignedTo': '" + ProdAssignedTo + "','productname': '" + ProductName + "','target_month': '" + ProdTgtMth + "','target_year': '" + ProdTgtYr + "'}",
                 dataType: "json",
+                beforeSend: function () {
+                    $('#fullpageloading').show()
+                },
+                complete: function () {
+                    $('#fullpageloading').hide();
+                },
                 success: function (data) {
                     var JsonData = data.d;
                     var JSONDataR = $.parseJSON(JsonData);
@@ -130,40 +191,40 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
-            $("#grdProductAssignment").dataTable({
-                aLengthMenu: [
-                    [25, 50, 100, -1], [25, 50, 100, "All"]
-                ]
-                ,
-                "columnDefs": [{
-                    "defaultContent": "-",
-                    "targets": "_all"
-                }]
-            });
+            //$("#grdProductAssignment").dataTable({
+            //    aLengthMenu: [
+            //        [25, 50, 100, -1], [25, 50, 100, "All"]
+            //    ]
+            //    ,
+            //    "columnDefs": [{
+            //        "defaultContent": "-",
+            //        "targets": "_all"
+            //    }]
+            //});
 
-            $("#ddlusername").select2({
-                placeholder: 'Select Assignedto...',
-                allowClear: true
-            }).on('select2-open', function () {
-                // Adding Custom Scrollbar
-                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            });
+            //$("#ddlusername").select2({
+            //    placeholder: 'Select Assignedto...',
+            //    allowClear: true
+            //}).on('select2-open', function () {
+            //    // Adding Custom Scrollbar
+            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            //});
 
-            $("#ddlProductName").select2({
-                placeholder: 'Select Product...',
-                allowClear: true
-            }).on('select2-open', function () {
-                // Adding Custom Scrollbar
-                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            });
+            //$("#ddlProductName").select2({
+            //    placeholder: 'Select Product...',
+            //    allowClear: true
+            //}).on('select2-open', function () {
+            //    // Adding Custom Scrollbar
+            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            //});
 
-            $("#ddlprodtgtmth").select2({
-                placeholder: 'Select Month...',
-                allowClear: true
-            }).on('select2-open', function () {
-                // Adding Custom Scrollbar
-                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            });
+            //$("#ddlprodtgtmth").select2({
+            //    placeholder: 'Select Month...',
+            //    allowClear: true
+            //}).on('select2-open', function () {
+            //    // Adding Custom Scrollbar
+            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            //});
 
         });
     </script>
@@ -171,13 +232,14 @@
         $(function () {
             //attach listner to .modal-close-btn so that when button is pressed the modal dialogue disappears
             $('body').on('click', '.modal-close-btn', function () {
-                $('#modal-dialog').modal('hide');
+                $('.modal').modal('hide');
             });
 
             //clear modal cache so that new contenet can be loaded
-            $('#modal-dialog').on('hidden.bs.modal', function () {
-                $(this).removeData('bs.modal');
-                //$('#loginForm').formValidation('resetForm', true);
+            $('.modal').on('hidden.bs.modal', function () {
+                $(this).find("input,textarea,select").val('').end();
+                $('.form-group').removeClass('validate-has-error');
+                $('.modal-body').find('.removespan').html("");
             });
 
             $('#CancelModal').on('click', function () {
@@ -214,6 +276,12 @@
                         url: "ProductAssignment.aspx/SaveProdAssignment",
                         data: "{'username': '" + username + "', 'prodname': '" + prodname + "', 'prodamttgt': '" + prodamttgt + "', 'prodqtytgt': '" + prodqtytgt + "', 'prodtgtmth': '" + prodtgtmth + "', 'prodtgtyr': '" + prodtgtyr + "'}",
                         dataType: "json",
+                        beforeSend: function () {
+                            $('#fullpageloading').show()
+                        },
+                        complete: function () {
+                            $('#fullpageloading').hide();
+                        },
                         success: function (data) {
                             $('.modal').modal('hide');
                             $.alert({
@@ -282,27 +350,26 @@
                                 <label class=" control-label" for="field-1">Assigned To</label>
                                 <asp:DropDownList ID="ddlusername" runat="server" CssClass="form-control" ClientIDMode="Static">
                                 </asp:DropDownList>
-                                <span id="ddlusernameHelper"></span>
+                                <span id="ddlusernameHelper" class="removespan"></span>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="prodname">Product Name</label>
                                 <asp:DropDownList ID="ddlProductName" runat="server" CssClass="form-control" ClientIDMode="Static">
                                 </asp:DropDownList>
-                                <span id="ddlProductNameHelper"></span>
+                                <span id="ddlProductNameHelper" class="removespan"></span>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="prodamttgt">Amount Target</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodamttgt" ID="txtprodamttgt" autocomplete="off" ClientIDMode="Static" MaxLength="20" data-validate="required"></asp:TextBox>
-                                <span id="prodamttgtHelper"></span>
+                                <span id="prodamttgtHelper" class="removespan"></span>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="prodqtytgt">Product Qty Target</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodqtytgt" ID="txtprodqtytgt" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                                <span id="prodqtytgtHelper"></span>
+                                <span id="prodqtytgtHelper" class="removespan"></span>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="prodtgtmth">Product Target Month</label>
-
                                 <asp:DropDownList ID="ddlprodtgtmth" runat="server" CssClass="form-control" ClientIDMode="Static">
                                     <asp:ListItem Value="January" Text="January" Selected="True"></asp:ListItem>
                                     <asp:ListItem Value="February" Text="February" Enabled="true"></asp:ListItem>
@@ -317,21 +384,19 @@
                                     <asp:ListItem Value="November" Text="November" Enabled="true"></asp:ListItem>
                                     <asp:ListItem Value="December" Text="December" Enabled="true"></asp:ListItem>
                                 </asp:DropDownList>
-                                <span id="ddlprodtgtmthHelper"></span>
+                                <span id="ddlprodtgtmthHelper" class="removespan"></span>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="prodtgtyr">Product Target Year</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodtgtyr" ID="txtprodtgtyr" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                                <span id="prodtgtyrHelper"></span>
+                                <span id="prodtgtyrHelper" class="removespan"></span>
                             </div>
                         </div>
-                  
                     </div>
                     <div class="modal-footer">
-
-                        <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
-                        <asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-info" />
-
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <%--<asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-info" />--%>
+                        <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>
@@ -351,7 +416,9 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <asp:GridView ID="grdProductAssignment" ClientIDMode="Static" class="table table-striped table-bordered" runat="server" EmptyDataText="No Records Found" ShowHeaderWhenEmpty="true" AllowPaging="true" AutoGenerateColumns="False">
+                             <table class="table table-striped table-bordered" border="1" id="grdProductAssignment" style="border-collapse: collapse;">
+                            </table>
+                            <%--<asp:GridView ID="grdProductAssignment" ClientIDMode="Static" class="table table-striped table-bordered" runat="server" EmptyDataText="No Records Found" ShowHeaderWhenEmpty="true" AllowPaging="true" AutoGenerateColumns="False">
                                 <Columns>
                                     <asp:BoundField HeaderText="Assigned To" DataField="prodassignedto">
                                         <HeaderStyle HorizontalAlign="Center" Wrap="True" />
@@ -384,7 +451,7 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
-                            </asp:GridView>
+                            </asp:GridView>--%>
 
                         </div>
                     </div>
@@ -393,6 +460,10 @@
         </div>
     </div>
     <!--main-content-ends-->
-
+    <div id="fullpageloading">
+        <div style="margin: 20%">
+            <img alt="loading" src="Images/fullpageloadingimg2.gif"  />
+        </div>
+    </div>
     <script src="assets/js/jquery-validate/jquery.validate.min.js"></script>
 </asp:Content>

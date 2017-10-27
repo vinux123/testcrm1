@@ -68,7 +68,7 @@ public class VPCRMSBAL
         return dt;
     }
 
-    public DataTable GetUsersDetails()
+    public static DataTable GetUsersDetails()
     {
         
         DataTable dt = VPCRMSDAL.GetUsersDetails();
@@ -90,7 +90,7 @@ public class VPCRMSBAL
     }
 
     // To fetch quotation details per user for Quatation form. 
-    public DataTable GetQuotationDetails(Decimal UserID, String role)
+    public static DataTable GetQuotationDetails(Decimal UserID, String role)
     {
         
         DataTable dt = VPCRMSDAL.GetQuotationDetails(UserID, role);
@@ -98,7 +98,7 @@ public class VPCRMSBAL
     }
 
     // To fetch follow up details of leads per user for Follow Up form. 
-    public DataTable GetFollowupDetails(Decimal UserID)
+    public static DataTable GetFollowupDetails(Decimal UserID)
     {
         
         DataTable dt = VPCRMSDAL.GetFollowupDetails(UserID);
@@ -106,7 +106,7 @@ public class VPCRMSBAL
     }
 
     // To fetch daily call report details per user for DCR form. 
-    public DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
+    public static DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
     {
         
         DataTable dt = VPCRMSDAL.GetDailyCallReportDetails(UserID, UserRole);
@@ -122,16 +122,14 @@ public class VPCRMSBAL
     }
     
     // To Fetch Product Details of client. 
-    public DataTable GetProductDetails(Decimal ClientAlias)
+    public static DataTable GetProductDetails(Decimal ClientAlias)
     {
-
-        
         DataTable dt = VPCRMSDAL.GetProductDetails(ClientAlias);
         return dt;
     }
 
     // To fetch product assignment details. 
-    public DataTable GetProductAssignment()
+    public static DataTable GetProductAssignment()
     {
         
         DataTable dt = VPCRMSDAL.GetProductAssignDetails();
@@ -152,6 +150,12 @@ public class VPCRMSBAL
     {
         
         VPCRMSDAL.SaveQuotationData(clientcustomerid, clientquoteid, clientcustomeruser, clientquotedproduct, clientquotedprodqty, clientquotedprice, clientquotedamt);
+    }
+
+    // Update Closed On Date
+    public static void UpdateClosedOnDate(Decimal client_alias, Decimal clientcustomerid, Decimal closed_amount, String closed_on_date)
+    {
+        VPCRMSDAL.UpdateClosedOnDate(client_alias, clientcustomerid, closed_amount, closed_on_date);
     }
 
     // To get existing user details. 

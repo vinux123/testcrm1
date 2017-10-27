@@ -23,6 +23,10 @@ public partial class testdcr : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");
@@ -30,11 +34,7 @@ public partial class testdcr : System.Web.UI.Page
 
         decimal client_alias = Convert.ToDecimal(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
 
-        DataTable dtLogin = new DataTable();
-        dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]), Convert.ToString(Session["UserRole"].ToString().Trim()));
-        grdDCR.DataSource = dtLogin;
-        grdDCR.DataBind();
-
+        
         // Get Company Name
         DataTable dtTable = new DataTable();
         dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
@@ -59,8 +59,8 @@ public partial class testdcr : System.Web.UI.Page
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataValueField = "productname";
             ddlProductName.DataBind();
-
-            
+            ddlProductName.Items.Insert(0, new ListItem("Select Product", "0"));
+            ddlProductName.SelectedIndex = 0;
         }
 
         // Populate Assigned to dropdown on modal. 
@@ -86,6 +86,23 @@ public partial class testdcr : System.Web.UI.Page
         
     }
 
+    //DataTable dtLogin = new DataTable();
+    //dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]), Convert.ToString(Session["UserRole"].ToString().Trim()));
+    //grdDCR.DataSource = dtLogin;
+    //grdDCR.DataBind();
+
+    [WebMethod]
+    public static string GetDailyCallReportDetails()
+    {
+        // HttpContext is used here to access non static variable Session inside static method. 
+        DataTable dtDailyCallReportDetails = new DataTable();
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        dtDailyCallReportDetails = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(HttpContext.Current.Session["UserID"]), Convert.ToString(HttpContext.Current.Session["UserRole"].ToString().Trim()));
+        String json = DataTableToJSONWithJavaScriptSerializer(dtDailyCallReportDetails);
+
+        return json;
+    }
+
     protected void calculate_gst(object sender, EventArgs e)
     {
 
@@ -107,7 +124,8 @@ public partial class testdcr : System.Web.UI.Page
             companyadd1, companyadd2, addresscity, addressdist, addressstate, addresscountry, Convert.ToDecimal(pincode), remarks, Convert.ToDecimal(assignedto),
             companytype, lastname, email, Convert.ToDecimal(alternatecontact), status, source, saddress1, saddress2, scity, sdistrict,
             sstate, scountry, Convert.ToDecimal(spincode), Mode, Convert.ToDecimal(clientcustomerid));
-        
+
+                
     }
 
     [WebMethod]

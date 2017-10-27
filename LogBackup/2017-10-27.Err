@@ -1,0 +1,23 @@
+ERROR 2017-10-27 11:28:51,810 434588ms ErrorLog               tedProdAssignments - MySql.Data.MySqlClient.MySqlException (0x80004005): Incorrect integer value: 'undefined' for column 'target_year' at row 1
+   at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+   at MySql.Data.MySqlClient.NativeDriver.GetResult(Int32& affectedRow, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.GetResult(Int32 statementId, Int32& affectedRows, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.NextResult(Int32 statementId, Boolean force)
+   at MySql.Data.MySqlClient.MySqlDataReader.NextResult()
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at VPCRMSDAL.GetEditedProdAssignments(Decimal client_user, String customer_product, String target_month, String target_year) in d:\Projects\VPCRMS\App_Code\VPCRMSDAL.cs:line 309
+ERROR 2017-10-27 23:21:21,479 91990ms ErrorLog               UpdateClosedOnDate - MySql.Data.MySqlClient.MySqlException (0x80004005): Incorrect date value: '27-10-2017 00:00:00' for column 'client_closed_on_date' at row 1
+   at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+   at MySql.Data.MySqlClient.NativeDriver.GetResult(Int32& affectedRow, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.GetResult(Int32 statementId, Int32& affectedRows, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.NextResult(Int32 statementId, Boolean force)
+   at MySql.Data.MySqlClient.MySqlDataReader.NextResult()
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()
+   at VPCRMSDAL.UpdateClosedOnDate(Decimal client_alias, Decimal clientcustomerid, Decimal closed_amount, String closed_on_date) in d:\Projects\VPCRMS\App_Code\VPCRMSDAL.cs:line 933

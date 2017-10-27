@@ -24,6 +24,11 @@ public partial class ProductAssignment : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Set page cache to NO
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");
@@ -32,11 +37,11 @@ public partial class ProductAssignment : System.Web.UI.Page
         //Get Client alias from UserID
         decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Substring(0, 4));
 
-        DataTable dtLogin = new DataTable();
-        // Since this is admin specific page, not client alias is required to pass to below method. 
-        dtLogin = VPCRMSBAL.GetProductAssignment();
-        grdProductAssignment.DataSource = dtLogin;
-        grdProductAssignment.DataBind();
+        //DataTable dtLogin = new DataTable();
+        //// Since this is admin specific page, not client alias is required to pass to below method. 
+        //dtLogin = VPCRMSBAL.GetProductAssignment();
+        //grdProductAssignment.DataSource = dtLogin;
+        //grdProductAssignment.DataBind();
 
         // Populate Assigned to dropdown on modal. 
         DataTable dtUserTable = new DataTable();
@@ -78,6 +83,18 @@ public partial class ProductAssignment : System.Web.UI.Page
             lblCompanyName.Text = "Default Name";
         }
 
+    }
+
+    [WebMethod]
+    public static string GetProductDetails()
+    {
+        // HttpContext is used here to access non static variable Session inside static method. 
+        DataTable dtProductDetails = new DataTable();
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        dtProductDetails = VPCRMSBAL.GetProductAssignment();
+        String json = DataTableToJSONWithJavaScriptSerializer(dtProductDetails);
+
+        return json;
     }
 
     [WebMethod]

@@ -207,11 +207,11 @@ public class VPCRMSDAL
         return dt;
     }
 
-    public DataTable GetUsersDetails()
+    public static DataTable GetUsersDetails()
     {
         // Connect to VPCRMS Admin Master Database to fetch user details. 
         DataTable dt = new DataTable();
-
+        string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionVPCS"].ToString();
         MySqlConnection conn = new MySqlConnection(connectionstring);
         
         MySqlCommand dCmd;
@@ -443,7 +443,7 @@ public class VPCRMSDAL
     }
 
 
-    public DataTable GetQuotationDetails(Decimal UserID, String role)
+    public static DataTable GetQuotationDetails(Decimal UserID, String role)
     {
         // Get Quotation details of perticular user by passing UserID parameter. 
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
@@ -485,7 +485,7 @@ public class VPCRMSDAL
 
 
 
-    public DataTable GetFollowupDetails(Decimal UserID)
+    public static DataTable GetFollowupDetails(Decimal UserID)
     {
         // Get Quotation details of perticular user by passing UserID parameter. 
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
@@ -526,7 +526,7 @@ public class VPCRMSDAL
 
 
 
-    public DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
+    public static DataTable GetDailyCallReportDetails(Decimal UserID, String UserRole)
     {
         // Get daily call report details of perticular user by passing UserID parameter. 
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
@@ -609,7 +609,7 @@ public class VPCRMSDAL
 
 
 
-    public DataTable GetProductDetails(Decimal client_alias)
+    public static DataTable GetProductDetails(Decimal client_alias)
     {
         // Get Product details of perticular user by passing UserID parameter. 
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
@@ -650,7 +650,7 @@ public class VPCRMSDAL
 
 
     // Get Product Assignment Details
-    public DataTable GetProductAssignDetails()
+    public static DataTable GetProductAssignDetails()
     {
         // Get Product Assignment details
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
@@ -912,6 +912,45 @@ public class VPCRMSDAL
 
     }
 
+    // Update Closed on date & final amount when status changed to "Closed".
+    public static void UpdateClosedOnDate(Decimal client_alias, Decimal clientcustomerid, Decimal closed_amount, String closed_on_date)
+    {
+        string connectionstring = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        MySqlConnection conn = new MySqlConnection(connectionstring); ;
+        try
+        {
+
+            conn = new MySqlConnection(connectionstring);
+            conn.Open();
+            using (MySqlCommand cmd = new MySqlCommand("usp_UpdateClosedOnDate", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@client_alias", client_alias);
+                cmd.Parameters.AddWithValue("@client_customer_id", clientcustomerid);
+                cmd.Parameters.AddWithValue("@client_final_closed_amt", closed_amount);
+                cmd.Parameters.AddWithValue("@client_closed_on_date", closed_on_date);
+                
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+        }
+        catch (MySqlException ex)
+        {
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+        }
+
+    }
+
     public static void SaveProdAssignment(Decimal userid, String prodname, Decimal prodamttgt, Decimal prodqtytgt, String prodtgtmth, String prodtgtyr)
     {
         //string connectionstring = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
@@ -1092,6 +1131,12 @@ public class VPCRMSDAL
                 conn1.Close();
                 conn1.Dispose();
             }
+        }
+
+        // Update Closed On Date & Closed on amount in Sales Master. 
+        if (status == "Closed")
+        {
+            VPCRMSDAL.UpdateClosedOnDate(Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)), clientcustomerid, erevenue, Convert.ToString(DateTime.Today.ToString("yyyy-MM-dd")));
         }
 
     }

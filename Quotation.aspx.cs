@@ -21,6 +21,7 @@ using iTextSharp.text;
 using System.IO;
 using System.Web.Services;
 using log4net;
+using System.Web.Script.Serialization;
 
 public partial class Quotation : System.Web.UI.Page
 {
@@ -28,15 +29,15 @@ public partial class Quotation : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Set page cache to NO
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.Cache.SetNoServerCaching();
+        HttpContext.Current.Response.Cache.SetNoStore();
+
         if (Session["UserID"] == null)
         {
             Response.Redirect("Login.aspx");
         }
-
-        DataTable dtLogin = new DataTable();
-        dtLogin = VPCRMSBAL.GetQuotationDetails(Convert.ToDecimal(Session["UserID"]), Convert.ToString(Session["UserRole"]));
-        grdQuotation.DataSource = dtLogin;
-        grdQuotation.DataBind();
 
         DataTable dtTable = new DataTable();
         dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
@@ -130,6 +131,7 @@ public partial class Quotation : System.Web.UI.Page
             }
 
             document.Close();
+                        
         }
 
         catch (Exception ex)
@@ -137,10 +139,36 @@ public partial class Quotation : System.Web.UI.Page
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
             logger.Error(ex.ToString());
         }
-        //HttpContext.Current.Response.ContentType = "application/pdf";
-        //HttpContext.Current.Response.AddHeader("content-disposition", "attachment;filename=Quotation.pdf");
 
-        //HttpContext.Current.Response.Write(document);
-        //HttpContext.Current.Response.End();
+    }
+
+
+    [WebMethod]
+    public static string GetQuotationDetails()
+    {
+        // HttpContext is used here to access non static variable Session inside static method. 
+        DataTable dtQuotationDetails = new DataTable();
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        dtQuotationDetails = VPCRMSBAL.GetQuotationDetails(Convert.ToDecimal(HttpContext.Current.Session["UserID"]), Convert.ToString(HttpContext.Current.Session["UserRole"]));
+        String json = DataTableToJSONWithJavaScriptSerializer(dtQuotationDetails);
+
+        return json;
+    }
+
+    public static string DataTableToJSONWithJavaScriptSerializer(DataTable table)
+    {
+        JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
+        List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
+        Dictionary<string, object> childRow;
+        foreach (DataRow row in table.Rows)
+        {
+            childRow = new Dictionary<string, object>();
+            foreach (DataColumn col in table.Columns)
+            {
+                childRow.Add(col.ColumnName, row[col]);
+            }
+            parentRow.Add(childRow);
+        }
+        return jsSerializer.Serialize(parentRow);
     }
 }

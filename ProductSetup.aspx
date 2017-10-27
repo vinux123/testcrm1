@@ -1,12 +1,62 @@
-﻿
-
-<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="ProductSetup.aspx.cs" Inherits="ProductSetup" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="ProductSetup.aspx.cs" Inherits="ProductSetup" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <style>
+        #fullpageloading
+        {
+            background-color: Gray;
+            opacity: 0.5;
+            cursor: auto;
+            width: 100%;
+            height: 100%;
+            z-index: 15; /* Positioning */
+            position: absolute;
+            left: 0;
+            top: 0;
+            vertical-align: middle;
+            text-align: center;
+            display: none;
+        }
+    </style>
     <script type="text/javascript">
-        
         $(document).ready(function () {
-            fixGridView($("#grdProduct"));
+            $.ajax({
+                type: "POST",
+                url: "ProductSetup.aspx/GetProductDetails",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function(){
+                    $('#fullpageloading').show()
+                },
+                complete: function(){
+                    $('#fullpageloading').hide();
+                },
+                success: function (data) {
+                    var finaldata = "<tr><th>Product Name</th><th>Product Description</th><th>HSN</th><th>Product Price</th><th>Action</th></tr>";
+                    var JSONDataR = $.parseJSON(data.d);
+                    for (var i = 0; i < JSONDataR.length; i++) {
+                        finaldata = finaldata + '<tr><td>' + JSONDataR[i].productname + '</td><td>' + JSONDataR[i].productdesc + '</td><td>' + JSONDataR[i].producthsn + '</td><td>' + JSONDataR[i].prodprice + '</td><td><a href=#><i class="fa fa-pencil" id="I9" onclick="EditProduct(\'' + JSONDataR[i].productname  + '\');"></i></a></td></tr>';
+                    }
+                    $("#grdProduct").append(finaldata);
+                    fixGridView($("#grdProduct"));
+                    $("#grdProduct").dataTable({
+                        aLengthMenu: [
+                            [5, 10, 15, 20, 25, 50, 100, -1], [5, 10, 15, 20, 25, 50, 100, "All"]
+                        ],
+                        "aoColumnDefs": [
+                  { 'bSortable': false, 'aTargets': [4] }
+                        ]
+                        ,
+                        "columnDefs": [{
+                            "defaultContent": "-",
+                            "targets": "_all"
+                        }]
+                    });
+                },
+                error: function (data) {
+                    console.log('ajax call error');
+                }
+            });
         });
 
         function fixGridView(tableEl) {
@@ -59,6 +109,12 @@
                 url: "ProductSetup.aspx/EditProductData",
                 data: "{'productname': '" + ProductName + "'}",
                 dataType: "json",
+                beforeSend: function () {
+                    $('#fullpageloading').show()
+                },
+                complete: function () {
+                    $('#fullpageloading').hide();
+                },
                 success: function (data) {
                     var JsonData = data.d;
                     var JSONDataR = $.parseJSON(JsonData);
@@ -81,35 +137,17 @@
         }
     </script>
     <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            
-            $("#grdProduct").dataTable({
-                aLengthMenu: [
-                    [25, 50, 100, -1], [25, 50, 100, "All"]
-                ]
-                ,
-                "columnDefs": [{
-                    "defaultContent": "-",
-                    "targets": "_all"
-                }]
-            });
-
-            
-        });
-    </script>
-    <script type="text/javascript">
         $(function () {
             //attach listner to .modal-close-btn so that when button is pressed the modal dialogue disappears
             $('body').on('click', '.modal-close-btn', function () {
                 $('.modal').modal('hide');
             });
 
-            // clear modal cache so that new content can be loaded
+            //clear modal cache so that new contenet can be loaded
             $('.modal').on('hidden.bs.modal', function () {
                 $(this).find("input,textarea,select").val('').end();
                 $('.form-group').removeClass('validate-has-error');
-                                
-                $('.modal-body').find('span').html("");
+                $('.modal-body').find('.removespan').html("");
             });
 
             $('#CancelModal').on('click', function () {
@@ -142,6 +180,12 @@
                         url: "ProductSetup.aspx/SaveProdData",
                         data: "{'prodname': '" + prodname + "', 'proddesc': '" + proddesc + "', 'prodhsn': '" + prodhsn + "', 'prodprice': '" + prodprice + "'}",
                         dataType: "json",
+                        beforeSend: function () {
+                            $('#fullpageloading').show()
+                        },
+                        complete: function () {
+                            $('#fullpageloading').hide();
+                        },
                         success: function (data) {
                             $('.modal').modal('hide');
                             $.alert({
@@ -190,7 +234,7 @@
         </div>
     </div>
     <div class="row">
-    <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -205,7 +249,7 @@
                             <div class="form-group">
                                 <label class=" control-label" for="field-1">Product Name</label>
                                 <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
-                                <span id="productnameHelper"></span>
+                                <span id="productnameHelper" class="removespan"></span>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="proddesc">Product Description</label>
@@ -218,9 +262,9 @@
                             <div class="form-group">
                                 <label class="control-label" for="prodprice">Product Price</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                                <span id="prodpriceHelper"></span>
+                                <span id="prodpriceHelper" class="removespan"></span>
                             </div>
-                           
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -232,7 +276,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default blue-box">
@@ -247,35 +291,17 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <asp:GridView ID="grdProduct" ClientIDMode="Static" class="table table-striped table-bordered" runat="server" EmptyDataText="No Records Found" ShowHeaderWhenEmpty="true" AllowPaging="true" AutoGenerateColumns="False">
-                                <Columns>
-                                    <asp:BoundField HeaderText="Product Name" DataField="productname">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Product Description" DataField="productdesc">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="HSN" DataField="producthsn">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Product Price" DataField="prodprice">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:TemplateField HeaderStyle-Width="10%">
-                                        <ItemTemplate>
-                                            <a href="#"><i class="fa fa-pencil" id="EditButton" onclick="EditProduct('<%# Eval("productname") %>');"></i></a>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>
+                            <table class="table table-striped table-bordered" border="1" id="grdProduct" style="border-collapse: collapse;">
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div id="fullpageloading">
+        <div style="margin: 20%">
+            <img alt="loading" src="Images/fullpageloadingimg2.gif"  />
         </div>
     </div>
     <!--main-content-ends-->
