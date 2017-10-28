@@ -53,93 +53,97 @@ public partial class Quotation : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static void GenerateQuotationPDF(String customerquoteid)
+    public static string GenerateQuotationPDF(String customerquoteid)
     {
         VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
 
         string path = HttpContext.Current.Server.MapPath("PDF-Files");  // due to static web method Httpcontext is used. 
-        string filename = path + "/Quotation_" + customerquoteid + ".pdf";
+        string client_alias = HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4);
+        string filename = path + "/Quotation_" + client_alias + "_" + customerquoteid + ".pdf";
+
+        // Check file exists on path or not, if exists delete existing instance and create new one always. 
+        if (File.Exists(filename))
+        {
+            File.Delete(filename);
+        }
 
         
         Document document = new Document(PageSize.A4, 12.5f, 12.5f, 12.5f, 12.5f);
 
         try
-        {
-            PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
-            document.Open();
-
-            FontSelector selector = new FontSelector();
-            Font f1 = FontFactory.GetFont(FontFactory.TIMES_BOLD, 12);
-            f1.Color = BaseColor.MAGENTA;
-
-            Font f2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-            f1.Color = BaseColor.RED;
-
-            DataTable dt = new DataTable();
-            dt = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
-            if (dt.Rows.Count > 0)
             {
-                Paragraph para1 = new Paragraph(dt.Rows[0]["clientname"].ToString().Trim(), f2);
-                para1.Alignment = Element.ALIGN_CENTER;
-                document.Add(para1);
-                para1.SpacingAfter = 50f;
-            }
+                PdfWriter.GetInstance(document, new FileStream(filename, FileMode.Create));
+                document.Open();
 
-            Paragraph para2 = new Paragraph();
-            Phrase phrase1 = new Phrase("Product Quotation", f1);
+                FontSelector selector = new FontSelector();
+                Font f1 = FontFactory.GetFont(FontFactory.TIMES_BOLD, 12);
+                f1.Color = BaseColor.MAGENTA;
 
-            para2.Alignment = Element.ALIGN_LEFT;
-            para2.Add(phrase1);
-            para2.SpacingAfter = 50f;
-            document.Add(para2);
+                Font f2 = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                f1.Color = BaseColor.RED;
 
-            DataTable dataTable = new DataTable();
-            dataTable = VPCRMSBAL.GetQuotationDetailsbyID(Convert.ToDecimal(customerquoteid));
-            if (dataTable.Rows.Count > 0)
-            {
-
-                PdfPTable table = new PdfPTable(dataTable.Columns.Count);
-                table.WidthPercentage = 100;
-
-                //Set columns names in the pdf file
-                for (int k = 0; k < dataTable.Columns.Count; k++)
+                DataTable dt = new DataTable();
+                dt = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
+                if (dt.Rows.Count > 0)
                 {
-                    PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
-
-                    cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                    cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
-                    cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
-
-                    table.AddCell(cell);
+                    Paragraph para1 = new Paragraph(dt.Rows[0]["clientname"].ToString().Trim(), f2);
+                    para1.Alignment = Element.ALIGN_CENTER;
+                    document.Add(para1);
+                    para1.SpacingAfter = 50f;
                 }
 
-                //Add values of DataTable in pdf file
-                for (int i = 0; i < dataTable.Rows.Count; i++)
-                {
-                    for (int j = 0; j < dataTable.Columns.Count; j++)
-                    {
-                        PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+                Paragraph para2 = new Paragraph();
+                Phrase phrase1 = new Phrase("Product Quotation", f1);
 
-                        //Align the cell in the center
+                para2.Alignment = Element.ALIGN_LEFT;
+                para2.Add(phrase1);
+                para2.SpacingAfter = 50f;
+                document.Add(para2);
+
+                DataTable dataTable = new DataTable();
+                dataTable = VPCRMSBAL.GetQuotationDetailsbyID(Convert.ToDecimal(customerquoteid));
+                if (dataTable.Rows.Count > 0)
+                {
+
+                    PdfPTable table = new PdfPTable(dataTable.Columns.Count);
+                    table.WidthPercentage = 100;
+
+                    //Set columns names in the pdf file
+                    for (int k = 0; k < dataTable.Columns.Count; k++)
+                    {
+                        PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
+
                         cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                         cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                        cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
 
                         table.AddCell(cell);
                     }
+
+                    //Add values of DataTable in pdf file
+                    for (int i = 0; i < dataTable.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < dataTable.Columns.Count; j++)
+                        {
+                            PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+
+                            //Align the cell in the center
+                            cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                            cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+
+                            table.AddCell(cell);
+                        }
+                    }
+                    document.Add(table);
                 }
-                document.Add(table);
+                document.Close();
             }
-
-            document.Close();
-                        
-        }
-
-        catch (Exception ex)
-        {
-            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
-            logger.Error(ex.ToString());
-        }
-
+            catch (Exception ex)
+            {
+                ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+                logger.Error(ex.ToString());
+            }
+        return client_alias;
     }
 
 

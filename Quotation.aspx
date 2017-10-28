@@ -73,15 +73,16 @@
         }
 
         function GeneratePDF(customerquoteid) {
-            //alert(customerquoteid);
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
+                
                 url: "Quotation.aspx/GenerateQuotationPDF",
                 data: "{'customerquoteid': '" + customerquoteid + "'}",
-                dataType: "json",
+                dataType: "text",
                 success: function (data) {
-                    //alert("quotation generated");
+                    var data1 = $.parseJSON(data);
+                    
                     $.alert({
                         title: 'PDF',
                         content: 'Quotation Generated',
@@ -89,9 +90,15 @@
                         animation: 'zoom',
                         backgroundDismiss: false,
                         confirm: function () {
+                            var link = document.createElement('a');
+                            link.href = '/PDF-Files/Quotation_' + data1.d + '_' + customerquoteid + '.pdf';
+                            link.download = 'Quotation_' + data1.d + '_' + customerquoteid + '.pdf';
+                            link.dispatchEvent(new MouseEvent('click'));
                             window.top.location = "Quotation.aspx";
                         }
                     });
+                    
+                    
                 },
 
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
