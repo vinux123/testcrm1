@@ -34,9 +34,15 @@ public partial class UserMaster : System.Web.UI.Page
             Response.Redirect("Login.aspx");
         }
 
+        if ((Session["UserRole"].ToString().Trim()) != "Manager" )
+        {
+            Response.Redirect("Dashboard.aspx");
+        }
+
+        // Get client alias. 
         decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
 
-        
+        // Get company name.
         DataTable dtTable = new DataTable();
         dtTable = VPCRMSBAL.GetCompanyName(client_alias);
         if (dtTable.Rows.Count > 0)
@@ -50,7 +56,7 @@ public partial class UserMaster : System.Web.UI.Page
             
         }
 
-        // uncomment this later
+        //// uncomment this later
         //DataTable dtAllowedUsers = new DataTable();
         //dtAllowedUsers = VPCRMSBAL.GetMaxAllowedUsers(client_alias);
         //if (Convert.ToDecimal(dtLogin.Rows.Count) >= Convert.ToDecimal(dtAllowedUsers.Rows[0]["noofusers"]))
@@ -69,7 +75,6 @@ public partial class UserMaster : System.Web.UI.Page
 
 
     [WebMethod]
-    //public static void SaveUserData(String userid, String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role)
     public static void SaveUserData(String username, String password, String repassword, String firstname, String lastname, String doj, String contactno, String emailid, String role, String mode, String userid)
     {
         

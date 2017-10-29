@@ -83,7 +83,10 @@ public partial class testdcr : System.Web.UI.Page
             ddlcustomeruser.SelectedIndex = 0;
         }
 
-        
+        if (Session["UserRole"].ToString() == "Associate")
+        {
+            ddlstatus.Items.Remove(ddlstatus.Items.FindByValue("Closed"));
+        }
     }
 
     //DataTable dtLogin = new DataTable();

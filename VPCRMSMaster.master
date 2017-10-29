@@ -86,11 +86,11 @@
                         <ul>
                             <li><a href="Report1.aspx"><span class="title">Reports</span> </a></li>
                         </ul>
-
-                        <ul>
+                    </li>
+                    <li><a href="Forecasting.aspx" id="A2" runat="server"><i class="linecons-eye"></i><span class="title">Forecasting</span> </a>
+                        <%--<ul>
                             <li><a href="Forecasting.aspx"><span class="title">Forecasting</span> </a></li>
-                        </ul>
-                        
+                        </ul>--%>
                     </li>
                 </ul>
             </div>

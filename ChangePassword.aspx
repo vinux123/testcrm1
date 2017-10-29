@@ -37,7 +37,7 @@
 	
 	
 </head>
-<body class="page-body login-page login-light" style="background-image: url('assets/images/login_background.jpg');">
+<body class="page-body login-page login-light" style="background-image: url('assets/images/login_background.jpg');  background-repeat: no-repeat; background-size: cover;">
 
 	
 	<div class="login-container">

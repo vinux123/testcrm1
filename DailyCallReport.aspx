@@ -66,7 +66,7 @@
                             [5, 10, 15, 20, 25, 50, 100, -1], [5, 10, 15, 20, 25, 50, 100, "All"]
                         ],
                         "aoColumnDefs": [
-                  { 'bSortable': false, 'aTargets': [4] }
+                  { 'bSortable': false, 'aTargets': [6] }
                         ]
                         ,
                         "columnDefs": [{
@@ -323,18 +323,13 @@
                         var JsonData = data.d;
                         var JSONDataR = $.parseJSON(JsonData);
                         $.each(JSONDataR, function (index, val) {
-                            //alert(val.clientdate);
-                            var date = new Date(parseInt(val.clientdate.replace('/Date(', ''))).toISOString();
-                            //alert(date);
+                            // Format date received via JSON response. Date retrieved is 1 day lesser, hence after parse added 1 extra day to get exact date. 
+                            // this was known bug in JSON framework, discussed on StackOverFlow in detail and best Possible Solution was given to add 1 extra day. ;)
                             var d = /\/Date\((\d*)\)\//.exec(val.clientdate);
                             var d1 = new Date(+d[1]);
-                            //alert(d1);
                             var yy = d1.getFullYear();
                             var mm = addZero(d1.getMonth() + 1);
                             var dd = addZero(d1.getDate());
-                            //alert(yy + '-' + mm + '-' + dd);
-                            //alert(date.substring(0,10));
-                            //$('#txtdate').val(date.substring(0, 10));
                             $('#txtdate').val(yy + '-' + mm + '-' + dd);
                             $('#txtcompany').val(val.clientcustomername);
                             $('#txtfirstname').val(val.custfollowuppersonfn);
@@ -342,8 +337,16 @@
                             $('#txtprimarycontact').val(val.clientcustomerpcontact);
                             $('#txtwebsite').val(val.companywebsite);
                             $('#txterevenue').val(val.clientcustomerpamt)
-                            var date1 = new Date(parseInt(val.custfollowupdate.replace('/Date(', ''))).toISOString();
-                            $('#txtfollowupdate').val(date1.substring(0, 10));
+
+                            //var date1 = new Date(parseInt(val.custfollowupdate.replace('/Date(', ''))).toISOString();
+                            //$('#txtfollowupdate').val(date1.substring(0, 10));
+                            var d2 = /\/Date\((\d*)\)\//.exec(val.custfollowupdate);
+                            var d1a = new Date(+d2[1]);
+                            var yy1 = d1a.getFullYear();
+                            var mm1 = addZero(d1a.getMonth() + 1);
+                            var dd1 = addZero(d1a.getDate());
+                            $('#txtfollowupdate').val(yy1 + '-' + mm1 + '-' + dd1);
+
                             $('#txtcompanyadd1').val(val.clientcustomeradd1);
                             $('#txtcompanyadd2').val(val.clientcustomeradd2);
                             $('#txtaddresscity').val(val.clientcustomercity);
@@ -352,6 +355,7 @@
                             $('#txtaddresscountry').val(val.clientcustomercountry);
                             $('#txtpincode').val(val.clientcustomerpincode);
                             $('#txtremarks').val(val.clientremarks);
+
                             $("#<%=ddlassignedto.ClientID %>").val(val.customeruser);
                             $("#<%=ddlcompanytype.ClientID %>").val(val.clientcompanytype);
                             $('#txtlastname').val(val.custfollowuppersonln);
@@ -492,12 +496,7 @@
                     var occupation = $('#txtoccupation').val();
                     var primarycontact = $('#txtprimarycontact').val();
                     var website = $('#txtwebsite').val();
-                    //if ($('#txterevenue').val() == ' ') {
-                    //    var erevenue = 0;
-                    //}
-                    //else {
-                        var erevenue = $('#txterevenue').val();
-                    //}
+                    var erevenue = $('#txterevenue').val();
                     var followupdate = $('#txtfollowupdate').val();
                     var companyadd1 = $('#txtcompanyadd1').val();
                     var companyadd2 = $('#txtcompanyadd2').val();
@@ -505,18 +504,9 @@
                     var addressdist = $('#txtaddressdist').val();
                     var addressstate = $('#txtaddressstate').val();
                     var addresscountry = $('#txtaddresscountry').val();
-                    //if ($('#txtpincode').val() == ' ') {
-                    //    var pincode = '0';
-                    //}
-                    //else {
-                        var pincode = $('#txtpincode').val();
-                    //}
-
+                    var pincode = $('#txtpincode').val();
                     var remarks = $('#txtremarks').val();
-
                     var assignedto = $('#ddlassignedto option:selected').val();
-
-
                     var companytype = $('#ddlcompanytype option:selected').val();
                     var lastname = $('#txtlastname').val();
                     var email = $('#txtemail').val();

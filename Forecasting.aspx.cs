@@ -12,10 +12,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class _Default : System.Web.UI.Page
+public partial class Forecasting : System.Web.UI.Page
 {
     private VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
     protected void Page_Load(object sender, EventArgs e)
@@ -39,12 +41,12 @@ public partial class _Default : System.Web.UI.Page
             ddlassignedto.DataTextField = "clientuserfirstname";
             ddlassignedto.DataValueField = "clientuserid";
             ddlassignedto.DataBind();
-            ddlassignedto.Items.Insert(0, new ListItem("Select Assign Person", "0"));
+            ddlassignedto.Items.Insert(0, new ListItem("Select Assign Person", ""));
             ddlassignedto.SelectedIndex = 0;
         }
 
 
-        grdForecasting.Visible = false;
+        //grdForecasting.Visible = false;
         // Get Company Name
         DataTable dtTable = new DataTable();
         dtTable = VPCRMSBAL.GetCompanyName(Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4)));
@@ -59,13 +61,40 @@ public partial class _Default : System.Web.UI.Page
         }
     }
 
-    protected void btnShow_Click(object sender, EventArgs e)
+    [WebMethod]
+    public static string GetForecastingReportDetails(String status, String assignedto)
     {
-        DataTable dtLogin = new DataTable();
-        grdForecasting.Visible = true;
-        dtLogin = VPCRMSBAL.GetDailyCallReportDetails(Convert.ToDecimal(Session["UserID"]), Convert.ToString(Session["UserRole"].ToString().Trim()));
-        grdForecasting.DataSource = dtLogin;
-        grdForecasting.DataBind();
+        Decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        assignedto = (String.IsNullOrEmpty(assignedto) ? "0" : assignedto);
+        DataTable dt = VPCRMSBAL.GetForecastingReportDetails(client_alias, status, Convert.ToDecimal(assignedto));
+        String json = DataTableToJSONWithJavaScriptSerializer(dt);
+        return json;
+    }
 
+    [WebMethod]
+    public static string GetForecastingChartDetails(String status, String assignedto)
+    {
+        Decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        assignedto = (String.IsNullOrEmpty(assignedto) ? "0" : assignedto);
+        DataTable dt = VPCRMSBAL.GetForecastingChartDetails(client_alias, status, Convert.ToDecimal(assignedto));
+        String json = DataTableToJSONWithJavaScriptSerializer(dt);
+        return json;
+    }
+
+    public static string DataTableToJSONWithJavaScriptSerializer(DataTable table)
+    {
+        JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
+        List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
+        Dictionary<string, object> childRow;
+        foreach (DataRow row in table.Rows)
+        {
+            childRow = new Dictionary<string, object>();
+            foreach (DataColumn col in table.Columns)
+            {
+                childRow.Add(col.ColumnName, row[col]);
+            }
+            parentRow.Add(childRow);
+        }
+        return jsSerializer.Serialize(parentRow);
     }
 }

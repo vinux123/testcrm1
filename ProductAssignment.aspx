@@ -43,8 +43,14 @@
                     var finaldata = "<tr><th>Assigned To</th><th>Product Name</th><th>Amount Target</th><th>Product Qty Target</th><th>Product Target Month</th><th>Product Target Year</th><th>Action</th></tr>";
                     var JSONDataR = $.parseJSON(data.d);
                     for (var i = 0; i < JSONDataR.length; i++) {
-                        finaldata = finaldata + '<tr><td>' + JSONDataR[i].prodassignedto + '</td><td>' + JSONDataR[i].productname + '</td><td>' + JSONDataR[i].prodamttgt + '</td><td>' + JSONDataR[i].prodqtytgt + '</td><td>' + JSONDataR[i].prodtgtmth + '</td><td>' + JSONDataR[i].prodtgtyr + '</td><td><a href=#><i class="fa fa-pencil" id="I9" onclick="EditProductAssignment(\'' + JSONDataR[i].prodassignedto + '\');"></i></a></td></tr>';
+                        finaldata = finaldata 
+                            + '<tr><td>' + JSONDataR[i].prodassignedto + '</td><td>' + JSONDataR[i].productname 
+                            + '</td><td>' + JSONDataR[i].prodamttgt + '</td><td>' + JSONDataR[i].prodqtytgt 
+                            + '</td><td>' + JSONDataR[i].prodtgtmth + '</td><td>' + JSONDataR[i].prodtgtyr 
+                            + '</td><td><a href=#><i class="fa fa-pencil" id="I9" onclick="EditProductAssignment(\'' + JSONDataR[i].prodassignedto + '\', \'' + JSONDataR[i].productname + '\', \'' + JSONDataR[i].prodtgtmth + '\', \'' + JSONDataR[i].prodtgtyr + '\');"></i></a></td></tr>';
+                        
                     }
+                    
                     $("#grdProductAssignment").append(finaldata);
                     fixGridView($("#grdProductAssignment"));
                     $("#grdProductAssignment").dataTable({

@@ -113,6 +113,20 @@ public class VPCRMSBAL
         return dt;
     }
 
+    // To fetch ForeCasting details per user.
+    public static DataTable GetForecastingReportDetails(Decimal client_alias, String status,decimal assignedto)
+    {
+        DataTable dt = VPCRMSDAL.GetForecastingReportDetails(client_alias, status, assignedto);
+        return dt;
+    }
+
+    // To fetch ForeCasting details per user.
+    public static DataTable GetForecastingChartDetails(Decimal client_alias, String status, decimal assignedto)
+    {
+        DataTable dt = VPCRMSDAL.GetForecastingChartDetails(client_alias, status, assignedto);
+        return dt;
+    }
+
     // To Fetch Company Name for each form. 
     public DataTable GetCompanyName(Decimal ClientAlias)
     {

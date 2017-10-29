@@ -33,6 +33,11 @@ public partial class ProductSetup : System.Web.UI.Page
             Response.Redirect("Login.aspx");
         }
 
+        if ((Session["UserRole"].ToString().Trim()) != "Manager")
+        {
+            Response.Redirect("Dashboard.aspx");
+        }
+
         
         //Get Client alias from UserID
         decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));

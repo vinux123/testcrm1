@@ -566,8 +566,87 @@ public class VPCRMSDAL
         return dt;
     }
 
+    public static DataTable GetForecastingReportDetails(Decimal client_alias, String status, decimal assignedto)
+    {
+        // Get daily call report details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        DataTable dt = new DataTable();
 
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+        
+        try
+        {
+            conn.Open();
+            dCmd = new MySqlCommand("usp_GetForecastingDetails", conn);
+            dCmd.Parameters.AddWithValue("@client_alias", client_alias);
+            dCmd.Parameters.AddWithValue("@client_forecasting_status", status);
+            dCmd.Parameters.AddWithValue("@client_forecasting_userid", assignedto);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
 
+    public static DataTable GetForecastingChartDetails(Decimal client_alias, String status, decimal assignedto)
+    {
+        // Get daily call report details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            conn.Open();
+            dCmd = new MySqlCommand("usp_GetForeCastingReportCount", conn);
+            dCmd.Parameters.AddWithValue("@client_alias", client_alias);
+            dCmd.Parameters.AddWithValue("@client_forecasting_status", status);
+            dCmd.Parameters.AddWithValue("@client_forecasting_userid", assignedto);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
 
     public DataTable GetCompanyName(Decimal ClientAlias)
     {
