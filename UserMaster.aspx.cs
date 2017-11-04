@@ -56,15 +56,27 @@ public partial class UserMaster : System.Web.UI.Page
             
         }
 
-        //// uncomment this later
-        //DataTable dtAllowedUsers = new DataTable();
-        //dtAllowedUsers = VPCRMSBAL.GetMaxAllowedUsers(client_alias);
-        //if (Convert.ToDecimal(dtLogin.Rows.Count) >= Convert.ToDecimal(dtAllowedUsers.Rows[0]["noofusers"]))
-        //{
-        //    btnAddUser.Visible = false;
-        //}
+        
         
     }
+    [WebMethod]
+    public static string CheckMaxAllowedUsers()
+    {
+        VPCRMSBAL VPCRMSBAL = new VPCRMSBAL();
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        DataTable dtAllowedUsers = new DataTable();
+        dtAllowedUsers = VPCRMSBAL.GetMaxAllowedUsers(client_alias);
+        if (Convert.ToDecimal(dtAllowedUsers.Rows[0]["current_user_count"]) >= Convert.ToDecimal(dtAllowedUsers.Rows[0]["allowed_users"]))
+        {
+            return "Yes";
+        }
+        else
+        {
+            return "No";
+        }
+
+    }
+
     [WebMethod]
     public static string GetUserDetails()
     {

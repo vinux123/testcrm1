@@ -107,20 +107,6 @@
             });
         }
     </script>
-    <%--<script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $("#grdQuotation").dataTable({
-                aLengthMenu: [
-                    [25, 50, 100, -1], [25, 50, 100, "All"]
-                ]
-                ,
-                "columnDefs": [{
-                    "defaultContent": "-",
-                    "targets": "_all"
-                }]
-            });
-        });
-    </script>--%>
     <div class="page-title">
         <div class=" col-md-10 title-env">
             <h1 class="title">Quotation</h1>
@@ -150,40 +136,6 @@
                         <div class="col-md-12">
                             <table class="table table-striped table-bordered" border="1" id="grdQuotation" style="border-collapse: collapse;">
                             </table>
-                            <%--<asp:GridView ID="grdQuotation" class="table table-striped table-bordered" CellSpacing="0" Width="100%" runat="server"
-                                EmptyDataText="No Records Found" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" ClientIDMode="Static">
-                                <Columns>
-                                    <asp:BoundField HeaderText="Client ID" DataField="clientcustomerid">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Client Name" DataField="clientcustomername">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Visit Date" DataField="customervisitdate">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Contact Number" DataField="clientcustomerpcontact">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Quotation ID" DataField="customerquoteid">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:BoundField HeaderText="Quotation Amount" DataField="customerquoteamt">
-                                        <HeaderStyle HorizontalAlign="Center" Wrap="True" />
-                                        <ItemStyle VerticalAlign="Top" />
-                                    </asp:BoundField>
-                                    <asp:TemplateField ShowHeader="true">
-                                        <ItemTemplate>
-                                            <button type="button" class="btn btn-primary" id="btnGenQuotPdf" onclick="GeneratePDF('<%# Eval("customerquoteid") %>');">Generate PDF</button>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>--%>
                         </div>
                     </div>
                 </div>

@@ -41,12 +41,16 @@
                         $('#fullpageloading').hide();
                     },
                     success: function (data) {
-                        var finaldata = "<tr><th>Client Name</th><th>Assigned To</th><th>Status</th></tr>";
+                        var finaldata = "<table class='table table-striped table-bordered' border='1' id='grdForecasting' style='border-collapse: collapse;'><tr><th>Client Name</th><th>Assigned To</th><th>Status</th></tr>";
                         var JSONDataR = $.parseJSON(data.d);
                         for (var i = 0; i < JSONDataR.length; i++) {
                             finaldata = finaldata + '<tr><td>' + JSONDataR[i].clientcustomername + '</td><td>' + JSONDataR[i].clientuserfirstname + '</td><td>' + JSONDataR[i].customerstatus + '</td></tr>';
                         }
-                        $("#grdForecasting").append(finaldata);
+                        finaldata = finaldata + '</table>';
+                        $("#Grid").html("");
+                        //var oTable = $("#grdForecasting");
+                        //oTable.dataTable().fnDestroy();    // destroy the old datatable
+                        $("#Grid").append(finaldata);
                         fixGridView($("#grdForecasting"));
                         $("#grdForecasting").dataTable({
                             aLengthMenu: [
@@ -74,7 +78,6 @@
                         $('#fullpageloading').hide();
                     },
                     success: function (data) {
-                        //var finaldata = "<tr><th>Client Name</th><th>Assigned To</th><th>Status</th></tr>";
                         var JSONDataR = $.parseJSON(data.d);
                         var dataSource = JSONDataR;
                         $("#bar-5").dxChart({
@@ -198,30 +201,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <%--<div class="col-md-6">
-                            <div class="form-group">
-                                <label class="cbr-inline">
-                                    <input type="radio" name="radio-2" class="cbr">
-                                    Monthly</label>
-                                <label class="cbr-inline">
-                                    <input type="radio" name="radio-2" class="cbr">
-                                    Yearly</label>
-                            </div>
-                        </div>--%>
                         <div class="col-md-2 pull-right">
                             <button type="button" id="btnShow" class="btn btn-info pull-right">Show</button>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-striped table-bordered" border="1" id="grdForecasting" style="border-collapse: collapse;">
-                            </table>
+                        <div class="col-md-12" id="Grid">
+                            <%--<table class="table table-striped table-bordered" border="1" id="grdForecasting" style="border-collapse: collapse;"></table>--%>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div id="bar-5" style="height: 260px; width: 100%; -moz-user-select: none;" class="dx-visibility-change-handler">
-                                
                             </div>
                         </div>
                     </div>

@@ -24,6 +24,11 @@
             text-align: center;
             display: none;
         }
+        .form-group.required .control-label:after {
+            content:" *";
+            color:red;
+            font-size: medium; 
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -313,12 +318,6 @@
             });
         });
     </script>
-    <style type="text/css">
-        .modal-content {
-            width: 600px !important;
-            margin: 30px auto !important;
-        }
-    </style>
     <div class="page-title">
         <div class=" col-md-10 title-env">
             <h1 class="title">Product Assignment</h1>
@@ -339,8 +338,8 @@
 
     <%--Vinayak--%>
     <div class="row">
-        <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
+        <div id="modal-dialog" class="modal fade custom-width" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="width: 60%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -350,30 +349,42 @@
                         </h4>
                     </div>
                     <div class="modal-body">
-                        
-                        <div class="col-md-12">
-                            <div class="form-group">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group required">
                                 <label class=" control-label" for="field-1">Assigned To</label>
                                 <asp:DropDownList ID="ddlusername" runat="server" CssClass="form-control" ClientIDMode="Static">
                                 </asp:DropDownList>
                                 <span id="ddlusernameHelper" class="removespan"></span>
                             </div>
-                            <div class="form-group">
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group required">
                                 <label class="control-label" for="prodname">Product Name</label>
                                 <asp:DropDownList ID="ddlProductName" runat="server" CssClass="form-control" ClientIDMode="Static">
                                 </asp:DropDownList>
                                 <span id="ddlProductNameHelper" class="removespan"></span>
                             </div>
-                            <div class="form-group">
+                                </div>
+                            </div>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group required">
                                 <label class="control-label" for="prodamttgt">Amount Target</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodamttgt" ID="txtprodamttgt" autocomplete="off" ClientIDMode="Static" MaxLength="20" data-validate="required"></asp:TextBox>
                                 <span id="prodamttgtHelper" class="removespan"></span>
                             </div>
-                            <div class="form-group">
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group required">
                                 <label class="control-label" for="prodqtytgt">Product Qty Target</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodqtytgt" ID="txtprodqtytgt" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
                                 <span id="prodqtytgtHelper" class="removespan"></span>
                             </div>
+                                </div>
+                            </div>
+                         <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label" for="prodtgtmth">Product Target Month</label>
                                 <asp:DropDownList ID="ddlprodtgtmth" runat="server" CssClass="form-control" ClientIDMode="Static">
@@ -392,22 +403,25 @@
                                 </asp:DropDownList>
                                 <span id="ddlprodtgtmthHelper" class="removespan"></span>
                             </div>
-                            <div class="form-group">
+                            </div>
+                             <div class="col-md-6">
+                            <div class="form-group required">
                                 <label class="control-label" for="prodtgtyr">Product Target Year</label>
                                 <asp:TextBox runat="server" class="form-control" name="prodtgtyr" ID="txtprodtgtyr" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
                                 <span id="prodtgtyrHelper" class="removespan"></span>
                             </div>
+                                 </div>
+                             </div>
                         </div>
-                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <%--<asp:Button ID="btnSubmit" ClientIDMode="Static" runat="server" Text="Save" class="btn btn-info" />--%>
                         <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default blue-box">

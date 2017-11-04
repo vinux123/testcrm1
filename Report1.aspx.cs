@@ -52,7 +52,7 @@ public partial class Report1 : System.Web.UI.Page
         {
             lblCompanyName.Text = "Default Name";
         }
-
+        
     }
 
     protected void btnGenerate_Click(object sender, EventArgs e)
@@ -62,7 +62,17 @@ public partial class Report1 : System.Web.UI.Page
         
 
         DataTable dt = new DataTable();
-        dt = VPCRMSBAL.GetReportData("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim());
+
+        // get daterange values from form. 
+        string dates = Convert.ToString(drreportdate.Text);
+
+        DateTime fromdate = Convert.ToDateTime(dates.Substring(0, 10).ToString());
+        string fromdate1 = fromdate.ToString("yyyy-dd-MM"); // convert to database date format. 
+        
+        DateTime todate = Convert.ToDateTime(dates.Substring(13, 10).ToString());
+        string todate1 = todate.ToString("yyyy-dd-MM"); // convert to database date format. 
+        
+        dt = VPCRMSBAL.GetReportData(fromdate1, todate1, Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim());
         
         ExportToPdf(dt);
 
@@ -76,8 +86,22 @@ public partial class Report1 : System.Web.UI.Page
         string path1 = Server.MapPath("PDF-Files");
         string filename1 = path1 + "/Report2.pdf";
 
+        // if file exists delete old report first. 
+        if (File.Exists(filename1))
+        {
+            File.Delete(filename1);
+        }
+
         DataTable dt = new DataTable();
-        dt = VPCRMSBAL.GetReportDataSalesDetails("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
+        string dates = Convert.ToString(drreportdate1.Text);
+
+        DateTime fromdate = Convert.ToDateTime(dates.Substring(0, 10).ToString());
+        string fromdate1 = fromdate.ToString("yyyy-dd-MM");
+
+        DateTime todate = Convert.ToDateTime(dates.Substring(13, 10).ToString());
+        string todate1 = todate.ToString("yyyy-dd-MM");
+        //dt = VPCRMSBAL.GetReportDataSalesDetails("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
+        dt = VPCRMSBAL.GetReportDataSalesDetails(fromdate1, todate1, Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
 
         ExportToPdfSalesDetails(dt);
 
@@ -100,7 +124,6 @@ public partial class Report1 : System.Web.UI.Page
 
         SendMail();
         
-
     }
 
     protected void btnSendSalesDetails_Click(object sender, EventArgs e)

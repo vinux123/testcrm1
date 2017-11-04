@@ -96,6 +96,31 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
+            // Below ajax call checks whether maximum allowed user count is reached or not, if its reached then disable Add User Button. 
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "UserMaster.aspx/CheckMaxAllowedUsers",
+                dataType: "json",
+
+                success: function (data) {
+                    alert(data.d);
+                    if (data.d == "Yes") {
+                        $("#btnAddUser").attr("disabled", true);
+                    }
+                    else {
+                        $("#btnAddUser").attr("disabled", false);
+                    }
+                },
+
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
             fixGridView($("#grdUserMaster"));
 
             $('#txtusername').change(function () {

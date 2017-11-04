@@ -2,8 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style>
-        #fullpageloading
-        {
+        #fullpageloading {
             background-color: Gray;
             opacity: 0.5;
             cursor: auto;
@@ -17,6 +16,12 @@
             text-align: center;
             display: none;
         }
+
+        .form-group.required .control-label:after {
+            content: " *";
+            color: red;
+            font-size: medium;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -25,17 +30,17 @@
                 url: "ProductSetup.aspx/GetProductDetails",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                beforeSend: function(){
+                beforeSend: function () {
                     $('#fullpageloading').show()
                 },
-                complete: function(){
+                complete: function () {
                     $('#fullpageloading').hide();
                 },
                 success: function (data) {
                     var finaldata = "<tr><th>Product Name</th><th>Product Description</th><th>HSN</th><th>Product Price</th><th>Action</th></tr>";
                     var JSONDataR = $.parseJSON(data.d);
                     for (var i = 0; i < JSONDataR.length; i++) {
-                        finaldata = finaldata + '<tr><td>' + JSONDataR[i].productname + '</td><td>' + JSONDataR[i].productdesc + '</td><td>' + JSONDataR[i].producthsn + '</td><td>' + JSONDataR[i].prodprice + '</td><td><a href=#><i class="fa fa-pencil" id="I9" onclick="EditProduct(\'' + JSONDataR[i].productname  + '\');"></i></a></td></tr>';
+                        finaldata = finaldata + '<tr><td>' + JSONDataR[i].productname + '</td><td>' + JSONDataR[i].productdesc + '</td><td>' + JSONDataR[i].producthsn + '</td><td>' + JSONDataR[i].prodprice + '</td><td><a href=#><i class="fa fa-pencil" id="I9" onclick="EditProduct(\'' + JSONDataR[i].productname + '\');"></i></a></td></tr>';
                     }
                     $("#grdProduct").append(finaldata);
                     fixGridView($("#grdProduct"));
@@ -211,12 +216,6 @@
             });
         });
     </script>
-    <style type="text/css">
-        .modal-content {
-            width: 600px !important;
-            margin: 30px auto !important;
-        }
-    </style>
     <div class="page-title">
         <div class=" col-md-10 title-env">
             <h1 class="title">Product Setup</h1>
@@ -234,8 +233,8 @@
         </div>
     </div>
     <div class="row">
-        <div id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
+        <div id="modal-dialog" class="modal fade custom-width" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="width: 60%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -245,26 +244,35 @@
                         </h4>
                     </div>
                     <div class="modal-body" id="modalbody">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class=" control-label" for="field-1">Product Name</label>
-                                <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
-                                <span id="productnameHelper" class="removespan"></span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class=" control-label" for="field-1">Product Name</label>
+                                    <asp:TextBox runat="server" class="form-control" name="productname" ID="txtprodname" ClientIDMode="Static" autocomplete="off" MaxLength="45"></asp:TextBox>
+                                    <span id="productnameHelper" class="removespan"></span>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="proddesc">Product Description</label>
-                                <asp:TextBox runat="server" class="form-control" name="proddesc" ID="txtproddesc" autocomplete="off" ClientIDMode="Static" MaxLength="50"></asp:TextBox>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="proddesc">Product Description</label>
+                                    <asp:TextBox runat="server" class="form-control" name="proddesc" ID="txtproddesc" autocomplete="off" ClientIDMode="Static" MaxLength="50"></asp:TextBox>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="prodhsn">Product HSN</label>
-                                <asp:TextBox runat="server" class="form-control" name="prodhsn" ID="txtprodhsn" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="prodhsn">Product HSN</label>
+                                    <asp:TextBox runat="server" class="form-control" name="prodhsn" ID="txtprodhsn" autocomplete="off" ClientIDMode="Static" MaxLength="20"></asp:TextBox>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="prodprice">Product Price</label>
-                                <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                                <span id="prodpriceHelper" class="removespan"></span>
+                            <div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class="control-label" for="prodprice">Product Price</label>
+                                    <asp:TextBox runat="server" class="form-control" name="prodprice" ID="txtprodprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                    <span id="prodpriceHelper" class="removespan"></span>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -301,7 +309,7 @@
     </div>
     <div id="fullpageloading">
         <div style="margin: 20%">
-            <img alt="loading" src="Images/fullpageloadingimg2.gif"  />
+            <img alt="loading" src="Images/fullpageloadingimg2.gif" />
         </div>
     </div>
     <!--main-content-ends-->

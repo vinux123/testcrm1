@@ -59,6 +59,14 @@ public class VPCRMSBAL
         return dt;
     }
 
+    // Get Product List
+    public static DataTable GetProductNames(Decimal ClientAlias)
+    {
+
+        DataTable dt = VPCRMSDAL.GetProductNames(ClientAlias);
+        return dt;
+    }
+
     
 
     public DataTable GetUserPassword(String UserName)
@@ -164,6 +172,12 @@ public class VPCRMSBAL
     {
         
         VPCRMSDAL.SaveQuotationData(clientcustomerid, clientquoteid, clientcustomeruser, clientquotedproduct, clientquotedprodqty, clientquotedprice, clientquotedamt);
+    }
+
+    //created reloaded method as chaged for inserting multiple products at one go.
+    public static void SaveQuotationData(Decimal clientcustomerid, Decimal clientquoteid, Decimal clientcustomeruser,String XML)
+    {
+        VPCRMSDAL.SaveQuotationData(clientcustomerid, clientquoteid,clientcustomeruser, XML);
     }
 
     // Update Closed On Date

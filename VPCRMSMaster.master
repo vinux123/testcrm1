@@ -42,7 +42,8 @@
                 <header class="logo-env"> 
         
         <!-- logo -->
-        <div class="logo"> <a href="#" class="logo-expanded"> <img src="assets/images/CRMlogo.jpeg" alt="" /> </a> <a href="#" class="logo-collapsed"> <img src="assets/images/CRMLogosmall.jpeg" width="40" alt="" /> </a> </div>
+        <div class="logo"> <a href="#" class="logo-expanded"> <img src="assets/images/Final2LogoCRM.png" alt="" /> </a> <a href="#" class="logo-collapsed"> 
+            <img src="assets/images/finalsmallCRM.png" width="40" alt="" /> </a> </div>
         <div class="logo">  </div>
         
         <!-- This will toggle the mobile menu and will be visible only on mobile devices -->
@@ -54,7 +55,9 @@
                 <ul id="main-menu" class="main-menu">
                     <!-- add class "multiple-expanded" to allow multiple submenus to open -->
                     <!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
-                    <li><a href="#"><i class="linecons-cog"></i><span class="title">Dashboard</span> </a>
+                    <li><a href="Dashboard.aspx" id="A3" runat="server"><i class="linecons-globe"></i><span class="title">Dashboard</span> </a>
+                    </li>
+                    <li><a href="#"><i class="linecons-cog"></i><span class="title">Daily Call Reports</span> </a>
                         <ul>
                             <li><a href="DailyCallReport.aspx"><span class="title">Daily Call Report</span> </a></li>
                         </ul>
@@ -172,7 +175,7 @@
     <script src="assets/js/datatables/dataTables.bootstrap.js"></script>
     <link rel="stylesheet" href="assets/js/datatables/dataTables.bootstrap.css">
  
-	<script src="assets/js/multiselect/js/jquery.multi-select.js"></script>
+	<%--<script src="assets/js/multiselect/js/jquery.multi-select.js"></script>--%>
 
 
 	<!-- Bottom Scripts --> 

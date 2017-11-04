@@ -16,6 +16,11 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using System.Xml;
+using System.Xml.Linq;
+using System.Runtime.Serialization.Json;
+using System.Text;
 
 public partial class testdcr : System.Web.UI.Page
 {
@@ -50,18 +55,7 @@ public partial class testdcr : System.Web.UI.Page
             lblCompanyName.Text = "Default Name";
         }
 
-        // Populate Product Name to dropdown on modal. 
-        DataTable dtProdTable = new DataTable();
-        dtProdTable = VPCRMSBAL.GetProductList(client_alias);
-        if (dtProdTable.Rows.Count > 0)
-        {
-            ddlProductName.DataSource = dtProdTable;
-            ddlProductName.DataValueField = "productname";
-            ddlProductName.DataValueField = "productname";
-            ddlProductName.DataBind();
-            ddlProductName.Items.Insert(0, new ListItem("Select Product", "0"));
-            ddlProductName.SelectedIndex = 0;
-        }
+        
 
         // Populate Assigned to dropdown on modal. 
         DataTable dtUserTable = new DataTable();
@@ -106,12 +100,24 @@ public partial class testdcr : System.Web.UI.Page
         return json;
     }
 
+    // Populate Product Name to dropdown on modal. 
+    [WebMethod]
+    public static string GetProductList()
+    {
+        decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
+        DataTable dtProdTable = new DataTable();
+        dtProdTable = VPCRMSBAL.GetProductNames(client_alias);
+        String a= String.Join(",", dtProdTable.AsEnumerable().Select(p => p.Field<String>("ProductName")).ToArray());
+        //String json = DataTableToJSONWithJavaScriptSerializer(dtProdTable);
+        return a;
+    }
+
     protected void calculate_gst(object sender, EventArgs e)
     {
 
-        decimal quotedamt = Convert.ToDecimal(Convert.ToString(txtquoteamt.Text));
-        decimal totalamt = (quotedamt * 18 / 100) + quotedamt;
-        txttotalamount.Text = Convert.ToString(totalamt);
+        //decimal quotedamt = Convert.ToDecimal(Convert.ToString(txtquoteamt.Text));
+        //decimal totalamt = (quotedamt * 18 / 100) + quotedamt;
+        //txttotalamount.Text = Convert.ToString(totalamt);
         //txttotalamt.Text = Convert.ToString(totalamt);
         //txttotalamt.Text = "testing";
         //txttotalamount.Text = "testing";
@@ -132,10 +138,66 @@ public partial class testdcr : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static void SaveQuotationDetails(String clientcustid, String customeruser, String quotedprod, String quoteqty, String quoteprice, String quoteamt)
+    //public static void SaveQuotationDetails(String clientcustid, String customeruser, String quotedprod, String quoteqty, String quoteprice, String quoteamt)
+    public static void SaveQuotationDetails(String clientcustid, String customeruser,String AllData)
     {
-        VPCRMSBAL.SaveQuotationData(Convert.ToDecimal(clientcustid), VPCRMSDAL.AssignQuoteID(), Convert.ToDecimal(customeruser), quotedprod, Convert.ToDecimal(quoteqty), Convert.ToDecimal(quoteprice), Convert.ToDecimal(quoteamt));
+        var xml = XDocument.Load(JsonReaderWriterFactory.CreateJsonReader(Encoding.ASCII.GetBytes(AllData), new XmlDictionaryReaderQuotas()));
+        //VPCRMSBAL.SaveQuotationData(Convert.ToDecimal(clientcustid), VPCRMSDAL.AssignQuoteID(), Convert.ToDecimal(customeruser), quotedprod, Convert.ToDecimal(quoteqty), Convert.ToDecimal(quoteprice), Convert.ToDecimal(quoteamt));
+        VPCRMSBAL.SaveQuotationData(Convert.ToDecimal(clientcustid), VPCRMSDAL.AssignQuoteID(), Convert.ToDecimal(customeruser), xml.ToString());
     }
+
+   
+
+public static XmlDocument JsonToXml(string json)
+{
+    XmlNode newNode = null;
+    XmlNode appendToNode = null;
+    XmlDocument returnXmlDoc = new XmlDocument();
+    returnXmlDoc.LoadXml("<Document />");
+    XmlNode rootNode = returnXmlDoc.SelectSingleNode("Document");
+    appendToNode = rootNode;
+
+    string[] arrElementData;
+    string[] arrElements = json.Split('\r');
+    foreach (string element in arrElements)
+    {
+        string processElement = element.Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim();
+        if ((processElement.IndexOf("}") > -1 || processElement.IndexOf("]") > -1) && appendToNode != rootNode)
+        {
+            appendToNode = appendToNode.ParentNode;
+        }
+        else if (processElement.IndexOf("[") > -1)
+        {
+            processElement = processElement.Replace(":", "").Replace("[", "").Replace("\"", "").Trim();
+            newNode = returnXmlDoc.CreateElement(processElement);
+            appendToNode.AppendChild(newNode);
+            appendToNode = newNode;
+        }
+        else if (processElement.IndexOf("{") > -1 && processElement.IndexOf(":") > -1)
+        {
+            processElement = processElement.Replace(":", "").Replace("{", "").Replace("\"", "").Trim();
+            newNode = returnXmlDoc.CreateElement(processElement);
+            appendToNode.AppendChild(newNode);
+            appendToNode = newNode;
+        }
+        else
+        {
+            if (processElement.IndexOf(":") > -1)
+            {
+                arrElementData = processElement.Replace(": \"", ":").Replace("\",", "").Replace("\"", "").Split(':');
+                newNode = returnXmlDoc.CreateElement(arrElementData[0]);
+                for (int i = 1; i < arrElementData.Length; i++)
+                {
+                    newNode.InnerText += arrElementData[i];
+                }
+
+                appendToNode.AppendChild(newNode);
+            }
+        }
+    }
+
+    return returnXmlDoc;
+}
 
     [WebMethod]
     public static string EditDCRDetails(String ClientCustomerID)

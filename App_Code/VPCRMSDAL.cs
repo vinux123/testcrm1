@@ -54,6 +54,7 @@ public class VPCRMSDAL
     public DataTable GetUserList(Decimal ClientAlias)
     {
         string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        
         MySqlConnection conn = new MySqlConnection(connectionstring);
         MySqlCommand dCmd;
         DataTable dt = new DataTable();
@@ -64,6 +65,8 @@ public class VPCRMSDAL
             DataTable dtUsers = new DataTable();
             dCmd = new MySqlCommand("usp_getUserList", conn);
             dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
+            dCmd.Parameters.AddWithValue("@client_user_role", HttpContext.Current.Session["UserRole"].ToString().Trim());
+            dCmd.Parameters.AddWithValue("@client_user_id", HttpContext.Current.Session["UserID"].ToString().Trim());
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
@@ -166,7 +169,43 @@ public class VPCRMSDAL
         return dt;
     }
 
-    
+    // Get Product List for Product List Drop Down. 
+    public static DataTable GetProductNames(Decimal ClientAlias)
+    {
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            conn.Open();
+            dCmd = new MySqlCommand("usp_getProductName", conn);
+            dCmd.Parameters.AddWithValue("@client_alias", ClientAlias);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
 
     // Fetch user password for Login. 
     public DataTable GetUserPassword(String UserName)
@@ -220,7 +259,10 @@ public class VPCRMSDAL
         try
         {
             conn.Open();
+            // fetch client alias & pass it to SP. 
+            decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
             dCmd = new MySqlCommand("usp_GetUserDetails", conn);
+            dCmd.Parameters.AddWithValue("@client_alias", client_alias);
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
@@ -886,7 +928,15 @@ public class VPCRMSDAL
             dCmd.CommandType = CommandType.StoredProcedure;
             MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
             daUsers.Fill(dt);
-            NewQuoteID = Convert.ToDecimal(dt.Rows[0]["maxquoteid"].ToString().Trim()) + 1;
+            // if no quotation exists assign 1 to newquoteid. 
+            if (String.IsNullOrEmpty(dt.Rows[0]["maxquoteid"].ToString()))
+            {
+                NewQuoteID = 1;
+            }
+            else
+            {
+                NewQuoteID = Convert.ToDecimal(dt.Rows[0]["maxquoteid"].ToString().Trim()) + 1;
+            }
         }
         catch (Exception ex)
         {
@@ -969,6 +1019,45 @@ public class VPCRMSDAL
                 cmd.Parameters.AddWithValue("@client_quoted_price", clientquotedprice);
                 cmd.Parameters.AddWithValue("@client_quoted_amount", clientquotedamt);
 
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+        }
+        catch (MySqlException ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+        }
+
+    }
+
+    //created reloaded method as chaged for inserting multiple products at one go.
+    public static void SaveQuotationData(Decimal clientcustomerid, Decimal clientquoteid, Decimal clientcustomeruser, String XML)
+    {
+        string connectionstring = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        MySqlConnection conn = new MySqlConnection(connectionstring); ;
+        try
+        {
+            conn = new MySqlConnection(connectionstring);
+            conn.Open();
+            using (MySqlCommand cmd = new MySqlCommand("usp_SaveQuotation", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@client_customer_id", clientcustomerid);
+                cmd.Parameters.AddWithValue("@client_quotation_date", DateTime.Now.ToString("yyyy-MM-dd"));
+                cmd.Parameters.AddWithValue("@client_quotation_id", clientquoteid);
+                cmd.Parameters.AddWithValue("@client_customer_user", clientcustomeruser);
+                cmd.Parameters.AddWithValue("@ptblProduct", XML);
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
             }

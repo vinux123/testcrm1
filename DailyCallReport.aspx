@@ -1,9 +1,9 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="DailyCallReport.aspx.cs" Inherits="testdcr" %>
+﻿
+<%@ Page Language="C#" MasterPageFile="~/VPCRMSMaster.master" AutoEventWireup="true" CodeFile="DailyCallReport.aspx.cs" Inherits="testdcr" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style>
-        #fullpageloading
-        {
+        #fullpageloading {
             background-color: Gray;
             opacity: 0.5;
             cursor: auto;
@@ -17,9 +17,11 @@
             text-align: center;
             display: none;
         }
-        .modal-content {
-            width: 600px !important;
-            margin: 30px auto !important;
+
+        .form-group.required .control-label:after {
+            content: " *";
+            color: red;
+            font-size: medium;
         }
     </style>
     <script type="text/javascript">
@@ -54,11 +56,11 @@
                                                            + JSONDataR[i].clientcustomerpcontact + '</td><td>'
                                                            + JSONDataR[i].clientcustomeremailid + '</td><td>'
                                                            + JSONDataR[i].clientuserfirstname + '</td><td>'
-                                                           + JSONDataR[i].customerstatus + '</td><td>'+
+                                                           + JSONDataR[i].customerstatus + '</td><td>' +
                                                            '<a href=#><i class="fa fa-pencil" id="EditDCR" data-toggle="tooltip" data-container="body" data-placement="bottom" data-original-title="Edit" onclick="EditDCR(\'' + JSONDataR[i].clientcustomerid + '\');"></i></a>&nbsp;&nbsp;&nbsp;<a href=#><i class="fa fa-plus" id="AddQuotation" data-toggle="tooltip" data-container="body" data-placement="bottom" data-original-title="Add Quotation" onclick="GenerateQuotation(\'' + JSONDataR[i].clientcustomerid + '\');"></i></a></td>'
                                                            + '</tr>';
                     }
-                    
+
                     $("#grdDCR").append(finaldata);
                     fixGridView($("#grdDCR"));
                     $("#grdDCR").dataTable({
@@ -83,9 +85,59 @@
         });
     </script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            fixGridView($("#grdDCR"));
-        });
+        function Info() {
+            this.ProductName = '';
+            this.ProductQTY = '';
+            this.ProductPrice = '';
+            this.ProductAmount = '';
+            this.ProductFinalAmount = '';
+        }
+
+        function adderr(f, index) {
+            //$("#msg").fadeIn('slow').removeClass("validate-has-error");
+            $("#msg").show();
+            // $(index).find("td:eq(" + f + ")").addClass("error");
+            $(index).find("td").parent("tr").css("background-color", "#F5ECCE");
+        }
+
+        function isvalid(ProductName, ProductQTY, ProductPrice, ProductAmount, ProductFinalAmount, i, index) {
+            debugger;
+            $("#tblProduct tbody tr > td ").removeClass("validate-has-error");
+            if ($.trim(ProductName) == 'Select') {
+                $("#msg").html("Please select product at row " + i);
+                adderr(1, index);
+                return false;
+            }
+
+            if ($.trim(ProductQTY) == '') {
+                $("#msg").html("Please enter product quantity at row " + i);
+                adderr(2, index);
+                return false;
+            }
+
+            if ($.trim(ProductPrice) == '') {
+                $("#msg").html("Please enter product price at row " + i);
+                adderr(3, index);
+                return false;
+            }
+
+            if ($.trim(ProductAmount) == '') {
+                $("#msg").html("Please enter product Amount at row " + i);
+                adderr(4, index);
+                return false;
+            }
+
+            if ($.trim(ProductFinalAmount) == '') {
+                $("#msg").html("Please enter product final amount at row " + i);
+                adderr(5, index);
+                return false;
+            }
+            
+            else {
+                $("#msg").hide();
+                return true;
+            }
+        }
 
         function fixGridView(tableEl) {
             var jTbl = $(tableEl);
@@ -96,7 +148,114 @@
             }
         }
 
-        function addZero(i){
+        function addnewrow(no) {
+            debugger;
+            var drpvalues = '';
+            $.ajax({
+                type: "POST",
+                url: "DailyCallReport.aspx/GetProductList",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //alert(data.d);
+                    drpvalues = data.d;
+                    var drpValue = drpvalues.split(',');
+                    var intProductCount = parseInt($('#hidProductCount').val());
+
+                    var tblftpurl = document.getElementById("tblProduct");
+                    var x = document.createElement('tr');
+                    var y = document.createElement('td');
+                    var z = document.createElement('select');
+
+                    for (var i = 0; i < drpValue.length; i++) {
+                        var new_option_element = new Option(drpValue[i], drpValue[i]);
+                        z.appendChild(new_option_element);
+                    }
+
+                    z.id = "ProductDetails_" + intProductCount + "__ProductName"; z.name = "ProductDetails[" + intProductCount + "].ProductName";
+                    z.setAttribute("class", "form-control");
+                    y.appendChild(z);
+                    x.appendChild(y);
+
+                    var y = document.createElement('td');
+                    var z = document.createElement('input');
+                    z.type = "text";
+                    z.autocomplete = "off";
+                    z.id = "ProductDetails_" + intProductCount + "__quotedqty"; z.name = "ProductDetails[" + intProductCount + "].quotedqty";
+                    z.setAttribute("class", "form-control");
+                    y.appendChild(z);
+                    x.appendChild(y);
+
+                    var y = document.createElement('td');
+                    var z = document.createElement('input');
+                    z.type = "text";
+                    z.autocomplete = "off";
+                    z.id = "ProductDetails_" + intProductCount + "__quoteprice"; z.name = "ProductDetails[" + intProductCount + "].quoteprice";
+                    z.setAttribute("class", "form-control");
+                    //z.setAttribute("style","width:150px");
+                    y.appendChild(z);
+                    x.appendChild(y);
+
+                    var y = document.createElement('td');
+                    var z = document.createElement('input');
+                    z.type = "text";
+                    z.autocomplete = "off";
+                    z.id = "ProductDetails_" + intProductCount + "__quoteamt"; z.name = "ProductDetails[" + intProductCount + "].quoteamt";
+                    z.setAttribute("class", "form-control");
+                    //z.setAttribute("style","width:150px");
+                    y.appendChild(z);
+                    x.appendChild(y);
+
+                    var y = document.createElement('td');
+                    var z = document.createElement('input');
+                    z.type = "text";
+                    z.autocomplete = "off";
+                    z.id = "ProductDetails_" + intProductCount + "__totalamount"; z.name = "ProductDetails[" + intProductCount + "].totalamount";
+                    z.setAttribute("class", "form-control");
+                    y.appendChild(z);
+                    x.appendChild(y);
+
+                    var y = document.createElement('td');
+                    var add_del_but;
+                    if (no == 1) {
+                        add_del_but = $("<button><i class=\"fa fa-plus\"></i></button>").click(function () {
+                            addnewrow(no + 1);
+                            //rebindFTPDetails();
+                        }).get(0);
+                    }
+                    else {
+                        add_del_but = $("<button><i class=\"fa fa-minus\"></i></button>").click(function () {
+                            var x = this.parentElement.parentElement;
+                            var y = this.parentElement.parentElement.parentElement;
+                            x.parentNode.removeChild(x);
+                            //rebindFTPDetails();
+                        }).get(0);
+                    }
+                    var z = document.createElement('input');
+                    z.type = "image"; z.id = "btnminus_" + intProductCount;
+                    z.setAttribute("src", "images/delImage_14_14.jpg");
+                    z.addEventListener("click", function () {
+                        var x = this.parentElement.parentElement;
+                        var y = this.parentElement.parentElement.parentElement;
+                        x.parentNode.removeChild(x);
+                    });
+                    //y.appendChild(z);
+                    y.appendChild(add_del_but);
+                    x.appendChild(y);
+                    tblProduct.tBodies[0].appendChild(x);
+                    intProductCount = intProductCount + 1;
+                    $('#hidProductCount').val(intProductCount);
+                    return false;
+                },
+                error: function (data) {
+                    console.log('ajax call error');
+                }
+            });
+            
+            
+        }
+
+        function addZero(i) {
             if (i < 10) {
                 i = "0" + i;
             }
@@ -187,209 +346,218 @@
             return val;
         }
 
-            function ValidateDCR() {
+        function ValidateDCR() {
 
-                var rege = /^[1-9]\d*$/;
-                var date = $('#txtdate').val();
-                var AssignedTo = $('#ddlassignedto option:selected').val();
-                var company = $('#txtcompany').val();
-                var Email = $('#txtemail').val();
-                var primarycontact = $('#txtprimarycontact').val();
-                var Status = $('#ddlstatus option:selected').val();
-                var Revenue = $('#txterevenue').val();
-                var Source = $('#ddlsource  option:selected').val();
-                var followupdate = $('#txtfollowupdate').val();
-                var PinCode = $('#txtpincode').val();
-                var Remarks = $('#txtremarks').val();
-                var val = true
+            var rege = /^[1-9]\d*$/;
+            var date = $('#txtdate').val();
+            var AssignedTo = $('#ddlassignedto option:selected').val();
+            var company = $('#txtcompany').val();
+            var Email = $('#txtemail').val();
+            var primarycontact = $('#txtprimarycontact').val();
+            var Status = $('#ddlstatus option:selected').val();
+            var Revenue = $('#txterevenue').val();
+            var Source = $('#ddlsource  option:selected').val();
+            var followupdate = $('#txtfollowupdate').val();
+            var PinCode = $('#txtpincode').val();
+            var Remarks = $('#txtremarks').val();
+            var val = true
 
-                if (date.length <= 0) {
-                    $('#txtdate').parent().addClass('validate-has-error');
-                    txtdateHelper.innerHTML = "Please select date";
-                }
-                else {
-                    $('#txtdate').parent().removeClass('validate-has-error');
-                    txtdateHelper.innerHTML = "";
-                }
-
-                if (AssignedTo == 0) {
-                    $('#ddlassignedto').parent().addClass('validate-has-error');
-                    ddlassignedtoHelper.innerHTML = "Please select Assigned to";
-                } else {
-                    $('#ddlassignedto').parent().removeClass('validate-has-error');
-                    ddlassignedtoHelper.innerHTML = "";
-                }
-
-                if (company.length <= 0) {
-                    $('#txtcompany').parent().addClass('validate-has-error');
-                    txtcompanyHelper.innerHTML = "Please select company";
-                }
-                else {
-                    $('#txtcompany').parent().removeClass('validate-has-error');
-                    txtcompanyHelper.innerHTML = "";
-                }
-
-                if (Email.length <= 0) {
-                    $('#txtemail').parent().addClass('validate-has-error');
-                    EmailHelper.innerHTML = "Please enter email";
-                }
-                else {
-                    $('#txtemail').parent().removeClass('validate-has-error');
-                    EmailHelper.innerHTML = "";
-                }
-
-                if (primarycontact.length <= 0) {
-                    $('#txtprimarycontact').parent().addClass('validate-has-error');
-                    txtprimarycontactHelper.innerHTML = "Please enter Primary Contact";
-                }
-                else {
-                    $('#txtprimarycontact').parent().removeClass('validate-has-error');
-                    txtprimarycontactHelper.innerHTML = "";
-                }
-
-                if (Status == 0) {
-                    $('#ddlstatus').parent().addClass('validate-has-error');
-                    ddlstatusHelper.innerHTML = "Please select Status";
-                } else {
-                    $('#ddlstatus').parent().removeClass('validate-has-error');
-                    ddlstatusHelper.innerHTML = "";
-                }
-
-                if (Revenue.length <= 0) {
-                    $('#txterevenue').parent().addClass('validate-has-error');
-                    ExpectedRevenueHelper.innerHTML = "Please enter expected revenue";
-                }
-                else {
-                    $('#txterevenue').parent().removeClass('validate-has-error');
-                    ExpectedRevenueHelper.innerHTML = "";
-                }
-
-                if (Source == 0) {
-                    $('#ddlsource').parent().addClass('validate-has-error');
-                    ddlSourceHelper.innerHTML = "Please select source";
-                } else {
-                    $('#ddlsource').parent().removeClass('validate-has-error');
-                    ddlSourceHelper.innerHTML = "";
-                }
-
-                if (PinCode.length <= 0) {
-                    $('#txtpincode').parent().addClass('validate-has-error');
-                    PinCodeHelper.innerHTML = "Please enter Pincode";
-                }
-                else {
-                    $('#txtpincode').parent().removeClass('validate-has-error');
-                    PinCodeHelper.innerHTML = "";
-                }
-
-                if (Remarks.length <= 0) {
-                    $('#txtremarks').parent().addClass('validate-has-error');
-                    RemarksHelper.innerHTML = "Please enter remarks";
-                }
-                else {
-                    $('#txtremarks').parent().removeClass('validate-has-error');
-                    RemarksHelper.innerHTML = "";
-                }
-
-                if (followupdate.length <= 0) {
-                    $('#txtfollowupdate').parent().addClass('validate-has-error');
-                    txtfollowupdateHelper.innerHTML = "Please enter followup date";
-                }
-                else {
-                    $('#txtfollowupdate').parent().removeClass('validate-has-error');
-                    txtfollowupdateHelper.innerHTML = "";
-                }
-
-                if (($('.validate-has-error').length) > 0) {
-                    val = false;
-                }
-                else { val = true; }
-                return val;
+            if (date.length <= 0) {
+                $('#txtdate').parent().addClass('validate-has-error');
+                txtdateHelper.innerHTML = "Please select date";
+            }
+            else {
+                $('#txtdate').parent().removeClass('validate-has-error');
+                txtdateHelper.innerHTML = "";
             }
 
-            function EditDCR(ClientCustomerID) {
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    url: "DailyCallReport.aspx/EditDCRDetails",
-                    data: "{'ClientCustomerID': '" + ClientCustomerID + "'}",
-                    dataType: "json",
-                    beforeSend: function () {
-                        $('#fullpageloading').show()
-                    },
-                    complete: function () {
-                        $('#fullpageloading').hide();
-                    },
-                    success: function (data) {
-                        var JsonData = data.d;
-                        var JSONDataR = $.parseJSON(JsonData);
-                        $.each(JSONDataR, function (index, val) {
-                            // Format date received via JSON response. Date retrieved is 1 day lesser, hence after parse added 1 extra day to get exact date. 
-                            // this was known bug in JSON framework, discussed on StackOverFlow in detail and best Possible Solution was given to add 1 extra day. ;)
-                            var d = /\/Date\((\d*)\)\//.exec(val.clientdate);
-                            var d1 = new Date(+d[1]);
-                            var yy = d1.getFullYear();
-                            var mm = addZero(d1.getMonth() + 1);
-                            var dd = addZero(d1.getDate());
-                            $('#txtdate').val(yy + '-' + mm + '-' + dd);
-                            $('#txtcompany').val(val.clientcustomername);
-                            $('#txtfirstname').val(val.custfollowuppersonfn);
-                            $('#txtoccupation').val(val.followuppersondesgn);
-                            $('#txtprimarycontact').val(val.clientcustomerpcontact);
-                            $('#txtwebsite').val(val.companywebsite);
-                            $('#txterevenue').val(val.clientcustomerpamt)
+            if (AssignedTo == 0) {
+                $('#ddlassignedto').parent().addClass('validate-has-error');
+                ddlassignedtoHelper.innerHTML = "Please select Assigned to";
+            } else {
+                $('#ddlassignedto').parent().removeClass('validate-has-error');
+                ddlassignedtoHelper.innerHTML = "";
+            }
 
-                            //var date1 = new Date(parseInt(val.custfollowupdate.replace('/Date(', ''))).toISOString();
-                            //$('#txtfollowupdate').val(date1.substring(0, 10));
-                            var d2 = /\/Date\((\d*)\)\//.exec(val.custfollowupdate);
-                            var d1a = new Date(+d2[1]);
-                            var yy1 = d1a.getFullYear();
-                            var mm1 = addZero(d1a.getMonth() + 1);
-                            var dd1 = addZero(d1a.getDate());
-                            $('#txtfollowupdate').val(yy1 + '-' + mm1 + '-' + dd1);
+            if (company.length <= 0) {
+                $('#txtcompany').parent().addClass('validate-has-error');
+                txtcompanyHelper.innerHTML = "Please select company";
+            }
+            else {
+                $('#txtcompany').parent().removeClass('validate-has-error');
+                txtcompanyHelper.innerHTML = "";
+            }
 
-                            $('#txtcompanyadd1').val(val.clientcustomeradd1);
-                            $('#txtcompanyadd2').val(val.clientcustomeradd2);
-                            $('#txtaddresscity').val(val.clientcustomercity);
-                            $('#txtaddressdist').val(val.clientcustomerdistrict);
-                            $('#txtaddressstate').val(val.clientcustomerstate);
-                            $('#txtaddresscountry').val(val.clientcustomercountry);
-                            $('#txtpincode').val(val.clientcustomerpincode);
-                            $('#txtremarks').val(val.clientremarks);
+            if (Email.length <= 0) {
+                $('#txtemail').parent().addClass('validate-has-error');
+                EmailHelper.innerHTML = "Please enter email";
+            }
+            else {
+                $('#txtemail').parent().removeClass('validate-has-error');
+                EmailHelper.innerHTML = "";
+            }
 
-                            $("#<%=ddlassignedto.ClientID %>").val(val.customeruser);
-                            $("#<%=ddlcompanytype.ClientID %>").val(val.clientcompanytype);
-                            $('#txtlastname').val(val.custfollowuppersonln);
-                            $('#txtemail').val(val.clientcustomeremailid);
-                            $('#txtalternatecontact').val(val.clientcustomeracontact);
-                            $("#<%=ddlstatus.ClientID %>").val(val.clientcustomerstatus);
-                            $("#<%=ddlsource.ClientID %>").val(val.clientsource);
-                            $('#txtsaddress1').val(val.shippingadd1);
-                            $('#txtsaddress2').val(val.shippingadd2);
-                            $('#txtscity').val(val.shippingcity);
-                            $('#txtsdistrict').val(val.shippingdistrict);
-                            $('#txtsstate').val(val.shippingstate);
-                            $('#txtscountry').val(val.shippingcountry);
-                            $('#txtspincode').val(val.shippingpincode);
-                            $('#hdnClientCustID').val(val.clientcustomerid);
-                            $('#btnSubmit').attr('value', 'Update');
-                            $('#modal-dialog').on('show.bs.modal', function (event) {
-                                $('#modal-dialog').insertAfter($('body'));
-                            });
-                            $('#modal-dialog').modal('show');
+            if (primarycontact.length <= 0) {
+                $('#txtprimarycontact').parent().addClass('validate-has-error');
+                txtprimarycontactHelper.innerHTML = "Please enter Primary Contact";
+            }
+            else {
+                $('#txtprimarycontact').parent().removeClass('validate-has-error');
+                txtprimarycontactHelper.innerHTML = "";
+            }
+
+            if (Status == 0) {
+                $('#ddlstatus').parent().addClass('validate-has-error');
+                ddlstatusHelper.innerHTML = "Please select Status";
+            } else {
+                $('#ddlstatus').parent().removeClass('validate-has-error');
+                ddlstatusHelper.innerHTML = "";
+            }
+
+            if (Revenue.length <= 0) {
+                $('#txterevenue').parent().addClass('validate-has-error');
+                ExpectedRevenueHelper.innerHTML = "Please enter expected revenue";
+            }
+            else {
+                $('#txterevenue').parent().removeClass('validate-has-error');
+                ExpectedRevenueHelper.innerHTML = "";
+            }
+
+            if (Source == 0) {
+                $('#ddlsource').parent().addClass('validate-has-error');
+                ddlSourceHelper.innerHTML = "Please select source";
+            } else {
+                $('#ddlsource').parent().removeClass('validate-has-error');
+                ddlSourceHelper.innerHTML = "";
+            }
+
+            if (PinCode.length <= 0) {
+                $('#txtpincode').parent().addClass('validate-has-error');
+                PinCodeHelper.innerHTML = "Please enter Pincode";
+            }
+            else {
+                $('#txtpincode').parent().removeClass('validate-has-error');
+                PinCodeHelper.innerHTML = "";
+            }
+
+            if (Remarks.length <= 0) {
+                $('#txtremarks').parent().addClass('validate-has-error');
+                RemarksHelper.innerHTML = "Please enter remarks";
+            }
+            else {
+                $('#txtremarks').parent().removeClass('validate-has-error');
+                RemarksHelper.innerHTML = "";
+            }
+
+            if (followupdate.length <= 0) {
+                $('#txtfollowupdate').parent().addClass('validate-has-error');
+                txtfollowupdateHelper.innerHTML = "Please enter followup date";
+            }
+            else {
+                $('#txtfollowupdate').parent().removeClass('validate-has-error');
+                txtfollowupdateHelper.innerHTML = "";
+            }
+
+            if (($('.validate-has-error').length) > 0) {
+                val = false;
+            }
+            else { val = true; }
+            return val;
+        }
+
+        function EditDCR(ClientCustomerID) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "DailyCallReport.aspx/EditDCRDetails",
+                data: "{'ClientCustomerID': '" + ClientCustomerID + "'}",
+                dataType: "json",
+                beforeSend: function () {
+                    $('#fullpageloading').show()
+                },
+                complete: function () {
+                    $('#fullpageloading').hide();
+                },
+                success: function (data) {
+                    var JsonData = data.d;
+                    var JSONDataR = $.parseJSON(JsonData);
+                    $.each(JSONDataR, function (index, val) {
+                        // Format date received via JSON response. Date retrieved is 1 day lesser, hence after parse added 1 extra day to get exact date. 
+                        // this was known bug in JSON framework, discussed on StackOverFlow in detail and best Possible Solution was given to add 1 extra day. ;)
+                        var d = /\/Date\((\d*)\)\//.exec(val.clientdate);
+                        var d1 = new Date(+d[1]);
+                        var yy = d1.getFullYear();
+                        var mm = addZero(d1.getMonth() + 1);
+                        var dd = addZero(d1.getDate());
+                        $('#txtdate').val(yy + '-' + mm + '-' + dd);
+                        $('#txtcompany').val(val.clientcustomername);
+                        $('#txtfirstname').val(val.custfollowuppersonfn);
+                        $('#txtoccupation').val(val.followuppersondesgn);
+                        $('#txtprimarycontact').val(val.clientcustomerpcontact);
+                        $('#txtwebsite').val(val.companywebsite);
+                        $('#txterevenue').val(val.clientcustomerpamt)
+
+                        //var date1 = new Date(parseInt(val.custfollowupdate.replace('/Date(', ''))).toISOString();
+                        //$('#txtfollowupdate').val(date1.substring(0, 10));
+                        var d2 = /\/Date\((\d*)\)\//.exec(val.custfollowupdate);
+                        var d1a = new Date(+d2[1]);
+                        var yy1 = d1a.getFullYear();
+                        var mm1 = addZero(d1a.getMonth() + 1);
+                        var dd1 = addZero(d1a.getDate());
+                        $('#txtfollowupdate').val(yy1 + '-' + mm1 + '-' + dd1);
+
+                        $('#txtcompanyadd1').val(val.clientcustomeradd1);
+                        $('#txtcompanyadd2').val(val.clientcustomeradd2);
+                        $('#txtaddresscity').val(val.clientcustomercity);
+                        $('#txtaddressdist').val(val.clientcustomerdistrict);
+                        $('#txtaddressstate').val(val.clientcustomerstate);
+                        $('#txtaddresscountry').val(val.clientcustomercountry);
+                        $('#txtpincode').val(val.clientcustomerpincode);
+                        $('#txtremarks').val(val.clientremarks);
+
+                        $("#<%=ddlassignedto.ClientID %>").val(val.customeruser);
+                        $("#<%=ddlcompanytype.ClientID %>").val(val.clientcompanytype);
+                        $('#txtlastname').val(val.custfollowuppersonln);
+                        $('#txtemail').val(val.clientcustomeremailid);
+                        $('#txtalternatecontact').val(val.clientcustomeracontact);
+                        $("#<%=ddlstatus.ClientID %>").val(val.clientcustomerstatus);
+                        $("#<%=ddlsource.ClientID %>").val(val.clientsource);
+                        $('#txtsaddress1').val(val.shippingadd1);
+                        $('#txtsaddress2').val(val.shippingadd2);
+                        $('#txtscity').val(val.shippingcity);
+                        $('#txtsdistrict').val(val.shippingdistrict);
+                        $('#txtsstate').val(val.shippingstate);
+                        $('#txtscountry').val(val.shippingcountry);
+                        $('#txtspincode').val(val.shippingpincode);
+                        $('#hdnClientCustID').val(val.clientcustomerid);
+                        $('#btnSubmit').attr('value', 'Update');
+                        $('#modal-dialog').on('show.bs.modal', function (event) {
+                            $('#modal-dialog').insertAfter($('body'));
                         });
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        alert("some error");
-                    }
-                });
+                        $('#modal-dialog').modal('show');
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                }
+            });
+        }
+        function GenerateQuotation(ClientCustomerID) {
+            $('#modal_dialog1').on('show.bs.modal', function (event) {
+                $('#modal_dialog1').insertAfter($('body'));
+            });
+            $("#ProductDetailRows").html("");
+            $('#msg').hide();
+            $('#hdnClientCustID').val(ClientCustomerID);
+            $('#hidProductCount').val("0");
+
+            if ($('#hidProductCount').val() == 0) {
+                addnewrow('1');
+                //                rebindFTPDetails()
+                //return false;
             }
-            function GenerateQuotation(ClientCustomerID) {
-                $('#modal_dialog1').on('show.bs.modal', function (event) {
-                    $('#modal_dialog1').insertAfter($('body'));
-                });
-                $('#hdnClientCustID').val(ClientCustomerID);
-                $('#modal_dialog1').modal('show');
-            }
+            $('#modal_dialog1').modal('show');
+        }
     </script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
@@ -578,6 +746,7 @@
                     return false;
                 }
             });
+
         });
     </script>
 
@@ -585,20 +754,49 @@
         $(document).ready(function () {
             $("#btnQuoteSubmit").click(function () {
                 debugger;
-                if (ValidateModal()) {
+               // if (ValidateModal()) {
 
+                //var data = JSON.stringify(getAllData());
+                //alert(data);
+
+                var inputs = new Array();
+                var CheckIsValid = true;
+                $("#tblProduct tbody tr").each(function (i, index) {
+                    var ProductName = $(index).find("td:eq(0)").find("option:selected").text();
+                    var ProductQTY = $(index).find("td:eq(1) input").val();
+                    var ProductPrice = $(index).find("td:eq(2) input").val();
+                    var ProductAmount = $(index).find("td:eq(3) input").val();
+                    var ProductFinalAmount = $(index).find("td:eq(4) input").val();
+                    
+                    if (!isvalid(ProductName, ProductQTY, ProductPrice, ProductAmount, ProductFinalAmount, i, index)) {
+                        CheckIsValid=false;
+                    }
+                    var obj = new Info();
+
+                    obj.ProductName = ProductName;
+                    obj.ProductQTY = ProductQTY;
+                    obj.ProductPrice = ProductPrice;
+                    obj.ProductAmount = ProductAmount;
+                    obj.ProductFinalAmount = ProductFinalAmount;
+                    inputs.push(obj);
+                });
+                //alert(JSON.stringify(inputs));
+                if (CheckIsValid) {
+                    var AllData = JSON.stringify(inputs);
                     var customeruser = $('#ddlcustomeruser option:selected').val();
                     var clientcustid = $('#hdnClientCustID').val();
-                    var quotedprod = $('#ddlProductName option:selected').val();
-                    var quoteqty = $('#txtquoteqty').val();
-                    var quoteprice = $('#txtquoteprice').val();
-                    var quoteamt = $('#txtquoteamt').val();
+                    //var quotedprod = $('#ddlProductName option:selected').val();
+                    //var quoteqty = $('#txtquoteqty').val();
+                    //var quoteprice = $('#txtquoteprice').val();
+                    //var quoteamt = $('#txtquoteamt').val();
 
                     $.ajax({
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         url: "DailyCallReport.aspx/SaveQuotationDetails",
-                        data: "{'clientcustid': '" + clientcustid + "', 'customeruser': '" + customeruser + "', 'quotedprod': '" + quotedprod + "', 'quoteqty': '" + quoteqty + "', 'quoteprice': '" + quoteprice + "', 'quoteamt': '" + quoteamt + "'}",
+                        //data: "{'clientcustid': '" + clientcustid + "', 'customeruser': '" + customeruser + "', 'quotedprod': '" + quotedprod + "', 'quoteqty': '" + quoteqty + "', 'quoteprice': '" + quoteprice + "', 'quoteamt': '" + quoteamt + "'}",
+                        data: "{'clientcustid': '" + clientcustid + "', 'customeruser': '" + customeruser + "', 'AllData': '" + AllData + "'}",
+
                         dataType: "json",
                         beforeSend: function () {
                             $('#fullpageloading').show()
@@ -624,6 +822,7 @@
                         }
                     });
                 }
+                //}
                 else { return false; }
             });
         });
@@ -647,7 +846,7 @@
     <asp:HiddenField runat="server" ID="hdnClientCustID" ClientIDMode="Static" />
     <div class="row">
         <div id="modal-dialog" class="modal fade custom-width" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog" style="width: 100%;">
+            <div class="modal-dialog" style="width: 60%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -659,14 +858,14 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class=" control-label" for="date">Date</label>
                                     <asp:TextBox runat="server" CssClass="form-control" ID="txtdate" ClientIDMode="Static"></asp:TextBox>
                                     <span id="txtdateHelper" class="removespan"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class="control-label" for="company">Company Name</label>
                                     <asp:TextBox runat="server" class="form-control" name="company" ID="txtcompany" autocomplete="off" ClientIDMode="Static" MaxLength="100"></asp:TextBox>
                                     <span id="txtcompanyHelper" class="removespan"></span>
@@ -685,13 +884,13 @@
                                 <div class="form-group">
                                     <label class="control-label" for="lastname">Last Name</label>
                                     <asp:TextBox runat="server" class="form-control" name="lastname" ClientIDMode="Static" ID="txtlastname" autocomplete="off" MaxLength="20"></asp:TextBox>
-                                    
+
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class="control-label" for="primarycontactno">Primary Contact No</label>
                                     <asp:TextBox runat="server" class="form-control" name="primarycontactno" ID="txtprimarycontact" autocomplete="off" ClientIDMode="Static"></asp:TextBox>
                                     <span id="txtprimarycontactHelper" class="removespan"></span>
@@ -706,14 +905,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class=" control-label" for="erevenue">Expected Revenue</label>
                                     <asp:TextBox runat="server" class="form-control" name="erevenue" ID="txterevenue" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
                                     <span id="ExpectedRevenueHelper" class="removespan"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class=" control-label" for="followupdate">Follow Up Date</label>
                                     <asp:TextBox runat="server" CssClass="form-control" ID="txtfollowupdate" ClientIDMode="Static"></asp:TextBox>
                                     <span id="txtfollowupdateHelper" class="removespan"></span>
@@ -765,7 +964,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class=" control-label" for="field-1">Assigned To</label>
                                     <asp:DropDownList ID="ddlassignedto" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
                                     <span id="ddlassignedtoHelper" class="removespan"></span>
@@ -794,7 +993,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class="control-label" for="email">Email</label>
                                     <asp:TextBox runat="server" class="form-control" name="email" ID="txtemail" ClientIDMode="Static" autocomplete="off" TextMode="Phone" MaxLength="100"></asp:TextBox>
                                     <span id="EmailHelper" class="removespan"></span>
@@ -809,7 +1008,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class="control-label" for="status">Status</label>
                                     <asp:DropDownList ID="ddlstatus" runat="server" CssClass="form-control" ClientIDMode="Static">
                                         <asp:ListItem Value="0" Text="Select Status"></asp:ListItem>
@@ -824,7 +1023,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class="control-label" for="source">Source</label>
                                     <asp:DropDownList ID="ddlsource" runat="server" CssClass="form-control" ClientIDMode="Static">
                                         <asp:ListItem Value="0" Text="Select Source"></asp:ListItem>
@@ -879,7 +1078,7 @@
                                     <label class=" control-label" for="saddresscountry">Country</label>
                                     <asp:TextBox runat="server" class="form-control" name="saddresscountry" ID="txtscountry" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
                                 </div>
-                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class=" control-label" for="spincode">Pincode</label>
@@ -890,81 +1089,125 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                        <div class="form-group">
-                            <label class=" control-label" for="remarks">Remarks</label>
-                            <asp:TextBox runat="server" class="form-control" name="remarks" ID="txtremarks" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                            <span id="RemarksHelper" class="removespan"></span>
-                        </div>
+                                <div class="form-group required">
+                                    <label class=" control-label" for="remarks">Remarks</label>
+                                    <asp:TextBox runat="server" class="form-control" name="remarks" ID="txtremarks" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                    <span id="RemarksHelper" class="removespan"></span>
                                 </div>
+                            </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label class=" control-label" for="pincode">Pincode</label>
                                     <asp:TextBox runat="server" class="form-control" name="pincode" ID="txtpincode" ClientIDMode="Static" autocomplete="on" MaxLength="6"></asp:TextBox>
                                     <span id="PinCodeHelper" class="removespan"></span>
                                 </div>
                             </div>
-                            </div>
+                        </div>
                     </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
-                    </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div id="modal_dialog1" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        &times;</button>
-                    <h4 class="modal-title">Add Quotation - 
+        <div id="modal_dialog1" class="modal fade custom-width" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="width: 60%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;</button>
+                        <h4 class="modal-title">Add Quotation - 
                             <asp:Label ID="lblQuotModalCompanyName" runat="server"></asp:Label>
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class=" control-label" for="customeruser1">Assigned To</label>
-                            <asp:DropDownList ID="ddlcustomeruser" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
-                            <span id="customeruserHelper" class="removespan"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="clientquotedproduct">Product</label>
-                            <asp:DropDownList ID="ddlProductName" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
-                            <span id="ProductNameHelper" class="removespan"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="quotedqty">Product Qty</label>
-                            <asp:TextBox runat="server" class="form-control" name="quotedqty" ID="txtquoteqty" autocomplete="off" ClientIDMode="Static" MaxLength="10"></asp:TextBox>
-                            <span id="quoteqtyHelper" class="removespan"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="quoteprice">Quote Price</label>
-                            <asp:TextBox runat="server" class="form-control" name="quoteprice" ID="txtquoteprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
-                            <span id="quotepriceHelper" class="removespan"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="quoteamt">Quoted Amount</label>
-                            <asp:TextBox runat="server" class="form-control" name="quoteamt" ID="txtquoteamt" autocomplete="off" ClientIDMode="Static" OnTextChanged="calculate_gst"></asp:TextBox>
-                            <span id="quoteamtHelper" class="removespan"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="totalamt">Total Amount (Inclusive of GST)</label>
-                            <asp:TextBox runat="server" class="form-control" name="totalamount" ID="txttotalamount" autocomplete="off" ClientIDMode="Static"></asp:TextBox>
-                            <span id="totalamountHelper" class="removespan"></span>
-                        </div>
+                        </h4>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" id="btnQuoteSubmit" class="btn btn-primary">Submit</button>
+                    <div class="modal-body">
+                        <div class="row"><div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="error" id="msg"></div></div></div></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group required">
+                                    <label class=" control-label" for="customeruser1">Assigned To</label>
+                                    <asp:DropDownList ID="ddlcustomeruser" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
+                                    <span id="customeruserHelper" class="removespan"></span>
+                                </div>
+                            </div>
+                            <%--<div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class="control-label" for="clientquotedproduct">Product</label>
+                                    <asp:DropDownList ID="ddlProductName" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
+                                    <span id="ProductNameHelper" class="removespan"></span>
+                                </div>
+                            </div>--%>
+                        </div>
+                        <div class="row">
+                            <%--<div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class="control-label" for="quotedqty">Product Qty</label>
+                                     <asp:TextBox runat="server" class="form-control" name="quotedqty" ID="txtquoteqty" autocomplete="off" ClientIDMode="Static" MaxLength="10"></asp:TextBox>
+                                    <span id="quoteqtyHelper" class="removespan"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class="control-label" for="quoteprice">Quote Price</label>
+                                    <asp:TextBox runat="server" class="form-control" name="quoteprice" ID="txtquoteprice" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                    <span id="quotepriceHelper" class="removespan"></span>
+                                </div>
+                            </div>--%>
+                            
+                            <table id="tblProduct" class="table table-model-2 ftp">
+                                <thead>
+                                    <tr>
+                                        <th>Product
+                                        </th>
+                                        <th>Product QTY
+                                        </th>
+                                        <th>Product Price
+                                        </th>
+                                        <th>Product Amount
+                                        </th>
+                                        <th>Product Final Amt
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <%--<tbody id="ProductDetailRows" style="background-color: #fcfcfc">--%>
+                                <tbody id="ProductDetailRows">
+                                </tbody>
+                            </table>
+                            <asp:HiddenField runat="server" id="hidProductCount" ClientIDMode="Static" />
+                        </div>
+                        <%--<div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class="control-label" for="quoteamt">Quoted Amount</label>
+                                    <asp:TextBox runat="server" class="form-control" name="quoteamt" ID="txtquoteamt" autocomplete="off" ClientIDMode="Static" OnTextChanged="calculate_gst"></asp:TextBox>
+                                    <span id="quoteamtHelper" class="removespan"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group required">
+                                    <label class="control-label" for="totalamt">Total Amount (Inclusive of GST)</label>
+                                    <asp:TextBox runat="server" class="form-control" name="totalamount" ID="txttotalamount" autocomplete="off" ClientIDMode="Static"></asp:TextBox>
+                                    <span id="totalamountHelper" class="removespan"></span>
+                                </div>
+                            </div>
+                        </div>--%>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="btnQuoteSubmit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default blue-box">
@@ -989,7 +1232,7 @@
     </div>
     <div id="fullpageloading">
         <div style="margin: 20%">
-            <img alt="loading" src="Images/fullpageloadingimg2.gif"  />
+            <img alt="loading" src="Images/fullpageloadingimg2.gif" />
         </div>
     </div>
     <!--main-content-ends-->

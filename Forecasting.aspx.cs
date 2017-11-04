@@ -63,9 +63,11 @@ public partial class Forecasting : System.Web.UI.Page
 
     [WebMethod]
     public static string GetForecastingReportDetails(String status, String assignedto)
+    
     {
         Decimal client_alias = Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4));
         assignedto = (String.IsNullOrEmpty(assignedto) ? "0" : assignedto);
+        
         DataTable dt = VPCRMSBAL.GetForecastingReportDetails(client_alias, status, Convert.ToDecimal(assignedto));
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
         return json;

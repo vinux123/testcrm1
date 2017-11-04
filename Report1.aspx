@@ -6,7 +6,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
    
-    <div class="page-title">
+    <div class="page-title"> 
         <div class=" col-md-10 title-env">
             <h1 class="title">Reports</h1>
             <ol class="breadcrumb bc-1">
@@ -31,16 +31,19 @@
                     <div class="panel-options"><a href="#" data-toggle="panel"><span class="collapse-icon">–</span> <span class="expand-icon">+</span> </a></div>
                 </div>
                 <div class="panel-body">
-                    <div class="col-md-2">
+                    <div class="row">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label class=" control-label" for="drpreportdate">Report Dates(From To) </label>
-                            <input type="text" id="drpreportdate" class="form-control daterange active" runat="server">
+                            <%--<input type="text" id="drpreportdate" class="form-control daterange active" runat="server">--%>
+                            <asp:TextBox ID="drreportdate" CssClass="form-control daterange active" runat="server"></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-2 pull-right">
-                        <asp:Button ID="btnGenerate" class="btn btn-info pull-right" Text="Generate" runat="server" OnClick="btnGenerate_Click" />
+                    <div class="col-md-3 pull-right">
+                        <asp:Button ID="btnGenerate" class="btn btn-info pull-right" Text="Generate" runat="server" OnClick="btnGenerate_Click" /> &nbsp;
                         <asp:Button ID="btnSend" class="btn btn-info pull-right" Text="Send" runat="server" OnClick="btnSend_Click" />
                     </div>
+                        </div>
                 </div>
 
                 <div class="panel-body">
@@ -59,15 +62,20 @@
                     <div class="panel-options"><a href="#" data-toggle="panel"><span class="collapse-icon">–</span> <span class="expand-icon">+</span> </a></div>
                 </div>
                 <div class="panel-body">
-                    <div class="col-md-2">
+                    <div class="row">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label class=" control-label" for="drpreportdate">Report Dates(From To) </label>
-                            <input type="text" id="Text1" class="form-control daterange active" runat="server">
+                            <%--<input type="text" id="Text1" class="form-control daterange active" runat="server">--%>
+                            <asp:TextBox ID="drreportdate1" CssClass="form-control daterange active" runat="server"></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-2 pull-right">
-                        <asp:Button ID="Button1" class="btn btn-info pull-right" Text="Generate" runat="server" OnClick="btnGenerateSalesDetails_Click" />
+
+                    <div class="col-md-3 pull-right">
+                        <asp:Button ID="Button1" class="btn btn-info pull-right" Text="Generate" runat="server" OnClick="btnGenerateSalesDetails_Click" /> 
+                        
                         <asp:Button ID="Button2" class="btn btn-info pull-right" Text="Send" runat="server" OnClick="btnSendSalesDetails_Click" />
+                    </div>
                     </div>
                 </div>
 
