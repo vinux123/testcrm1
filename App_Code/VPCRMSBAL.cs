@@ -129,6 +129,13 @@ public class VPCRMSBAL
     }
 
     // To fetch ForeCasting details per user.
+    public static DataTable GetRevenueChartDetails()
+    {
+        DataTable dt = VPCRMSDAL.GetRevenueChartDetails();
+        return dt;
+    }
+
+    // To fetch ForeCasting details per user.
     public static DataTable GetForecastingChartDetails(Decimal client_alias, String status, decimal assignedto)
     {
         DataTable dt = VPCRMSDAL.GetForecastingChartDetails(client_alias, status, assignedto);
@@ -207,11 +214,17 @@ public class VPCRMSBAL
         DataTable dt = VPCRMSDAL.GetEditedProdAssignments(client_user, customer_product, target_month, target_year);
         return dt;
     }
-
+    
     public static DataTable GetEditDCRDetails(Decimal client_customer_id)
     {
         
         DataTable dt = VPCRMSDAL.GetEditDCRDetails(client_customer_id);
+        return dt;
+    }
+
+    public static DataTable GetProductPrice(String ProductName,decimal ProductPrice)
+    {
+        DataTable dt = VPCRMSDAL.GetProductPrice(ProductName, ProductPrice);
         return dt;
     }
 

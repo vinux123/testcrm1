@@ -1,4 +1,7 @@
-﻿// Copyright (c) 2017 VP Consultancy Services. 
+﻿
+
+
+// Copyright (c) 2017 VP Consultancy Services. 
 // 
 // Permission to use, copy, modify, and distribute this software for given
 // purpose with or without fee is hereby granted, provided that the above
@@ -59,18 +62,15 @@ public partial class Report1 : System.Web.UI.Page
     {
         string path = Server.MapPath("PDF-Files");
         string filename = path + "/Report1.pdf";
-        
-
         DataTable dt = new DataTable();
 
         // get daterange values from form. 
         string dates = Convert.ToString(drreportdate.Text);
+        string[] fromdate = dates.Substring(0, 10).Split('/');
+        string fromdate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", fromdate[1], fromdate[0], fromdate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
 
-        DateTime fromdate = Convert.ToDateTime(dates.Substring(0, 10).ToString());
-        string fromdate1 = fromdate.ToString("yyyy-dd-MM"); // convert to database date format. 
-        
-        DateTime todate = Convert.ToDateTime(dates.Substring(13, 10).ToString());
-        string todate1 = todate.ToString("yyyy-dd-MM"); // convert to database date format. 
+        string[] todate = dates.Substring(13, 10).Split('/');
+        string todate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", todate[1], todate[0], todate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
         
         dt = VPCRMSBAL.GetReportData(fromdate1, todate1, Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim());
         
@@ -95,11 +95,11 @@ public partial class Report1 : System.Web.UI.Page
         DataTable dt = new DataTable();
         string dates = Convert.ToString(drreportdate1.Text);
 
-        DateTime fromdate = Convert.ToDateTime(dates.Substring(0, 10).ToString());
-        string fromdate1 = fromdate.ToString("yyyy-dd-MM");
+        string[] fromdate = dates.Substring(0, 10).Split('/');
+        string fromdate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", fromdate[1], fromdate[0], fromdate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
 
-        DateTime todate = Convert.ToDateTime(dates.Substring(13, 10).ToString());
-        string todate1 = todate.ToString("yyyy-dd-MM");
+        string[] todate = dates.Substring(13, 10).Split('/');
+        string todate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", todate[1], todate[0], todate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
         //dt = VPCRMSBAL.GetReportDataSalesDetails("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
         dt = VPCRMSBAL.GetReportDataSalesDetails(fromdate1, todate1, Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
 
@@ -118,7 +118,15 @@ public partial class Report1 : System.Web.UI.Page
         
 
         DataTable dt = new DataTable();
-        dt = VPCRMSBAL.GetReportData("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim());
+
+        string dates = Convert.ToString(drreportdate.Text);
+        string[] fromdate = dates.Substring(0, 10).Split('/');
+        string fromdate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", fromdate[1], fromdate[0], fromdate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
+
+        string[] todate = dates.Substring(13, 10).Split('/');
+        string todate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", todate[1], todate[0], todate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
+        
+        dt = VPCRMSBAL.GetReportData(fromdate1, todate1, Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim());
 
         ExportToPdf(dt);
 
@@ -128,6 +136,29 @@ public partial class Report1 : System.Web.UI.Page
 
     protected void btnSendSalesDetails_Click(object sender, EventArgs e)
     {
+        string path1 = Server.MapPath("PDF-Files");
+        string filename1 = path1 + "/Report2.pdf";
+
+        // if file exists delete old report first. 
+        if (File.Exists(filename1))
+        {
+            File.Delete(filename1);
+        }
+
+        DataTable dt = new DataTable();
+        string dates = Convert.ToString(drreportdate1.Text);
+
+        string[] fromdate = dates.Substring(0, 10).Split('/');
+        string fromdate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", fromdate[1], fromdate[0], fromdate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
+
+        string[] todate = dates.Substring(13, 10).Split('/');
+        string todate1 = (DateTime.Parse(string.Format("{0}/{1}/{2}", todate[1], todate[0], todate[2]))).ToString("yyyy-MM-dd"); // convert to database date format. 
+        //dt = VPCRMSBAL.GetReportDataSalesDetails("2017-10-01", "2017-10-30", Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
+        dt = VPCRMSBAL.GetReportDataSalesDetails(fromdate1, todate1, Convert.ToDecimal(Session["UserID"].ToString().Trim()), Session["UserRole"].ToString().Trim(), "All");
+
+        ExportToPdfSalesDetails(dt);
+        
+        SendDetailsMail();
     }
 
 
@@ -355,6 +386,63 @@ public partial class Report1 : System.Web.UI.Page
             smtCliend.EnableSsl = true;
             smtCliend.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
                     
+            smtCliend.Credentials = new NetworkCredential(smtpuname, smtppwd);
+
+            try
+            {
+                smtCliend.Send(mm);
+            }
+            catch (System.Net.Mail.SmtpException ex)
+            {
+                ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+                logger.Error(ex.ToString());
+                Response.Redirect("ErrorPage.aspx");
+            }
+            catch (Exception exe)
+            {
+                ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+                logger.Error(exe.ToString());
+                Response.Redirect("ErrorPage.aspx");
+            }
+        }
+
+    }
+
+    public void SendDetailsMail()
+    {
+        string path = Server.MapPath("PDF-Files");
+        string filename = path + "/Report2.pdf";
+
+
+        DataTable dtTable = new DataTable();
+        decimal client_alias = Convert.ToDecimal(Session["UserID"].ToString().Trim().Substring(0, 4));
+
+        dtTable = VPCRMSBAL.GetCompanyName(client_alias);
+        if (dtTable.Rows.Count > 0)
+        {
+            string host = dtTable.Rows[0]["clientsmtphost"].ToString().Trim();
+            string port = dtTable.Rows[0]["clientsmtpport"].ToString().Trim();
+            string sslenabled = dtTable.Rows[0]["clientsmtpenablessl"].ToString().Trim();
+            string smtpuname = dtTable.Rows[0]["clientsmtpusername"].ToString().Trim();
+            string smtppwd = dtTable.Rows[0]["clientsmtppassword"].ToString().Trim();
+
+            System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
+            mm.To.Add(new System.Net.Mail.MailAddress("kulkarnivd1989@gmail.com", "Vinayak Kulkarni"));
+            mm.From = new System.Net.Mail.MailAddress(smtpuname);
+            mm.Sender = new System.Net.Mail.MailAddress(smtpuname, "Vinayak Kulkarni");
+            mm.Subject = "This is Test Email";
+            mm.Body = "<h3>This is Testing SMTP Mail Send By Me</h3>";
+            mm.IsBodyHtml = true;
+            mm.Priority = System.Net.Mail.MailPriority.High; // Set Priority to sending mail
+            mm.Attachments.Add(new Attachment(filename));
+
+            SmtpClient smtCliend = new SmtpClient();
+            smtCliend.Host = host;
+            smtCliend.Port = Convert.ToInt32(port);
+            smtCliend.UseDefaultCredentials = false;
+            smtCliend.EnableSsl = true;
+            smtCliend.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+
             smtCliend.Credentials = new NetworkCredential(smtpuname, smtppwd);
 
             try

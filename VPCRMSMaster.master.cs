@@ -13,6 +13,7 @@ using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Security;
 
 public partial class VPCRMSMaster : System.Web.UI.MasterPage
 {
@@ -20,10 +21,10 @@ public partial class VPCRMSMaster : System.Web.UI.MasterPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        // Set page cache to NO
-        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        HttpContext.Current.Response.Cache.SetNoServerCaching();
-        HttpContext.Current.Response.Cache.SetNoStore();
+        //// Set page cache to NO
+        //Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        //Response.Cache.SetNoServerCaching();
+        //Response.Cache.SetNoStore();
 
         if (Session["UserID"] == null)
         {
@@ -55,6 +56,7 @@ public partial class VPCRMSMaster : System.Web.UI.MasterPage
         Session["UserRole"] = null;
         Session["ConnectionStringCRMS"] = null;
         Session.RemoveAll();
+        
         Session.Abandon();
     }
 }

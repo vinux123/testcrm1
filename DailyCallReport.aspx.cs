@@ -73,7 +73,7 @@ public partial class testdcr : System.Web.UI.Page
             ddlcustomeruser.DataTextField = "clientuserfirstname";
             ddlcustomeruser.DataValueField = "clientuserid";
             ddlcustomeruser.DataBind();
-            ddlcustomeruser.Items.Insert(0, new ListItem("Select Customer", "0"));
+            ddlcustomeruser.Items.Insert(0, new ListItem("Select Assign Person", "0"));
             ddlcustomeruser.SelectedIndex = 0;
         }
 
@@ -203,6 +203,15 @@ public static XmlDocument JsonToXml(string json)
     public static string EditDCRDetails(String ClientCustomerID)
     {
         DataTable dt = VPCRMSBAL.GetEditDCRDetails(Convert.ToDecimal(ClientCustomerID));
+        String json = DataTableToJSONWithJavaScriptSerializer(dt);
+        return json;
+    }
+
+    [WebMethod]
+    public static string GetProductPrice(String ProductName)
+    {
+        decimal client_alias = Convert.ToDecimal(Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
+        DataTable dt = VPCRMSBAL.GetProductPrice(ProductName, client_alias);
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
         return json;
     }

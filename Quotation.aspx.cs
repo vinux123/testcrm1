@@ -118,7 +118,7 @@ public partial class Quotation : System.Web.UI.Page
                     Paragraph para1b = new Paragraph(dt.Rows[0]["clientcontactno1"].ToString().Trim(), f3);
                     para1b.Alignment = Element.ALIGN_LEFT;
                     document.Add(para1b);
-                    para1b.SpacingAfter = 50f;
+                    para1b.SpacingAfter = 30f;
                 }
 
                 Paragraph para5 = new Paragraph();
@@ -146,26 +146,33 @@ public partial class Quotation : System.Web.UI.Page
                     document.Add(phrase57);
                     
                     Paragraph phrase41 = new Paragraph("Dear Sir/Madam,", f3);
-                    phrase41.SpacingBefore = 50f;
+                    phrase41.SpacingBefore = 30f;
                     document.Add(phrase41);
                     Paragraph phrase42 = new Paragraph("Please see requested quotation details as per below.", f3);
-                    phrase42.SpacingAfter = 50f;
+                    phrase42.SpacingAfter = 30f;
                     document.Add(phrase42);
             
                     //PdfPTable table = new PdfPTable(dataTable.Columns.Count);
                     PdfPTable table = new PdfPTable(4);
                     table.WidthPercentage = 100;
+                    table.SetTotalWidth(new float[] { 100f, 20f, 20f, 20f });
 
                     //Set columns names in the pdf file
                     //for (int k = 0; k < dataTable.Columns.Count; k++)
+                    //PdfPCell srnocell = new PdfPCell(new Phrase("Sr No"));
+                    //srnocell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    //srnocell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                    //srnocell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                    //table.AddCell(srnocell);
+
                     for (int k = 12; k < dataTable.Columns.Count; k++)
                     {
                         PdfPCell cell = new PdfPCell(new Phrase(dataTable.Columns[k].ColumnName));
 
+                        if (k == 12) { cell.HorizontalAlignment = PdfPCell.ALIGN_LEFT; }
                         cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                         cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
-                        //cell.BackgroundColor = new iTextSharp.text.BaseColor(51, 102, 102);
-                    
+                        cell.BackgroundColor = BaseColor.LIGHT_GRAY;
                         table.AddCell(cell);
                     }
 
@@ -173,26 +180,61 @@ public partial class Quotation : System.Web.UI.Page
                     for (int i = 0; i < dataTable.Rows.Count; i++)
                     {
                         //for (int j = 0; j < dataTable.Columns.Count; j++)
+                        //srnocell = new PdfPCell(new Phrase((i + 1).ToString(), f3));
+                        //srnocell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                        //srnocell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                        //table.AddCell(srnocell);
                         for (int j = 12; j < dataTable.Columns.Count; j++)
                         {
-                            PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString()));
+                            PdfPCell cell = new PdfPCell(new Phrase(dataTable.Rows[i][j].ToString(),f3));
 
                             //Align the cell in the center
+                            if (j == 12) { cell.HorizontalAlignment = PdfPCell.ALIGN_LEFT; }    
                             cell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                             cell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
-
-                            
                             table.AddCell(cell);
                         }
                     }
+
+                    
                     document.Add(table);
                 }
+                
+                Paragraph thanksline = new Paragraph(new Phrase("Thank you for showing interest in us, we look forward for your positive response.", f3));
+                thanksline.Alignment = Element.ALIGN_LEFT;
+                thanksline.SpacingBefore = 30f;
+                thanksline.SpacingAfter = 50f;
+                document.Add(thanksline);
+
+                Paragraph signpara = new Paragraph(new Phrase("Authorized Signatory", f3));
+                signpara.Alignment = Element.ALIGN_RIGHT;
+                signpara.SpacingAfter = 20f;
+                document.Add(signpara);
+
+                document.Add(linebreak);
+
+                Paragraph terms1 = new Paragraph(new Phrase("Terms & Conditions", f1));
+                terms1.Alignment = Element.ALIGN_LEFT;
+                
+                document.Add(terms1);
+                Paragraph terms2 = new Paragraph(new Phrase("1. Prices are exclusive of taxes.", f3));
+                terms2.Alignment = Element.ALIGN_LEFT;
+                document.Add(terms2);
+                Paragraph terms3 = new Paragraph(new Phrase("2. All shipments of goods/products will be delivered within ___ months.", f3));
+                terms3.Alignment = Element.ALIGN_LEFT;
+                document.Add(terms3);
+                Paragraph terms4 = new Paragraph(new Phrase("3. If there are any inconsitancies or conflicts between the standard terms & conditions of sales & terms on any applicable agreement, precedence shall be given to standard terms & conditions of Sale unless the parties agree in writing to contrary.", f3));
+                terms4.Alignment = Element.ALIGN_JUSTIFIED;
+                document.Add(terms4);
+                
 
                 document.AddAuthor("VPCRMS");
                 document.AddCreator("VP Consultancy Services");
                 document.AddTitle("Quotation");
                 
                 document.Close();
+
+               
             }
             catch (Exception ex)
             {

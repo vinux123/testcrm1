@@ -27,7 +27,7 @@
     
     <script type="text/javascript">
         $(function () {
-            //debugger;
+            
             $.ajax({
                 type: "POST",
                 url: "UserMaster.aspx/GetUserDetails",
@@ -102,9 +102,7 @@
                 contentType: "application/json; charset=utf-8",
                 url: "UserMaster.aspx/CheckMaxAllowedUsers",
                 dataType: "json",
-
                 success: function (data) {
-                    alert(data.d);
                     if (data.d == "Yes") {
                         $("#btnAddUser").attr("disabled", true);
                     }
@@ -112,7 +110,6 @@
                         $("#btnAddUser").attr("disabled", false);
                     }
                 },
-
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("some error");
                 }
@@ -174,7 +171,6 @@
         }
 
         function ValidateModal() {
-            //alert($('#hdnMode').val());
             var Role = $('#ddlrole option:selected').val();
             var val = true
 
@@ -300,27 +296,7 @@
             });
         }
     </script>
-    <%--<script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $("#grdUserMaster").dataTable({
-                aLengthMenu: [
-                    [25, 50, 100, -1], [25, 50, 100, "All"]
-                ],
-                "aoColumnDefs": [
-          { 'bSortable': false, 'aTargets': [7] }
-                ]
-            });
-
-            //$("#ddlrole").select2({
-            //    placeholder: 'Select Role...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
-
-        });
-    </script>--%>
+    
     <script type="text/javascript">
         $(function () {
             //attach listner to .modal-close-btn so that when button is pressed the modal dialogue disappears
@@ -446,7 +422,7 @@
         </div>
     </div>
 
-    <%--Vinayak--%>
+    
     <div class="row">
         <div id="modal-dialog" class="modal fade custom-width" style="height: 1247px;" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
             <<div class="modal-dialog" style="width: 60%;">

@@ -100,6 +100,81 @@
             $(index).find("td").parent("tr").css("background-color", "#F5ECCE");
         }
 
+        function calcProductAmount(rownumber) {
+            var jq_ddl_ProductQty = $('#ProductDetails_' + rownumber + '__quotedqty').val();//ProductDetails_0__quotedqty
+            var jq_ddl_ProductPrice = $('#ProductDetails_' + rownumber + '__quoteprice').val();
+            var rege = /^[1-9]\d*$/;
+            
+            if ($.trim(jq_ddl_ProductQty) != '' && $.trim(jq_ddl_ProductPrice) != '')
+            {
+                //if (!rege.test(jq_ddl_ProductQty)) {
+                //    $.alert({
+                //        title: 'Confirm!',
+                //        content: 'Please enter numeric value',
+                //        confirmButtonClass: 'btn-primary',
+                //        animation: 'zoom',
+                //        backgroundDismiss: false,
+                //        confirm: function () {
+                //            $('#ProductDetails_' + rownumber + '__quotedqty').val('');
+                //            $('#ProductDetails_' + rownumber + '__quotedqty').focus();
+                //            return false;
+                //        }
+                //    });
+                //}
+                //else if(!rege.test(jq_ddl_ProductPrice))
+                //{
+                //    $.alert({
+                //        title: 'Confirm!',
+                //        content: 'Please enter numeric value',
+                //        confirmButtonClass: 'btn-primary',
+                //        animation: 'zoom',
+                //        backgroundDismiss: false,
+                //        confirm: function () {
+                //            $('#ProductDetails_' + rownumber + '__ProductPrice').val('');
+                //            $('#ProductDetails_' + rownumber + '__ProductPrice').focus();
+                //            return false;
+                //        }
+                //    });
+                //}
+                //else{
+                    $('#ProductDetails_' + rownumber + '__quoteamt').val(jq_ddl_ProductQty * jq_ddl_ProductPrice);
+                //}
+            }
+        }
+
+        function getProductPrice(rownumber) {
+            var jq_ddl_ProductName = $('#ProductDetails_' + rownumber + '__ProductName').val();
+            if (jq_ddl_ProductName == 'Select') {
+                $('#ProductDetails_' + rownumber + '__quoteprice').val('');
+                //$('#ProductDetails_' + rownumber + '__quoteprice').attr("disabled", false);
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "DailyCallReport.aspx/GetProductPrice",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: "{'ProductName': '" + jq_ddl_ProductName + "'}",
+                    beforeSend: function () {
+                        $('#fullpageloading').show()
+                    },
+                    complete: function () {
+                        $('#fullpageloading').hide();
+                    },
+                    success: function (data) {
+                        var JSONDataR = $.parseJSON(data.d);
+                        $.each(JSONDataR, function (index, val) {
+                            $('#ProductDetails_' + rownumber + '__quoteprice').val(val.prodprice);
+                            //$('#ProductDetails_' + rownumber + '__quoteprice').attr("disabled", true);
+                        });
+                    },
+                    error: function (data) {
+                        console.log('ajax call error');
+                    }
+                });
+            }
+        }
+
         function isvalid(ProductName, ProductQTY, ProductPrice, ProductAmount, ProductFinalAmount, i, index) {
             debugger;
             $("#tblProduct tbody tr > td ").removeClass("validate-has-error");
@@ -166,7 +241,8 @@
                     var x = document.createElement('tr');
                     var y = document.createElement('td');
                     var z = document.createElement('select');
-
+                    var new_option_element1 = new Option('Select', 'Select');
+                    z.appendChild(new_option_element1);
                     for (var i = 0; i < drpValue.length; i++) {
                         var new_option_element = new Option(drpValue[i], drpValue[i]);
                         z.appendChild(new_option_element);
@@ -174,6 +250,11 @@
 
                     z.id = "ProductDetails_" + intProductCount + "__ProductName"; z.name = "ProductDetails[" + intProductCount + "].ProductName";
                     z.setAttribute("class", "form-control");
+
+                    $(z).change(function () {
+                        var RowNumber = intProductCount - 1;
+                        return getProductPrice(RowNumber);
+                    });
                     y.appendChild(z);
                     x.appendChild(y);
 
@@ -183,6 +264,10 @@
                     z.autocomplete = "off";
                     z.id = "ProductDetails_" + intProductCount + "__quotedqty"; z.name = "ProductDetails[" + intProductCount + "].quotedqty";
                     z.setAttribute("class", "form-control");
+                    $(z).change(function () {
+                        var RowNumber = intProductCount - 1;
+                        return calcProductAmount(RowNumber);
+                    });
                     y.appendChild(z);
                     x.appendChild(y);
 
@@ -192,7 +277,10 @@
                     z.autocomplete = "off";
                     z.id = "ProductDetails_" + intProductCount + "__quoteprice"; z.name = "ProductDetails[" + intProductCount + "].quoteprice";
                     z.setAttribute("class", "form-control");
-                    //z.setAttribute("style","width:150px");
+                    $(z).change(function () {
+                        var RowNumber = intProductCount - 1;
+                        return calcProductAmount(RowNumber);
+                    });
                     y.appendChild(z);
                     x.appendChild(y);
 
@@ -220,7 +308,6 @@
                     if (no == 1) {
                         add_del_but = $("<button><i class=\"fa fa-plus\"></i></button>").click(function () {
                             addnewrow(no + 1);
-                            //rebindFTPDetails();
                         }).get(0);
                     }
                     else {
@@ -239,7 +326,6 @@
                         var y = this.parentElement.parentElement.parentElement;
                         x.parentNode.removeChild(x);
                     });
-                    //y.appendChild(z);
                     y.appendChild(add_del_but);
                     x.appendChild(y);
                     tblProduct.tBodies[0].appendChild(x);
@@ -613,13 +699,13 @@
             //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
             //});
 
-            //$("#ddlcustomeruser").select2({
-            //    placeholder: 'Select Assignedto...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
+            $("#ddlcustomeruser").select2({
+                placeholder: 'Select Assignedto...',
+                allowClear: true
+            }).on('select2-open', function () {
+                // Adding Custom Scrollbar
+                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            });
 
         });
     </script>
@@ -761,25 +847,43 @@
 
                 var inputs = new Array();
                 var CheckIsValid = true;
-                $("#tblProduct tbody tr").each(function (i, index) {
-                    var ProductName = $(index).find("td:eq(0)").find("option:selected").text();
-                    var ProductQTY = $(index).find("td:eq(1) input").val();
-                    var ProductPrice = $(index).find("td:eq(2) input").val();
-                    var ProductAmount = $(index).find("td:eq(3) input").val();
-                    var ProductFinalAmount = $(index).find("td:eq(4) input").val();
-                    
-                    if (!isvalid(ProductName, ProductQTY, ProductPrice, ProductAmount, ProductFinalAmount, i, index)) {
-                        CheckIsValid=false;
-                    }
-                    var obj = new Info();
 
-                    obj.ProductName = ProductName;
-                    obj.ProductQTY = ProductQTY;
-                    obj.ProductPrice = ProductPrice;
-                    obj.ProductAmount = ProductAmount;
-                    obj.ProductFinalAmount = ProductFinalAmount;
-                    inputs.push(obj);
-                });
+                if (CheckIsValid) {
+                    var customeruser = $('#ddlcustomeruser option:selected').index();
+                    if (customeruser == 0) {
+                        $("#msg").html("Please select assignee person");
+                        $("#msg").show();
+                        CheckIsValid = false;
+                    }
+                    else {
+                        $("#tblProduct tbody tr").each(function (i, index) {
+                            var ProductName = $(index).find("td:eq(0)").find("option:selected").text();
+                            var ProductQTY = $(index).find("td:eq(1) input").val();
+                            var ProductPrice = $(index).find("td:eq(2) input").val();
+                            var ProductAmount = $(index).find("td:eq(3) input").val();
+                            var ProductFinalAmount = $(index).find("td:eq(4) input").val();
+
+                            if (!isvalid(ProductName, ProductQTY, ProductPrice, ProductAmount, ProductFinalAmount, i, index)) {
+                                CheckIsValid = false;
+                            }
+
+
+                            var obj = new Info();
+
+                            obj.ProductName = ProductName;
+                            obj.ProductQTY = ProductQTY;
+                            obj.ProductPrice = ProductPrice;
+                            obj.ProductAmount = ProductAmount;
+                            obj.ProductFinalAmount = ProductFinalAmount;
+                            inputs.push(obj);
+                        });
+                        //$("#msg").hide();
+                    }
+                }
+
+                
+
+                
                 //alert(JSON.stringify(inputs));
                 if (CheckIsValid) {
                     var AllData = JSON.stringify(inputs);
@@ -866,7 +970,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group required">
-                                    <label class="control-label" for="company">Company Name</label>
+                                    <label class="control-label" for="company">Company/Client Name</label>
                                     <asp:TextBox runat="server" class="form-control" name="company" ID="txtcompany" autocomplete="off" ClientIDMode="Static" MaxLength="100"></asp:TextBox>
                                     <span id="txtcompanyHelper" class="removespan"></span>
                                 </div>

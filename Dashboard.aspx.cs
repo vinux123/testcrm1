@@ -25,9 +25,12 @@ public partial class Dashboard : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         // Set page cache to NO
-        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        HttpContext.Current.Response.Cache.SetNoServerCaching();
-        HttpContext.Current.Response.Cache.SetNoStore();
+        //Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        //Response.Cache.SetExpires(DateTime.Now.AddDays(-1));
+        //Response.Cache.SetNoStore();
+        //Response.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        //Response.AddHeader("Pragma", "no-cache");
+        //Response.AddHeader("Expires", "0");
 
         if (Session["UserID"] == null)
         {
@@ -73,6 +76,14 @@ public partial class Dashboard : System.Web.UI.Page
         drNew2[1] = dtCount.Rows[0]["ClosedCountMonthly"];
         dt.Rows.Add(drNew2);
 
+        String json = DataTableToJSONWithJavaScriptSerializer(dt);
+        return json;
+    }
+
+    [WebMethod]
+    public static string GetRevenueChartDetails()
+    {
+        DataTable dt = VPCRMSBAL.GetRevenueChartDetails();
         String json = DataTableToJSONWithJavaScriptSerializer(dt);
         return json;
     }

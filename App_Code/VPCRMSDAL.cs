@@ -354,6 +354,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -368,7 +369,7 @@ public class VPCRMSDAL
         }
         return dt;
     }
-
+    
     public static DataTable GetEditDCRDetails(Decimal ClientUserID)
     {
         //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
@@ -408,6 +409,47 @@ public class VPCRMSDAL
         return dt;
     }
 
+    public static DataTable GetProductPrice(String ProductName,decimal ProductPrice)
+    {
+        //string connectionstring_crms = ConfigurationManager.ConnectionStrings["SQLConnectionCRMS"].ToString();
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            conn.Open();
+            dCmd = new MySqlCommand("usp_GetProductPrice", conn);
+            dCmd.Parameters.AddWithValue("@ProductName", ProductName);
+            dCmd.Parameters.AddWithValue("@client_alias", ProductPrice);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
+
     public DataTable CheckClientActiveOrNot(Decimal ClientAlias)
     {
         // Connect to VPCRMS Admin Master Database to check whether client active or not.  
@@ -431,6 +473,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -469,6 +512,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -510,6 +554,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -551,6 +596,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -593,6 +639,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -649,6 +696,44 @@ public class VPCRMSDAL
         return dt;
     }
 
+    public static DataTable GetRevenueChartDetails()
+    {
+        // Get daily call report details of perticular user by passing UserID parameter. 
+        string connectionstring_crms = HttpContext.Current.Session["ConnectionStringCRMS"].ToString().Trim();
+        DataTable dt = new DataTable();
+
+        MySqlConnection conn = new MySqlConnection(connectionstring_crms);
+
+        MySqlCommand dCmd;
+        DataTable dtUsers = new DataTable();
+
+        try
+        {
+            conn.Open();
+            dCmd = new MySqlCommand("GetRevenueChartDetails", conn);
+            dCmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter daUsers = new MySqlDataAdapter(dCmd);
+            daUsers.Fill(dt);
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
+            logger.Error(ex.ToString());
+            HttpContext.Current.Response.Redirect("ErrorPage.aspx");
+        }
+        finally
+        {
+            if (conn.State == ConnectionState.Open)
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            dCmd = null;
+        }
+        return dt;
+    }
     public static DataTable GetForecastingChartDetails(Decimal client_alias, String status, decimal assignedto)
     {
         // Get daily call report details of perticular user by passing UserID parameter. 
@@ -675,6 +760,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -713,6 +799,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -754,6 +841,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -793,6 +881,7 @@ public class VPCRMSDAL
         catch (Exception ex)
         {
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -842,6 +931,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -891,6 +981,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -942,6 +1033,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -984,6 +1076,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1027,6 +1120,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1066,6 +1160,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1105,6 +1200,7 @@ public class VPCRMSDAL
         catch (MySqlException ex)
         {
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1148,6 +1244,7 @@ public class VPCRMSDAL
         {
            // throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1229,9 +1326,9 @@ public class VPCRMSDAL
         {
             
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
-            
             
         }
         finally
@@ -1289,6 +1386,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1353,6 +1451,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1393,6 +1492,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1434,6 +1534,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1472,6 +1573,7 @@ public class VPCRMSDAL
         catch (Exception ex)
         {
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1514,6 +1616,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1557,6 +1660,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
@@ -1594,6 +1698,7 @@ public class VPCRMSDAL
         {
             //throw ex;
             ILog logger = log4net.LogManager.GetLogger("ErrorLog");
+            logger.Error("For Client Alias: " + Convert.ToDecimal(HttpContext.Current.Session["UserID"].ToString().Trim().Substring(0, 4)));
             logger.Error(ex.ToString());
             HttpContext.Current.Response.Redirect("ErrorPage.aspx");
         }
