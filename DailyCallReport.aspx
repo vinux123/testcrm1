@@ -94,9 +94,7 @@
         }
 
         function adderr(f, index) {
-            //$("#msg").fadeIn('slow').removeClass("validate-has-error");
             $("#msg").show();
-            // $(index).find("td:eq(" + f + ")").addClass("error");
             $(index).find("td").parent("tr").css("background-color", "#F5ECCE");
         }
 
@@ -107,38 +105,7 @@
             
             if ($.trim(jq_ddl_ProductQty) != '' && $.trim(jq_ddl_ProductPrice) != '')
             {
-                //if (!rege.test(jq_ddl_ProductQty)) {
-                //    $.alert({
-                //        title: 'Confirm!',
-                //        content: 'Please enter numeric value',
-                //        confirmButtonClass: 'btn-primary',
-                //        animation: 'zoom',
-                //        backgroundDismiss: false,
-                //        confirm: function () {
-                //            $('#ProductDetails_' + rownumber + '__quotedqty').val('');
-                //            $('#ProductDetails_' + rownumber + '__quotedqty').focus();
-                //            return false;
-                //        }
-                //    });
-                //}
-                //else if(!rege.test(jq_ddl_ProductPrice))
-                //{
-                //    $.alert({
-                //        title: 'Confirm!',
-                //        content: 'Please enter numeric value',
-                //        confirmButtonClass: 'btn-primary',
-                //        animation: 'zoom',
-                //        backgroundDismiss: false,
-                //        confirm: function () {
-                //            $('#ProductDetails_' + rownumber + '__ProductPrice').val('');
-                //            $('#ProductDetails_' + rownumber + '__ProductPrice').focus();
-                //            return false;
-                //        }
-                //    });
-                //}
-                //else{
                     $('#ProductDetails_' + rownumber + '__quoteamt').val(jq_ddl_ProductQty * jq_ddl_ProductPrice);
-                //}
             }
         }
 
@@ -146,7 +113,6 @@
             var jq_ddl_ProductName = $('#ProductDetails_' + rownumber + '__ProductName').val();
             if (jq_ddl_ProductName == 'Select') {
                 $('#ProductDetails_' + rownumber + '__quoteprice').val('');
-                //$('#ProductDetails_' + rownumber + '__quoteprice').attr("disabled", false);
             }
             else {
                 $.ajax({
@@ -176,7 +142,6 @@
         }
 
         function isvalid(ProductName, ProductQTY, ProductPrice, ProductAmount, ProductFinalAmount, i, index) {
-            debugger;
             $("#tblProduct tbody tr > td ").removeClass("validate-has-error");
             if ($.trim(ProductName) == 'Select') {
                 $("#msg").html("Please select product at row " + i);
@@ -232,7 +197,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    //alert(data.d);
                     drpvalues = data.d;
                     var drpValue = drpvalues.split(',');
                     var intProductCount = parseInt($('#hidProductCount').val());
@@ -290,7 +254,6 @@
                     z.autocomplete = "off";
                     z.id = "ProductDetails_" + intProductCount + "__quoteamt"; z.name = "ProductDetails[" + intProductCount + "].quoteamt";
                     z.setAttribute("class", "form-control");
-                    //z.setAttribute("style","width:150px");
                     y.appendChild(z);
                     x.appendChild(y);
 
@@ -583,8 +546,6 @@
                         $('#txtwebsite').val(val.companywebsite);
                         $('#txterevenue').val(val.clientcustomerpamt)
 
-                        //var date1 = new Date(parseInt(val.custfollowupdate.replace('/Date(', ''))).toISOString();
-                        //$('#txtfollowupdate').val(date1.substring(0, 10));
                         var d2 = /\/Date\((\d*)\)\//.exec(val.custfollowupdate);
                         var d1a = new Date(+d2[1]);
                         var yy1 = d1a.getFullYear();
@@ -639,65 +600,12 @@
 
             if ($('#hidProductCount').val() == 0) {
                 addnewrow('1');
-                //                rebindFTPDetails()
-                //return false;
             }
             $('#modal_dialog1').modal('show');
         }
     </script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
-            //$("#grdDCR").dataTable({
-            //    aLengthMenu: [
-            //        [25, 50, 100, -1], [25, 50, 100, "All"]
-            //    ]
-            //    ,
-            //    "columnDefs": [{
-            //        "defaultContent": "-",
-            //        "targets": "_all"
-            //    }]
-
-            //});
-
-            //$("#ddlstatus").select2({
-            //    placeholder: 'Select Status...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
-
-            //$("#ddlsource").select2({
-            //    placeholder: 'Select Source...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
-
-            //$("#ddlcompanytype").select2({
-            //    placeholder: 'Select Company Type...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
-
-            //$("#ddlProductName").select2({
-            //    placeholder: 'Select Product...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
-
-            //$("#ddlassignedto").select2({
-            //    placeholder: 'Select Assignedto...',
-            //    allowClear: true
-            //}).on('select2-open', function () {
-            //    // Adding Custom Scrollbar
-            //    $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
-            //});
 
             $("#ddlcustomeruser").select2({
                 placeholder: 'Select Assignedto...',
@@ -731,7 +639,6 @@
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $("#btnAddDCR").click(function (e) {
-                //debugger;
                 $('#modal-dialog').on('show.bs.modal', function (event) {
                     $('#modal-dialog').insertAfter($('body'));
                 });
@@ -742,7 +649,6 @@
     <script>
         $(document).ready(function () {
             $("#btnSubmit").click(function () {
-                debugger;
                 if (ValidateDCR()) {
                     var clientdate = $('#txtdate').val();
                     var company = $('#txtcompany').val();
@@ -839,12 +745,6 @@
     <script>
         $(document).ready(function () {
             $("#btnQuoteSubmit").click(function () {
-                debugger;
-               // if (ValidateModal()) {
-
-                //var data = JSON.stringify(getAllData());
-                //alert(data);
-
                 var inputs = new Array();
                 var CheckIsValid = true;
 
@@ -877,28 +777,17 @@
                             obj.ProductFinalAmount = ProductFinalAmount;
                             inputs.push(obj);
                         });
-                        //$("#msg").hide();
                     }
                 }
-
-                
-
-                
-                //alert(JSON.stringify(inputs));
                 if (CheckIsValid) {
                     var AllData = JSON.stringify(inputs);
                     var customeruser = $('#ddlcustomeruser option:selected').val();
                     var clientcustid = $('#hdnClientCustID').val();
-                    //var quotedprod = $('#ddlProductName option:selected').val();
-                    //var quoteqty = $('#txtquoteqty').val();
-                    //var quoteprice = $('#txtquoteprice').val();
-                    //var quoteamt = $('#txtquoteamt').val();
 
                     $.ajax({
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         url: "DailyCallReport.aspx/SaveQuotationDetails",
-                        //data: "{'clientcustid': '" + clientcustid + "', 'customeruser': '" + customeruser + "', 'quotedprod': '" + quotedprod + "', 'quoteqty': '" + quoteqty + "', 'quoteprice': '" + quoteprice + "', 'quoteamt': '" + quoteamt + "'}",
                         data: "{'clientcustid': '" + clientcustid + "', 'customeruser': '" + customeruser + "', 'AllData': '" + AllData + "'}",
 
                         dataType: "json",
@@ -1195,7 +1084,7 @@
                             <div class="col-md-6">
                                 <div class="form-group required">
                                     <label class=" control-label" for="remarks">Remarks</label>
-                                    <asp:TextBox runat="server" class="form-control" name="remarks" ID="txtremarks" ClientIDMode="Static" autocomplete="off"></asp:TextBox>
+                                    <asp:TextBox runat="server" class="form-control" name="remarks" ID="txtremarks" ClientIDMode="Static" autocomplete="off" TextMode="MultiLine" MaxLength="1000"></asp:TextBox>
                                     <span id="RemarksHelper" class="removespan"></span>
                                 </div>
                             </div>
